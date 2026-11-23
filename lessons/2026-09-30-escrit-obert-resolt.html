@@ -1,0 +1,733 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Escrit, obert, resolt</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  /* Layout: a "participle ledger" — theory spread + stacked activity cards, each with its own check button;
+     a slim sticky score chip (safe-area aware) tracks the running total across every activity. */
+  :root{
+    --bg:#f2ede2;
+    --surface:#fffdf8;
+    --surface-2:#e9e0cd;
+    --ink:#231f18;
+    --ink-soft:#6b6353;
+    --accent:#3d5a73;
+    --accent-ink:#ffffff;
+    --accent-soft:#dfe6ea;
+    --accent-soft-ink:#294559;
+    --mark:#a8641f;
+    --mark-soft:#f4e3cc;
+    --line:#d9cdb0;
+    --good:#3f7d54;
+    --good-soft:#dcece0;
+    --bad:#b23b3b;
+    --bad-soft:#f6dcdc;
+    --shadow: 0 1px 2px rgba(35,31,24,.07), 0 10px 26px -14px rgba(35,31,24,.24);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#181510;
+      --surface:#211c15;
+      --surface-2:#2a2318;
+      --ink:#eee7d8;
+      --ink-soft:#b3a892;
+      --accent:#8db3cf;
+      --accent-ink:#0e2431;
+      --accent-soft:#233442;
+      --accent-soft-ink:#bcdcee;
+      --mark:#e0a458;
+      --mark-soft:#3a2c17;
+      --line:#3c3320;
+      --good:#7bd39a;
+      --good-soft:#1e3327;
+      --bad:#e39090;
+      --bad-soft:#3a2222;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#181510;
+    --surface:#211c15;
+    --surface-2:#2a2318;
+    --ink:#eee7d8;
+    --ink-soft:#b3a892;
+    --accent:#8db3cf;
+    --accent-ink:#0e2431;
+    --accent-soft:#233442;
+    --accent-soft-ink:#bcdcee;
+    --mark:#e0a458;
+    --mark-soft:#3a2c17;
+    --line:#3c3320;
+    --good:#7bd39a;
+    --good-soft:#1e3327;
+    --bad:#e39090;
+    --bad-soft:#3a2222;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-inline:18px;
+    padding-block:22px 90px;
+    max-width:900px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+  p{ margin:0 0 .8em; }
+  .backlink{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.76rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  .backlink:hover{ filter:brightness(0.96); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:600; font-style:italic; }
+  header.top p{ margin:10px 0 0; max-width:58ch; opacity:.94; font-size:.95rem; }
+  .topic-pill{
+    display:inline-block;
+    margin-top:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    background:rgba(255,255,255,.16);
+    padding:5px 12px;
+    border-radius:999px;
+  }
+
+  section{ margin-bottom:26px; }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    box-shadow:var(--shadow);
+  }
+  h2.section-title{
+    font-size:1.25rem;
+    margin-bottom:10px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  h2.section-title .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.8rem;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:2px 8px;
+    border-radius:6px;
+  }
+
+  table.conj{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0;
+    font-size:.92rem;
+  }
+  table.conj th, table.conj td{
+    border:1px solid var(--line);
+    padding:9px 10px;
+    text-align:left;
+  }
+  table.conj th{
+    background:var(--surface-2);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--ink-soft);
+  }
+  table.conj td.irreg{ color:var(--mark); font-weight:600; font-family:'JetBrains Mono',monospace; }
+  .table-scroll{ overflow-x:auto; }
+
+  .rule-box{
+    background:var(--mark-soft);
+    border-left:3px solid var(--mark);
+    border-radius:0 10px 10px 0;
+    padding:12px 16px;
+    margin:14px 0;
+    font-size:.92rem;
+  }
+  .rule-box b{ color:var(--mark); }
+
+  .q{
+    border-top:1px solid var(--line);
+    padding-block:14px;
+  }
+  .q:first-of-type{ border-top:none; padding-top:4px; }
+  .q .prompt{ margin-bottom:8px; }
+  .q input[type="text"]{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.95rem;
+    padding:6px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+    width:130px;
+    max-width:45vw;
+  }
+  .q input[type="text"]:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .options{ display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+  .options label{
+    display:flex; align-items:center; gap:8px;
+    padding:7px 10px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+    font-size:.92rem;
+    background:var(--surface);
+  }
+  .options label:hover{ background:var(--surface-2); }
+  .options input{ accent-color:var(--accent); }
+  select.vocab-select{
+    font-family:'Inter', sans-serif;
+    font-size:.92rem;
+    padding:6px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+    max-width:100%;
+  }
+  .feedback{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:.84rem;
+    font-family:'JetBrains Mono', monospace;
+    padding:3px 9px;
+    border-radius:999px;
+    margin-left:8px;
+    margin-top:6px;
+  }
+  .feedback.ok{ background:var(--good-soft); color:var(--good); }
+  .feedback.no{ background:var(--bad-soft); color:var(--bad); }
+  .feedback[hidden]{ display:none!important; }
+
+  .dialog{
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:14px;
+  }
+  .dialog .turn{ margin-bottom:8px; }
+  .dialog .turn:last-child{ margin-bottom:0; }
+  .dialog .who{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:2px;
+  }
+
+  button.check-btn{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:.9rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check-btn:hover{ filter:brightness(1.06); }
+  button.check-btn:active{ transform:translateY(1px); }
+  .activity-score{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  .score-chip{
+    position:fixed;
+    right:16px;
+    bottom:calc(16px + env(safe-area-inset-bottom, 0px));
+    background:var(--ink);
+    color:var(--bg);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem;
+    padding:10px 16px;
+    border-radius:999px;
+    box-shadow:var(--shadow);
+    z-index:20;
+  }
+  .score-chip b{ font-size:1rem; }
+
+  .solutions{
+    background:var(--surface-2);
+    border-radius:16px;
+    padding:20px 22px 22px;
+  }
+  .sol-item{
+    border-top:1px solid var(--line);
+    padding-block:12px;
+    font-size:.9rem;
+  }
+  .sol-item:first-of-type{ border-top:none; }
+  .sol-item .ans{ color:var(--mark); font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .sol-group-title{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.74rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--ink-soft);
+    margin:18px 0 4px;
+  }
+  .sol-group-title:first-child{ margin-top:0; }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:30px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:20px 18px; }
+    .card{ padding:16px 16px 18px; }
+  }
+</style>
+
+<a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Alacant · Departament d'Informàtica</div>
+    <h1>Escrit, obert, resolt</h1>
+    <p>Exercici diari de valencià oral per a l'àmbit educatiu: hui repassem els participis irregulars i com es construeixen els temps compostos amb "haver".</p>
+    <span class="topic-pill">📎 Tema d'avui: Participis irregulars i temps compostos</span>
+  </div>
+</header>
+
+<section class="card">
+  <h2 class="section-title"><span class="num">teoria</span> Participis irregulars i temps compostos</h2>
+  <p>Els <b>temps compostos</b> (pretèrit perfet compost, plusquamperfet, etc.) es formen amb el verb <b>haver</b> conjugat + el <b>participi</b> del verb principal. A diferència del castellà, en valencià el participi dins d'un temps compost és <b>invariable</b>: sempre en masculí singular, encara que el subjecte siga femení o plural.</p>
+
+  <div class="table-scroll">
+    <table class="conj">
+      <thead>
+        <tr><th>Pronom</th><th>Haver (present)</th><th>+ Participi</th><th>Exemple</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>jo</td><td class="mono">he</td><td class="mono">fet</td><td>He fet una còpia de seguretat.</td></tr>
+        <tr><td>tu</td><td class="mono">has</td><td class="mono">dit</td><td>Ho has dit al claustre.</td></tr>
+        <tr><td>ell / ella</td><td class="mono">ha</td><td class="mono">vist</td><td>Ha vist l'error al codi.</td></tr>
+        <tr><td>nosaltres</td><td class="mono">hem</td><td class="mono">escrit</td><td>Hem escrit la consulta en SQL.</td></tr>
+        <tr><td>vosaltres</td><td class="mono">heu</td><td class="mono">obert</td><td>Heu obert la màquina virtual?</td></tr>
+        <tr><td>ells / elles</td><td class="mono">han</td><td class="mono">resolt</td><td>Han resolt el problema de xarxa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Molts verbs formen el participi de manera regular afegint <span class="mono">-at</span> (1a conjugació), <span class="mono">-ut</span> (2a) o <span class="mono">-it</span> (3a) a l'arrel: <span class="mono">parlar → parlat</span>, <span class="mono">perdre → perdut</span>, <span class="mono">dormir → dormit</span>. Però un grup de verbs molt freqüents —justament els que fem servir cada dia a classe— tenen un participi <b>irregular</b>, que cal memoritzar:</p>
+
+  <div class="table-scroll">
+    <table class="conj">
+      <thead>
+        <tr><th>Infinitiu</th><th>Participi</th><th>Exemple en temps compost</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>fer</td><td class="irreg">fet</td><td>Hem fet la pràctica de Scratch.</td></tr>
+        <tr><td>dir</td><td class="irreg">dit</td><td>T'ho he dit al xat del departament.</td></tr>
+        <tr><td>veure</td><td class="irreg">vist</td><td>Heu vist el nou servidor de correu?</td></tr>
+        <tr><td>escriure</td><td class="irreg">escrit</td><td>He escrit el codi en Python.</td></tr>
+        <tr><td>obrir</td><td class="irreg">obert</td><td>Han obert el document a Microsoft 365.</td></tr>
+        <tr><td>cobrir</td><td class="irreg">cobert</td><td>Ja hem cobert tot el temari.</td></tr>
+        <tr><td>resoldre</td><td class="irreg">resolt</td><td>He resolt l'error de connexió.</td></tr>
+        <tr><td>respondre</td><td class="irreg">respost</td><td>Ha respost el correu del centre.</td></tr>
+        <tr><td>tindre</td><td class="irreg">tingut</td><td>Hem tingut problemes amb l'encaminador.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rule-box">
+    <b>Compte amb la concordança:</b> "Les alumnes <span class="mono">han fet</span> la pràctica" (mai "fetes"). El participi només concorda en gènere i nombre quan actua com a adjectiu darrere de <span class="mono">ser</span> o d'un nom: "La consulta és <span class="mono">feta</span>", "els documents <span class="mono">oberts</span>".
+  </div>
+</section>
+
+<section class="card" id="act1">
+  <h2 class="section-title"><span class="num">1</span> Omple els buits amb el participi correcte</h2>
+  <p>Escriu només el participi (sense l'auxiliar "haver"), en minúscula.</p>
+
+  <div class="q" data-answer="escrit">
+    <p class="prompt">1. Hui hem <input type="text" class="blank"> (<i>escriure</i>) un script en Python per a automatitzar la còpia de seguretat del servidor.</p>
+  </div>
+  <div class="q" data-answer="fet">
+    <p class="prompt">2. L'alumnat ha <input type="text" class="blank"> (<i>fer</i>) una consulta SQL amb XAMPP per a comprovar la base de dades relacional.</p>
+  </div>
+  <div class="q" data-answer="obert">
+    <p class="prompt">3. Encara no heu <input type="text" class="blank"> (<i>obrir</i>) la màquina virtual amb VirtualBox? Cal fer-ho abans de la pràctica.</p>
+  </div>
+  <div class="q" data-answer="resolt">
+    <p class="prompt">4. El tècnic ha <input type="text" class="blank"> (<i>resoldre</i>) el problema de xifratge del certificat digital.</p>
+  </div>
+  <div class="q" data-answer="dit">
+    <p class="prompt">5. Els alumnes de Batxillerat han <input type="text" class="blank"> (<i>dir</i>) que el sistema operatiu no reconeixia l'encaminador.</p>
+  </div>
+
+  <button class="check-btn" data-check="act1">Comprova les respostes</button>
+  <div class="activity-score" id="score-act1" hidden></div>
+</section>
+
+<section class="card" id="act2">
+  <h2 class="section-title"><span class="num">2</span> Tria l'opció correcta</h2>
+
+  <div class="q" data-answer="vist">
+    <p class="prompt">1. Quin és el participi del verb <i>veure</i>?</p>
+    <div class="options">
+      <label><input type="radio" name="q2-1" value="vist"> vist</label>
+      <label><input type="radio" name="q2-1" value="vegut"> vegut</label>
+      <label><input type="radio" name="q2-1" value="veit"> veït</label>
+      <label><input type="radio" name="q2-1" value="vistut"> vistut</label>
+    </div>
+  </div>
+  <div class="q" data-answer="respost">
+    <p class="prompt">2. Quin és el participi del verb <i>respondre</i>?</p>
+    <div class="options">
+      <label><input type="radio" name="q2-2" value="respondut"> respondut</label>
+      <label><input type="radio" name="q2-2" value="respost"> respost</label>
+      <label><input type="radio" name="q2-2" value="respós"> respós</label>
+      <label><input type="radio" name="q2-2" value="respondit"> respondit</label>
+    </div>
+  </div>
+  <div class="q" data-answer="cobert">
+    <p class="prompt">3. Quin és el participi del verb <i>cobrir</i>?</p>
+    <div class="options">
+      <label><input type="radio" name="q2-3" value="cobrit"> cobrit</label>
+      <label><input type="radio" name="q2-3" value="cobruit"> cobruït</label>
+      <label><input type="radio" name="q2-3" value="cobert"> cobert</label>
+      <label><input type="radio" name="q2-3" value="cobrat"> cobrat</label>
+    </div>
+  </div>
+  <div class="q" data-answer="invariable">
+    <p class="prompt">4. En un temps compost amb "haver", el participi...</p>
+    <div class="options">
+      <label><input type="radio" name="q2-4" value="invariable"> sempre és masculí singular, invariable</label>
+      <label><input type="radio" name="q2-4" value="concorda-gs"> concorda en gènere i nombre amb el subjecte</label>
+      <label><input type="radio" name="q2-4" value="concorda-n"> concorda només en nombre</label>
+      <label><input type="radio" name="q2-4" value="infinitiu"> s'escriu igual que l'infinitiu</label>
+    </div>
+  </div>
+  <div class="q" data-answer="hem tingut">
+    <p class="prompt">5. "Nosaltres ___ (tindre) un problema amb l'encaminador" — forma correcta:</p>
+    <div class="options">
+      <label><input type="radio" name="q2-5" value="hem tingut"> hem tingut</label>
+      <label><input type="radio" name="q2-5" value="hem tengut"> hem tengut</label>
+      <label><input type="radio" name="q2-5" value="havem tingut"> havem tingut</label>
+      <label><input type="radio" name="q2-5" value="hem tenit"> hem tenit</label>
+    </div>
+  </div>
+
+  <button class="check-btn" data-check="act2">Comprova les respostes</button>
+  <div class="activity-score" id="score-act2" hidden></div>
+</section>
+
+<section class="card" id="act3">
+  <h2 class="section-title"><span class="num">3</span> Completa la taula de conjugació</h2>
+  <p>Escriu la forma completa (auxiliar + participi), per exemple <span class="mono">he fet</span>.</p>
+
+  <div class="table-scroll">
+    <table class="conj">
+      <thead><tr><th>Pronom</th><th>Fer</th><th>Obrir</th></tr></thead>
+      <tbody>
+        <tr><td>jo</td><td class="mono">he fet</td><td class="q" data-answer="he obert" style="border:none;padding:4px 6px;"><input type="text" class="blank" style="width:100%;max-width:140px;"></td></tr>
+        <tr><td>tu</td><td class="q" data-answer="has fet" style="border:none;padding:4px 6px;"><input type="text" class="blank" style="width:100%;max-width:140px;"></td><td class="mono">has obert</td></tr>
+        <tr><td>ell / ella</td><td class="q" data-answer="ha fet" style="border:none;padding:4px 6px;"><input type="text" class="blank" style="width:100%;max-width:140px;"></td><td class="mono">ha obert</td></tr>
+        <tr><td>nosaltres</td><td class="mono">hem fet</td><td class="q" data-answer="hem obert" style="border:none;padding:4px 6px;"><input type="text" class="blank" style="width:100%;max-width:140px;"></td></tr>
+        <tr><td>vosaltres</td><td class="q" data-answer="heu fet" style="border:none;padding:4px 6px;"><input type="text" class="blank" style="width:100%;max-width:140px;"></td><td class="mono">heu obert</td></tr>
+        <tr><td>ells / elles</td><td class="mono">han fet</td><td class="q" data-answer="han obert" style="border:none;padding:4px 6px;"><input type="text" class="blank" style="width:100%;max-width:140px;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="check-btn" data-check="act3">Comprova les respostes</button>
+  <div class="activity-score" id="score-act3" hidden></div>
+</section>
+
+<section class="card" id="act4">
+  <h2 class="section-title"><span class="num">4</span> Mini-diàlegs al departament d'informàtica</h2>
+  <p>Completa els buits amb el participi correcte segons el verb entre parèntesis.</p>
+
+  <div class="dialog">
+    <div class="turn"><span class="who">Professor</span>Heu <span class="q-inline" data-answer="fet"><input type="text" class="blank"></span> (<i>fer</i>) ja la consulta amb el gestor de bases de dades?</div>
+    <div class="turn"><span class="who">Alumne</span>Sí, l'hem <span class="q-inline" data-answer="escrit"><input type="text" class="blank"></span> (<i>escriure</i>) en SQL i hem comprovat el resultat amb XAMPP.</div>
+  </div>
+  <div class="dialog">
+    <div class="turn"><span class="who">Cap de departament</span>Has <span class="q-inline" data-answer="vist"><input type="text" class="blank"></span> (<i>veure</i>) el nou certificat digital del servidor de correu?</div>
+    <div class="turn"><span class="who">Professor</span>Sí, i també he <span class="q-inline" data-answer="resolt"><input type="text" class="blank"></span> (<i>resoldre</i>) el problema del xifratge.</div>
+  </div>
+  <div class="dialog">
+    <div class="turn"><span class="who">Professor</span>Abans de continuar, heu <span class="q-inline" data-answer="obert"><input type="text" class="blank"></span> (<i>obrir</i>) el document compartit a Microsoft 365?</div>
+    <div class="turn"><span class="who">Alumnat</span>Encara no, però ja hem <span class="q-inline" data-answer="fet"><input type="text" class="blank"></span> (<i>fer</i>) la còpia de seguretat del lloc de WordPress.</div>
+  </div>
+
+  <button class="check-btn" data-check="act4">Comprova les respostes</button>
+  <div class="activity-score" id="score-act4" hidden></div>
+</section>
+
+<section class="card" id="act5">
+  <h2 class="section-title"><span class="num">5</span> Vocabulari: PRSI I i II · programació i xarxes</h2>
+  <p>Relaciona cada terme valencià amb la seua traducció correcta al castellà.</p>
+
+  <div class="q" data-answer="enrutador/router">
+    <p class="prompt">1. <b>encaminador</b></p>
+    <select class="vocab-select">
+      <option value="">— tria una opció —</option>
+      <option value="enrutador/router">enrutador / router</option>
+      <option value="servidor de correo">servidor de correo</option>
+      <option value="certificado digital">certificado digital</option>
+      <option value="cifrado">cifrado</option>
+    </select>
+  </div>
+  <div class="q" data-answer="cifrado">
+    <p class="prompt">2. <b>xifratge</b></p>
+    <select class="vocab-select">
+      <option value="">— tria una opció —</option>
+      <option value="cifrado">cifrado</option>
+      <option value="copia de seguridad">copia de seguridad</option>
+      <option value="base de datos relacional">base de datos relacional</option>
+      <option value="consulta">consulta</option>
+    </select>
+  </div>
+  <div class="q" data-answer="copia de seguridad">
+    <p class="prompt">3. <b>còpia de seguretat</b></p>
+    <select class="vocab-select">
+      <option value="">— tria una opció —</option>
+      <option value="copia de seguridad">copia de seguridad</option>
+      <option value="certificado digital">certificado digital</option>
+      <option value="gestor de bases de datos">gestor de bases de datos</option>
+      <option value="protocolo de comunicación">protocolo de comunicación</option>
+    </select>
+  </div>
+  <div class="q" data-answer="certificado digital">
+    <p class="prompt">4. <b>certificat digital</b></p>
+    <select class="vocab-select">
+      <option value="">— tria una opció —</option>
+      <option value="certificado digital">certificado digital</option>
+      <option value="firma digital">firma digital</option>
+      <option value="cifrado">cifrado</option>
+      <option value="enrutador/router">enrutador / router</option>
+    </select>
+  </div>
+  <div class="q" data-answer="consulta">
+    <p class="prompt">5. <b>consulta</b></p>
+    <select class="vocab-select">
+      <option value="">— tria una opció —</option>
+      <option value="consulta">consulta</option>
+      <option value="variable">variable</option>
+      <option value="función">función</option>
+      <option value="máquina virtual">máquina virtual</option>
+    </select>
+  </div>
+  <div class="q" data-answer="gestor de bases de datos">
+    <p class="prompt">6. <b>gestor de bases de dades</b></p>
+    <select class="vocab-select">
+      <option value="">— tria una opció —</option>
+      <option value="gestor de bases de datos">gestor de bases de datos</option>
+      <option value="base de datos relacional">base de datos relacional</option>
+      <option value="sistema operativo">sistema operativo</option>
+      <option value="servidor de correo">servidor de correo</option>
+    </select>
+  </div>
+
+  <button class="check-btn" data-check="act5">Comprova les respostes</button>
+  <div class="activity-score" id="score-act5" hidden></div>
+</section>
+
+<section class="solutions">
+  <h2 class="section-title" style="margin-bottom:14px;"><span class="num">✓</span> Solucions i explicacions</h2>
+
+  <div class="sol-group-title">1. Omplir buits</div>
+  <div class="sol-item"><span class="ans">1. escrit</span> — participi irregular d'"escriure"; s'usa amb "hem" (nosaltres).</div>
+  <div class="sol-item"><span class="ans">2. fet</span> — participi irregular de "fer", invariable encara que el subjecte ("l'alumnat") siga singular col·lectiu.</div>
+  <div class="sol-item"><span class="ans">3. obert</span> — participi irregular d'"obrir"; compte, no és "obrit".</div>
+  <div class="sol-item"><span class="ans">4. resolt</span> — participi irregular de "resoldre", igual que "dissolt" (dissoldre).</div>
+  <div class="sol-item"><span class="ans">5. dit</span> — participi irregular de "dir"; invariable amb "han" encara que el subjecte siga plural.</div>
+
+  <div class="sol-group-title">2. Tria l'opció correcta</div>
+  <div class="sol-item"><span class="ans">1. vist</span> — de "veure"; "vegut" no existeix en valencià normatiu.</div>
+  <div class="sol-item"><span class="ans">2. respost</span> — de "respondre", com "pres" (prendre) o "encés" (encendre): arrel + -s/-st.</div>
+  <div class="sol-item"><span class="ans">3. cobert</span> — de "cobrir", seguint el mateix patró que "obrir → obert".</div>
+  <div class="sol-item"><span class="ans">4. invariable</span> — amb "haver" el participi no concorda mai amb el subjecte; només concorda quan funciona com a adjectiu darrere de "ser".</div>
+  <div class="sol-item"><span class="ans">5. hem tingut</span> — "tindre" fa el participi "tingut" (no "tenit" ni "tengut").</div>
+
+  <div class="sol-group-title">3. Taula de conjugació</div>
+  <div class="sol-item"><span class="ans">jo:</span> he obert · <span class="ans">tu:</span> has fet · <span class="ans">ell/ella:</span> ha fet · <span class="ans">nosaltres:</span> hem obert · <span class="ans">vosaltres:</span> heu fet · <span class="ans">ells/elles:</span> han obert.</div>
+
+  <div class="sol-group-title">4. Mini-diàlegs</div>
+  <div class="sol-item"><span class="ans">Diàleg 1:</span> fet, escrit — "l'hem escrit" (pronom feble + haver + participi, sempre invariable).</div>
+  <div class="sol-item"><span class="ans">Diàleg 2:</span> vist, resolt — participis de "veure" i "resoldre".</div>
+  <div class="sol-item"><span class="ans">Diàleg 3:</span> obert, fet — participis de "obrir" i "fer".</div>
+
+  <div class="sol-group-title">5. Vocabulari PRSI I i II</div>
+  <div class="sol-item"><span class="ans">encaminador</span> = enrutador / router: dispositiu que dirigeix el trànsit de dades entre xarxes.</div>
+  <div class="sol-item"><span class="ans">xifratge</span> = cifrado: procés que protegeix la informació codificant-la.</div>
+  <div class="sol-item"><span class="ans">còpia de seguretat</span> = copia de seguridad: còpia dels arxius per si es perden les dades originals.</div>
+  <div class="sol-item"><span class="ans">certificat digital</span> = certificado digital: document electrònic que verifica la identitat en línia.</div>
+  <div class="sol-item"><span class="ans">consulta</span> = consulta: petició d'informació feta a una base de dades (per exemple, en SQL).</div>
+  <div class="sol-item"><span class="ans">gestor de bases de dades</span> = gestor de bases de datos: programa que crea i administra bases de dades (com XAMPP amb MySQL).</div>
+</section>
+
+<footer class="note">Exercici oral diari de valencià · Nivell B1-B2 · Àmbit educatiu-informàtic · IES Jorge Juan, Alacant</footer>
+
+<div class="score-chip">Puntuació total: <b id="totalScore">0</b> / <span id="totalMax">28</span></div>
+
+<script>
+(function(){
+  var norm = function(s){
+    return (s||'').toString().trim().toLowerCase()
+      .replace(/[.,;:!?¿¡]/g,'')
+      .replace(/\s+/g,' ');
+  };
+
+  var scores = { act1:0, act2:0, act3:0, act4:0, act5:0 };
+  var maxes  = { act1:5, act2:5, act3:6, act4:6, act5:6 };
+
+  function updateTotal(){
+    var total = 0;
+    for (var k in scores){ total += scores[k]; }
+    var el = document.getElementById('totalScore');
+    if (el) el.textContent = total;
+  }
+
+  function markFeedback(container, ok){
+    var existing = container.querySelector('.feedback');
+    if (existing) existing.remove();
+    var span = document.createElement('span');
+    span.className = 'feedback ' + (ok ? 'ok' : 'no');
+    span.textContent = ok ? '✓ Correcte' : '✗ Incorrecte';
+    container.appendChild(span);
+  }
+
+  function checkTextBlanks(section){
+    var qs = section.querySelectorAll('.q[data-answer], .q-inline[data-answer]');
+    var correct = 0;
+    qs.forEach(function(q){
+      var expected = norm(q.getAttribute('data-answer'));
+      var input = q.querySelector('input[type="text"]');
+      if (!input) return;
+      var given = norm(input.value);
+      var ok = given === expected;
+      if (ok) correct++;
+      markFeedback(q, ok);
+    });
+    return { correct: correct, total: qs.length };
+  }
+
+  function checkRadios(section){
+    var qs = section.querySelectorAll('.q[data-answer]');
+    var correct = 0;
+    qs.forEach(function(q){
+      var expected = q.getAttribute('data-answer');
+      var radios = q.querySelectorAll('input[type="radio"]');
+      if (!radios.length) return;
+      var chosen = null;
+      radios.forEach(function(r){ if (r.checked) chosen = r.value; });
+      var ok = chosen === expected;
+      if (ok) correct++;
+      markFeedback(q, ok);
+    });
+    return { correct: correct, total: qs.length };
+  }
+
+  function checkSelects(section){
+    var qs = section.querySelectorAll('.q[data-answer]');
+    var correct = 0;
+    qs.forEach(function(q){
+      var expected = q.getAttribute('data-answer');
+      var sel = q.querySelector('select');
+      if (!sel) return;
+      var ok = sel.value === expected;
+      if (ok) correct++;
+      markFeedback(q, ok);
+    });
+    return { correct: correct, total: qs.length };
+  }
+
+  function showScore(actId, result){
+    scores[actId] = result.correct;
+    var box = document.getElementById('score-' + actId);
+    if (box){
+      box.hidden = false;
+      box.textContent = 'Puntuació d’esta activitat: ' + result.correct + ' / ' + result.total;
+    }
+    updateTotal();
+  }
+
+  document.querySelectorAll('[data-check]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var actId = btn.getAttribute('data-check');
+      var section = document.getElementById(actId);
+      if (!section) return;
+      var result;
+      if (actId === 'act1' || actId === 'act3' || actId === 'act4'){
+        result = checkTextBlanks(section);
+      } else if (actId === 'act2'){
+        result = checkRadios(section);
+      } else if (actId === 'act5'){
+        result = checkSelects(section);
+      }
+      if (result) showScore(actId, result);
+    });
+  });
+
+  updateTotal();
+})();
+</script>
+
+</body></html>

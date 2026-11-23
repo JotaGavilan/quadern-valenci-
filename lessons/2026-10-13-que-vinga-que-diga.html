@@ -1,0 +1,826 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Que vinga, que diga</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+  :root{
+    /* layout: hero banda superior + fitxa teòrica + targetes d'activitat apilades, llegenda d'estat pròpia */
+    --bg:#f5efe6;
+    --surface:#ffffff;
+    --surface-2:#ece0ce;
+    --ink:#2a2118;
+    --ink-soft:#6e6153;
+    --accent:#7c3f66;
+    --accent-ink:#ffffff;
+    --accent-soft:#f1dce7;
+    --accent-soft-ink:#5c2a49;
+    --line:#ddcdb4;
+    --good:#2f7d54;
+    --good-bg:#dcefe1;
+    --bad:#b1402f;
+    --bad-bg:#f6ddd6;
+    --mono-bg:#efe6d8;
+    --shadow: 0 1px 2px rgba(42,33,24,.07), 0 10px 26px -14px rgba(42,33,24,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1c1712;
+      --surface:#241d17;
+      --surface-2:#2d251c;
+      --ink:#f0e8da;
+      --ink-soft:#bcae98;
+      --accent:#e592c0;
+      --accent-ink:#2a1420;
+      --accent-soft:#3a2430;
+      --accent-soft-ink:#f3c9e0;
+      --line:#3c3225;
+      --good:#7fd9a0;
+      --good-bg:#17301f;
+      --bad:#e38d7a;
+      --bad-bg:#3a1f18;
+      --mono-bg:#2a2218;
+      color-scheme: dark;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1c1712;
+    --surface:#241d17;
+    --surface-2:#2d251c;
+    --ink:#f0e8da;
+    --ink-soft:#bcae98;
+    --accent:#e592c0;
+    --accent-ink:#2a1420;
+    --accent-soft:#3a2430;
+    --accent-soft-ink:#f3c9e0;
+    --line:#3c3225;
+    --good:#7fd9a0;
+    --good-bg:#17301f;
+    --bad:#e38d7a;
+    --bad-bg:#3a1f18;
+    --mono-bg:#2a2218;
+    color-scheme: dark;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-inline:18px;
+    padding-block:22px 64px;
+  }
+  .page{ max-width:800px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono, .verbform, input.answer, select.answer{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+  a.back-link{
+    display:inline-block;
+    font-size:.82rem;
+    font-weight:600;
+    text-decoration:none;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  a.back-link:hover{ filter:brightness(1.05); }
+
+  header.hero{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:20px;
+    padding:28px 26px 24px;
+    box-shadow:var(--shadow);
+    margin-bottom:22px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 85% 10%, rgba(255,255,255,.14), transparent 55%);
+    pointer-events:none;
+  }
+  header.hero .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.88;
+    margin-bottom:10px;
+  }
+  header.hero h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:600; }
+  header.hero p.lead{ margin:10px 0 0; max-width:58ch; opacity:.94; font-size:.96rem; }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .chip{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    padding:5px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    white-space:nowrap;
+  }
+
+  .scorebar{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:5;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-size:.86rem;
+  }
+  .scorebar b{
+    font-family:'JetBrains Mono', monospace;
+    font-size:1rem;
+  }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card > h2{
+    font-size:1.2rem;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  section.card > p.sub{
+    margin:4px 0 16px;
+    color:var(--ink-soft);
+    font-size:.88rem;
+  }
+
+  .theory p{ margin:0 0 12px; }
+  .theory .rule-box{
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:14px 16px;
+    margin:14px 0;
+    font-size:.92rem;
+  }
+  .theory .rule-box b{ color:var(--accent); }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:14px 0; }
+  table.conj{ border-collapse:collapse; width:100%; min-width:560px; font-size:.88rem; }
+  table.conj th{
+    background:var(--surface-2);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:9px 10px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  table.conj td{
+    padding:9px 10px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  table.conj tr:last-child td{ border-bottom:none; }
+  table.conj td.verb{ font-family:'Fraunces', serif; font-weight:600; font-style:italic; }
+  table.conj td.form{ font-family:'JetBrains Mono', monospace; }
+
+  .note-list{ font-size:.88rem; color:var(--ink-soft); margin-top:10px; }
+
+  .q{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    padding-block:12px;
+    border-top:1px solid var(--line);
+  }
+  .q:first-child{ border-top:none; padding-top:0; }
+  .q .prompt{ font-size:.95rem; }
+  .q .prompt .verbhint{ color:var(--ink-soft); font-size:.82rem; font-style:italic; }
+  .q .answer-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  input.answer{
+    font-size:.95rem;
+    padding:7px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--mono-bg);
+    color:var(--ink);
+    width:11em;
+    max-width:100%;
+  }
+  input.answer:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  select.answer{
+    font-size:.88rem;
+    padding:7px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--mono-bg);
+    color:var(--ink);
+    max-width:100%;
+  }
+  .feedback{
+    font-size:.84rem;
+    font-weight:600;
+    display:none;
+    padding:3px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .q.correct .feedback.ok{ display:inline-block; color:var(--good); background:var(--good-bg); }
+  .q.wrong .feedback.bad{ display:inline-block; color:var(--bad); background:var(--bad-bg); }
+  .q.correct input.answer, .q.correct select.answer{ border-color:var(--good); }
+  .q.wrong input.answer, .q.wrong select.answer{ border-color:var(--bad); }
+
+  .mc-options{ display:flex; flex-direction:column; gap:6px; }
+  .mc-options label{
+    display:flex; align-items:center; gap:8px;
+    font-size:.92rem;
+    font-family:'JetBrains Mono', monospace;
+    padding:4px 2px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .mc-options input[type=radio]{ accent-color:var(--accent); }
+
+  .dialog-line{ margin:0 0 10px; font-size:.95rem; }
+  .dialog-line b{ font-family:'Fraunces', serif; font-weight:600; }
+
+  button.check-btn{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:.9rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border:none;
+    border-radius:999px;
+    padding:10px 20px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check-btn:hover{ filter:brightness(1.08); }
+  button.check-btn:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+
+  .section-score{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.84rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:4px 22px 20px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.15rem;
+    padding:16px 0;
+  }
+  .sol-block{ margin-top:8px; }
+  .sol-block h3{ font-size:.95rem; margin-bottom:8px; color:var(--accent); }
+  .sol-item{
+    font-size:.88rem;
+    padding:7px 0;
+    border-top:1px solid var(--line);
+  }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item b{ font-family:'JetBrains Mono', monospace; color:var(--good); }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:26px;
+  }
+
+  @media (max-width:480px){
+    header.hero{ padding:22px 18px 20px; }
+    section.card{ padding:18px 16px 20px; }
+    .scorebar{ flex-wrap:wrap; }
+  }
+</style>
+
+<div class="page">
+
+  <a class="back-link" href="../index.html">&larr; Quadern de valencià (totes les lliçons)</a>
+
+  <header class="hero">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Alacant — Departament d'Informàtica</div>
+      <h1>Que vinga, que diga</h1>
+      <p class="lead">Exercici diari de valencià oral per a l'àmbit educatiu-informàtic. Hui treballem el present de subjuntiu dels verbs irregulars i el vocabulari de Relacions Digitals Responsables.</p>
+      <div class="chip-row">
+        <span class="chip">📚 Tema: Present de subjuntiu dels irregulars</span>
+        <span class="chip">💬 Vocabulari: RDR · Relacions Digitals Responsables (1r ESO)</span>
+        <span class="chip">🗓️ 13 d'octubre de 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="scorebar">
+    <span>Puntuació acumulada</span>
+    <span><b id="globalScore">0</b> / <b id="globalTotal">29</b> punts</span>
+  </div>
+
+  <section class="card theory">
+    <h2>El present de subjuntiu dels verbs irregulars</h2>
+    <p class="sub">La regla, el patró i els exemples d'avui</p>
+
+    <p>El present de subjuntiu s'usa per a expressar desig, finalitat, dubte, necessitat o orde indirecta, normalment darrere de "cal que", "vull que", "és important que", "perquè" o "abans que". En els verbs irregulars, la particularitat és que la majoria prenen un <b>increment velar o palatal</b> (-ga, -ja, -ca/-sc-) que es manté <b>igual en totes les persones</b> — a diferència del present d'indicatiu, on l'increment sovint només apareix en la primera persona (per exemple "isc" davant d'"isca, isques, isca...").</p>
+
+    <div class="rule-box">
+      <b>Patró general:</b> arrel de subjuntiu + -a / -es / -a / -em / -eu / -en. Exemple amb <i>eixir</i>: isc<u>a</u>, isc<u>ues</u>→isqu<u>es</u>, isc<u>a</u>, isqu<u>em</u>, isqu<u>eu</u>, isqu<u>en</u>.
+    </div>
+
+    <div class="table-wrap">
+      <table class="conj">
+        <thead>
+          <tr><th>Verb</th><th>jo</th><th>tu</th><th>ell/ella</th><th>nosaltres</th><th>vosaltres</th><th>ells/elles</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="verb">ser</td><td class="form">siga</td><td class="form">sigues</td><td class="form">siga</td><td class="form">siguem</td><td class="form">sigueu</td><td class="form">siguen</td></tr>
+          <tr><td class="verb">estar</td><td class="form">estiga</td><td class="form">estigues</td><td class="form">estiga</td><td class="form">estiguem</td><td class="form">estigueu</td><td class="form">estiguen</td></tr>
+          <tr><td class="verb">haver</td><td class="form">haja</td><td class="form">hages</td><td class="form">haja</td><td class="form">hàgem</td><td class="form">hàgeu</td><td class="form">hagen</td></tr>
+          <tr><td class="verb">dir</td><td class="form">diga</td><td class="form">digues</td><td class="form">diga</td><td class="form">diguem</td><td class="form">digueu</td><td class="form">diguen</td></tr>
+          <tr><td class="verb">voler</td><td class="form">vulga</td><td class="form">vulgues</td><td class="form">vulga</td><td class="form">vulguem</td><td class="form">vulgueu</td><td class="form">vulguen</td></tr>
+          <tr><td class="verb">poder</td><td class="form">puga</td><td class="form">pugues</td><td class="form">puga</td><td class="form">puguem</td><td class="form">pugueu</td><td class="form">puguen</td></tr>
+          <tr><td class="verb">tindre</td><td class="form">tinga</td><td class="form">tingues</td><td class="form">tinga</td><td class="form">tinguem</td><td class="form">tingueu</td><td class="form">tinguen</td></tr>
+          <tr><td class="verb">vindre</td><td class="form">vinga</td><td class="form">vingues</td><td class="form">vinga</td><td class="form">vinguem</td><td class="form">vingueu</td><td class="form">vinguen</td></tr>
+          <tr><td class="verb">eixir</td><td class="form">isca</td><td class="form">isques</td><td class="form">isca</td><td class="form">isquem</td><td class="form">isqueu</td><td class="form">isquen</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note-list">
+      <b>Saber</b> fa sàpia, sàpies, sàpia... sapiem, sapieu, sàpien. <b>Dos verbs tenen un subjuntiu "mixt":</b> en <i>fer</i> i <i>anar</i>, les formes de nosaltres i vosaltres coincideixen amb les de l'indicatiu (<i>fem, feu</i> / <i>anem, aneu</i>), mentre que la resta de persones usa l'arrel de subjuntiu (<i>faça, faces, faça, facen</i> / <i>vaja, vages, vaja, vagen</i>). És un detall que sorprén l'alumnat quan es parla en valencià a classe!
+    </p>
+  </section>
+
+  <!-- ACTIVITAT 1: omple els buits -->
+  <section class="card" id="act1">
+    <h2>Activitat 1 · Omple els buits</h2>
+    <p class="sub">Escriu la forma correcta del present de subjuntiu del verb indicat.</p>
+
+    <div class="q" data-correct="digues">
+      <div class="prompt">1. Cal que (tu) els <input type="text" class="answer" id="q1_1"> <span class="verbhint">(DIR)</span> als alumnes que guarden bé l'àlies abans de publicar res a la xarxa.</div>
+    </div>
+    <div class="q" data-correct="isca">
+      <div class="prompt">2. No vull que ningú <input type="text" class="answer" id="q1_2"> <span class="verbhint">(EIXIR)</span> de classe sense desar la pràctica de Scratch.</div>
+    </div>
+    <div class="q" data-correct="tingueu">
+      <div class="prompt">3. Espere que (vosaltres) <input type="text" class="answer" id="q1_3"> <span class="verbhint">(TINDRE)</span> el dispositiu mòbil en silenci durant l'explicació.</div>
+    </div>
+    <div class="q" data-correct="sàpia">
+      <div class="prompt">4. És important que cada alumne <input type="text" class="answer" id="q1_4"> <span class="verbhint">(SABER)</span> què és la petjada digital abans d'obrir un perfil nou.</div>
+    </div>
+    <div class="q" data-correct="puguem">
+      <div class="prompt">5. Perquè (nosaltres) <input type="text" class="answer" id="q1_5"> <span class="verbhint">(PODER)</span> acabar hui la unitat de ciberconvivència, cal organitzar bé el temps.</div>
+    </div>
+
+    <button class="check-btn" onclick="checkFill('act1', ['q1_1','q1_2','q1_3','q1_4','q1_5'])">Comprova les respostes</button>
+    <div class="section-score" id="act1-score"></div>
+  </section>
+
+  <!-- ACTIVITAT 2: tria l'opció correcta -->
+  <section class="card" id="act2">
+    <h2>Activitat 2 · Tria l'opció correcta</h2>
+    <p class="sub">Selecciona la forma de subjuntiu adequada per a cada frase.</p>
+
+    <div class="q" data-correct="siga">
+      <div class="prompt">1. Perquè l'alumnat no <i>(SER)</i> víctima de ciberassetjament, és bo parlar-ne a tutoria.</div>
+      <div class="mc-options" data-name="q2_1">
+        <label><input type="radio" name="q2_1" value="siga"> siga</label>
+        <label><input type="radio" name="q2_1" value="sigua"> sigua</label>
+        <label><input type="radio" name="q2_1" value="és"> és</label>
+        <label><input type="radio" name="q2_1" value="fora"> fora</label>
+      </div>
+    </div>
+    <div class="q" data-correct="estiguen">
+      <div class="prompt">2. Vull que tots <i>(ESTAR)</i> amb compte de la seua etiqueta digital a les xarxes.</div>
+      <div class="mc-options" data-name="q2_2">
+        <label><input type="radio" name="q2_2" value="estan"> estan</label>
+        <label><input type="radio" name="q2_2" value="estiguen"> estiguen</label>
+        <label><input type="radio" name="q2_2" value="estarien"> estarien</label>
+        <label><input type="radio" name="q2_2" value="estiguin"> estiguin</label>
+      </div>
+    </div>
+    <div class="q" data-correct="hagen">
+      <div class="prompt">3. Cal que (ells) ja <i>(HAVER)</i> parlat amb les famílies sobre la bretxa digital abans de la reunió.</div>
+      <div class="mc-options" data-name="q2_3">
+        <label><input type="radio" name="q2_3" value="han"> han</label>
+        <label><input type="radio" name="q2_3" value="hagen"> hagen</label>
+        <label><input type="radio" name="q2_3" value="havien"> havien</label>
+        <label><input type="radio" name="q2_3" value="hauran"> hauran</label>
+      </div>
+    </div>
+    <div class="q" data-correct="tinga">
+      <div class="prompt">4. No és estrany que algun alumne <i>(TINDRE)</i> nomofòbia si mira el mòbil cada cinc minuts.</div>
+      <div class="mc-options" data-name="q2_4">
+        <label><input type="radio" name="q2_4" value="té"> té</label>
+        <label><input type="radio" name="q2_4" value="tinga"> tinga</label>
+        <label><input type="radio" name="q2_4" value="tindrà"> tindrà</label>
+        <label><input type="radio" name="q2_4" value="tenia"> tenia</label>
+      </div>
+    </div>
+    <div class="q" data-correct="digueu">
+      <div class="prompt">5. Espere que (vosaltres) <i>(DIR)</i> la veritat si detecteu un bo circulant pel grup de classe.</div>
+      <div class="mc-options" data-name="q2_5">
+        <label><input type="radio" name="q2_5" value="dieu"> dieu</label>
+        <label><input type="radio" name="q2_5" value="direu"> direu</label>
+        <label><input type="radio" name="q2_5" value="digueu"> digueu</label>
+        <label><input type="radio" name="q2_5" value="diguéu"> diguéu</label>
+      </div>
+    </div>
+
+    <button class="check-btn" onclick="checkMC('act2', ['q2_1','q2_2','q2_3','q2_4','q2_5'])">Comprova les respostes</button>
+    <div class="section-score" id="act2-score"></div>
+  </section>
+
+  <!-- ACTIVITAT 3: completa la taula -->
+  <section class="card" id="act3">
+    <h2>Activitat 3 · Completa la taula de conjugació</h2>
+    <p class="sub">Escriu les formes que falten dels verbs <i>eixir</i>, <i>voler</i> i <i>poder</i>.</p>
+
+    <div class="table-wrap">
+      <table class="conj">
+        <thead>
+          <tr><th>Verb</th><th>jo</th><th>tu</th><th>ell/ella</th><th>nosaltres</th><th>vosaltres</th><th>ells/elles</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="verb">eixir</td>
+            <td class="form">isca</td>
+            <td class="form"><input type="text" class="answer" id="q3_1" style="width:7em"></td>
+            <td class="form">isca</td>
+            <td class="form">isquem</td>
+            <td class="form"><input type="text" class="answer" id="q3_2" style="width:7em"></td>
+            <td class="form">isquen</td>
+          </tr>
+          <tr>
+            <td class="verb">voler</td>
+            <td class="form">vulga</td>
+            <td class="form">vulgues</td>
+            <td class="form"><input type="text" class="answer" id="q3_3" style="width:7em"></td>
+            <td class="form">vulguem</td>
+            <td class="form">vulgueu</td>
+            <td class="form"><input type="text" class="answer" id="q3_4" style="width:7em"></td>
+          </tr>
+          <tr>
+            <td class="verb">poder</td>
+            <td class="form"><input type="text" class="answer" id="q3_5" style="width:7em"></td>
+            <td class="form">pugues</td>
+            <td class="form">puga</td>
+            <td class="form"><input type="text" class="answer" id="q3_6" style="width:7em"></td>
+            <td class="form">pugueu</td>
+            <td class="form">puguen</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="act3-feedback" class="note-list"></div>
+    <button class="check-btn" onclick="checkTable()">Comprova les respostes</button>
+    <div class="section-score" id="act3-score"></div>
+  </section>
+
+  <!-- ACTIVITAT 4: mini-diàleg -->
+  <section class="card" id="act4">
+    <h2>Activitat 4 · Mini-diàleg al departament</h2>
+    <p class="sub">Dos professors del departament d'informàtica parlen entre classes. Omple els buits.</p>
+
+    <p class="dialog-line"><b>Prof. A:</b> Bon dia! Necessite que em <input type="text" class="answer" id="q4_1" style="width:8em"> <span class="verbhint">(DIR, tu)</span> com ha anat la sessió de RDR amb 1r d'ESO.</p>
+    <p class="dialog-line"><b>Prof. B:</b> Molt bé, encara que és normal que alguns alumnes <input type="text" class="answer" id="q4_2" style="width:8em"> <span class="verbhint">(TINDRE, ells)</span> dubtes sobre què és la bretxa digital.</p>
+    <p class="dialog-line"><b>Prof. A:</b> Clar. Per això vull que tots <input type="text" class="answer" id="q4_3" style="width:8em"> <span class="verbhint">(SABER, ells)</span> distingir un bo d'una notícia real abans d'acabar la unitat.</p>
+    <p class="dialog-line"><b>Prof. B:</b> D'acord. Perquè ho <input type="text" class="answer" id="q4_4" style="width:8em"> <span class="verbhint">(PODER, nosaltres)</span> treballar millor, demà obrim un document compartit a Microsoft 365 per a prendre notes entre tots.</p>
+    <p class="dialog-line"><b>Prof. A:</b> Perfecte. Quan acabeu, és important que <input type="text" class="answer" id="q4_5" style="width:8em"> <span class="verbhint">(EIXIR, vosaltres)</span> de classe havent guardat el document.</p>
+
+    <div id="act4-feedback" class="note-list"></div>
+    <button class="check-btn" onclick="checkDialog()">Comprova les respostes</button>
+    <div class="section-score" id="act4-score"></div>
+  </section>
+
+  <!-- ACTIVITAT 5: vocabulari RDR -->
+  <section class="card" id="act5">
+    <h2>Activitat 5 · Vocabulari: RDR · Relacions Digitals Responsables</h2>
+    <p class="sub">Selecciona la traducció correcta al castellà de cada terme valencià.</p>
+
+    <div class="q" data-correct="dispositivo móvil">
+      <div class="prompt">1. dispositiu mòbil →
+        <select class="answer" id="q5_1">
+          <option value="">— tria —</option>
+          <option value="dispositivo móvil">dispositivo móvil</option>
+          <option value="dispositivo fijo">dispositivo fijo</option>
+          <option value="aparato portátil">aparato portátil</option>
+        </select>
+      </div>
+    </div>
+    <div class="q" data-correct="red social">
+      <div class="prompt">2. xarxa social →
+        <select class="answer" id="q5_2">
+          <option value="">— tria —</option>
+          <option value="red social">red social</option>
+          <option value="red neuronal">red neuronal</option>
+          <option value="redes compartidas">redes compartidas</option>
+        </select>
+      </div>
+    </div>
+    <div class="q" data-correct="huella digital">
+      <div class="prompt">3. petjada digital →
+        <select class="answer" id="q5_3">
+          <option value="">— tria —</option>
+          <option value="huella digital">huella digital</option>
+          <option value="pisada digital">pisada digital</option>
+          <option value="marca online">marca online</option>
+        </select>
+      </div>
+    </div>
+    <div class="q" data-correct="ciberacoso">
+      <div class="prompt">4. ciberassetjament →
+        <select class="answer" id="q5_4">
+          <option value="">— tria —</option>
+          <option value="ciberacoso">ciberacoso</option>
+          <option value="ciberseguridad">ciberseguridad</option>
+          <option value="ciberdelito">ciberdelito</option>
+        </select>
+      </div>
+    </div>
+    <div class="q" data-correct="nomofobia">
+      <div class="prompt">5. nomofòbia →
+        <select class="answer" id="q5_5">
+          <option value="">— tria —</option>
+          <option value="nomofobia">nomofobia</option>
+          <option value="tecnofobia">tecnofobia</option>
+          <option value="ludopatía">ludopatía</option>
+        </select>
+      </div>
+    </div>
+    <div class="q" data-correct="alias">
+      <div class="prompt">6. àlies →
+        <select class="answer" id="q5_6">
+          <option value="">— tria —</option>
+          <option value="alias">alias</option>
+          <option value="apodo real">apodo real</option>
+          <option value="nombre legal">nombre legal</option>
+        </select>
+      </div>
+    </div>
+    <div class="q" data-correct="brecha digital">
+      <div class="prompt">7. bretxa digital →
+        <select class="answer" id="q5_7">
+          <option value="">— tria —</option>
+          <option value="brecha digital">brecha digital</option>
+          <option value="grieta tecnológica">grieta tecnológica</option>
+          <option value="división social">división social</option>
+        </select>
+      </div>
+    </div>
+    <div class="q" data-correct="bulo">
+      <div class="prompt">8. bo (informació falsa) →
+        <select class="answer" id="q5_8">
+          <option value="">— tria —</option>
+          <option value="bulo">bulo</option>
+          <option value="bono">bono</option>
+          <option value="rumor oficial">rumor oficial</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="check-btn" onclick="checkSelect('act5', ['q5_1','q5_2','q5_3','q5_4','q5_5','q5_6','q5_7','q5_8'])">Comprova les respostes</button>
+    <div class="section-score" id="act5-score"></div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-block">
+      <h3>Activitat 1 — Omple els buits</h3>
+      <div class="sol-item"><b>1. digues</b> — DIR, 2a sing.: "cal que (tu) digues" demana la forma de subjuntiu diga/digues, ací la de tu.</div>
+      <div class="sol-item"><b>2. isca</b> — EIXIR, 3a sing.: arrel "isc-" + -a, igual que en indicatiu "isc" però ara per a totes les persones.</div>
+      <div class="sol-item"><b>3. tingueu</b> — TINDRE, 2a plural: arrel "tingu-" + -eu.</div>
+      <div class="sol-item"><b>4. sàpia</b> — SABER, 3a sing.: forma pròpia valenciana "sàpia" (no "sap" ni "sabrà").</div>
+      <div class="sol-item"><b>5. puguem</b> — PODER, 1a plural: arrel "pugu-" + -em.</div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 2 — Tria l'opció correcta</h3>
+      <div class="sol-item"><b>1. siga</b> — "sigua" no existeix en valencià normatiu; "és" i "fora" no són subjuntiu.</div>
+      <div class="sol-item"><b>2. estiguen</b> — "estan" és indicatiu, "estarien" és condicional, "estiguin" és forma oriental (central), no valenciana.</div>
+      <div class="sol-item"><b>3. hagen</b> — subjuntiu de "haver" com a auxiliar de temps compost ("hagen parlat").</div>
+      <div class="sol-item"><b>4. tinga</b> — "té" és indicatiu, "tindrà" és futur, "tenia" és imperfet.</div>
+      <div class="sol-item"><b>5. digueu</b> — forma valenciana sense accent; "diguéu" no s'accentua en valencià normatiu.</div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 3 — Taula de conjugació</h3>
+      <div class="sol-item"><b>eixir:</b> tu → isques · vosaltres → isqueu</div>
+      <div class="sol-item"><b>voler:</b> ell/ella → vulga · ells/elles → vulguen</div>
+      <div class="sol-item"><b>poder:</b> jo → puga · nosaltres → puguem</div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 4 — Mini-diàleg</h3>
+      <div class="sol-item"><b>1. digues</b> (DIR, tu) · <b>2. tinguen</b> (TINDRE, ells) · <b>3. sàpien</b> (SABER, ells) · <b>4. puguem</b> (PODER, nosaltres) · <b>5. isqueu</b> (EIXIR, vosaltres)</div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 5 — Vocabulari RDR</h3>
+      <div class="sol-item"><b>dispositiu mòbil</b> = dispositivo móvil</div>
+      <div class="sol-item"><b>xarxa social</b> = red social</div>
+      <div class="sol-item"><b>petjada digital</b> = huella digital</div>
+      <div class="sol-item"><b>ciberassetjament</b> = ciberacoso</div>
+      <div class="sol-item"><b>nomofòbia</b> = nomofobia</div>
+      <div class="sol-item"><b>àlies</b> = alias</div>
+      <div class="sol-item"><b>bretxa digital</b> = brecha digital</div>
+      <div class="sol-item"><b>bo (informació falsa)</b> = bulo</div>
+    </div>
+  </details>
+
+  <footer class="note">IES Jorge Juan, Alacant · Departament d'Informàtica · Exercici diari de valencià oral</footer>
+</div>
+
+<script>
+(function(){
+  var scores = { act1:0, act2:0, act3:0, act4:0, act5:0 };
+
+  function normalize(s){
+    if(!s) return '';
+    return s.toString().trim().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/·/g, '');
+  }
+
+  function updateGlobal(){
+    var total = 0;
+    for(var k in scores){ total += scores[k]; }
+    document.getElementById('globalScore').textContent = total;
+  }
+
+  function setQFeedback(qEl, isCorrect){
+    qEl.classList.remove('correct','wrong');
+    qEl.classList.add(isCorrect ? 'correct' : 'wrong');
+  }
+
+  function ensureFeedbackSpans(qEl){
+    if(!qEl.querySelector('.feedback.ok')){
+      var ok = document.createElement('span');
+      ok.className = 'feedback ok';
+      ok.textContent = '✓ Correcte';
+      qEl.querySelector('.answer-row') ? qEl.querySelector('.answer-row').appendChild(ok) : qEl.appendChild(ok);
+    }
+    if(!qEl.querySelector('.feedback.bad')){
+      var bad = document.createElement('span');
+      bad.className = 'feedback bad';
+      qEl.appendChild(bad);
+    }
+  }
+
+  window.checkFill = function(sectionId, ids){
+    var correctCount = 0;
+    ids.forEach(function(id){
+      var input = document.getElementById(id);
+      var qEl = input.closest('.q');
+      ensureFeedbackSpans(qEl);
+      var correctAnswer = qEl.getAttribute('data-correct');
+      var ok = normalize(input.value) === normalize(correctAnswer);
+      if(ok){
+        correctCount++;
+        setQFeedback(qEl, true);
+      } else {
+        setQFeedback(qEl, false);
+        var badSpan = qEl.querySelector('.feedback.bad');
+        badSpan.textContent = '✗ Resposta correcta: ' + correctAnswer;
+      }
+    });
+    scores[sectionId] = correctCount;
+    document.getElementById(sectionId + '-score').textContent = correctCount + ' / ' + ids.length + ' encertades';
+    updateGlobal();
+  };
+
+  window.checkMC = function(sectionId, names){
+    var correctCount = 0;
+    names.forEach(function(name){
+      var options = document.getElementsByName(name);
+      var qEl = options[0].closest('.q');
+      var correctAnswer = qEl.getAttribute('data-correct');
+      var selected = null;
+      options.forEach(function(opt){ if(opt.checked) selected = opt.value; });
+      var ok = selected === correctAnswer;
+      if(ok) correctCount++;
+      var optionsWrap = qEl.querySelector('.mc-options');
+      var existing = qEl.querySelector('.mc-feedback');
+      if(!existing){
+        existing = document.createElement('div');
+        existing.className = 'mc-feedback';
+        existing.style.fontSize = '.84rem';
+        existing.style.fontWeight = '600';
+        existing.style.marginTop = '2px';
+        qEl.appendChild(existing);
+      }
+      if(selected === null){
+        existing.textContent = '✗ No has triat cap opció. Resposta correcta: ' + correctAnswer;
+        existing.style.color = 'var(--bad)';
+      } else if(ok){
+        existing.textContent = '✓ Correcte';
+        existing.style.color = 'var(--good)';
+      } else {
+        existing.textContent = '✗ Resposta correcta: ' + correctAnswer;
+        existing.style.color = 'var(--bad)';
+      }
+    });
+    scores[sectionId] = correctCount;
+    document.getElementById(sectionId + '-score').textContent = correctCount + ' / ' + names.length + ' encertades';
+    updateGlobal();
+  };
+
+  window.checkTable = function(){
+    var answers = { q3_1:'isques', q3_2:'isqueu', q3_3:'vulga', q3_4:'vulguen', q3_5:'puga', q3_6:'puguem' };
+    var correctCount = 0;
+    var lines = [];
+    for(var id in answers){
+      var input = document.getElementById(id);
+      var ok = normalize(input.value) === normalize(answers[id]);
+      input.style.borderColor = ok ? 'var(--good)' : 'var(--bad)';
+      if(ok){ correctCount++; }
+      else { lines.push(id.replace('q3_','casella ') + ' → ' + answers[id]); }
+    }
+    var fb = document.getElementById('act3-feedback');
+    fb.textContent = lines.length ? ('Revisa: ' + lines.join(' · ')) : 'Totes les caselles són correctes!';
+    scores.act3 = correctCount;
+    document.getElementById('act3-score').textContent = correctCount + ' / 6 encertades';
+    updateGlobal();
+  };
+
+  window.checkDialog = function(){
+    var answers = { q4_1:'digues', q4_2:'tinguen', q4_3:'sàpien', q4_4:'puguem', q4_5:'isqueu' };
+    var correctCount = 0;
+    var lines = [];
+    for(var id in answers){
+      var input = document.getElementById(id);
+      var ok = normalize(input.value) === normalize(answers[id]);
+      input.style.borderColor = ok ? 'var(--good)' : 'var(--bad)';
+      if(ok){ correctCount++; }
+      else { lines.push(answers[id]); }
+    }
+    var fb = document.getElementById('act4-feedback');
+    fb.textContent = lines.length ? ('Formes correctes que falten: ' + lines.join(', ')) : 'Diàleg completat perfectament!';
+    scores.act4 = correctCount;
+    document.getElementById('act4-score').textContent = correctCount + ' / 5 encertades';
+    updateGlobal();
+  };
+
+  window.checkSelect = function(sectionId, ids){
+    var correctCount = 0;
+    ids.forEach(function(id){
+      var select = document.getElementById(id);
+      var qEl = select.closest('.q');
+      ensureFeedbackSpans(qEl);
+      var correctAnswer = qEl.getAttribute('data-correct');
+      var ok = select.value === correctAnswer;
+      if(ok){
+        correctCount++;
+        setQFeedback(qEl, true);
+      } else {
+        setQFeedback(qEl, false);
+        var badSpan = qEl.querySelector('.feedback.bad');
+        badSpan.textContent = '✗ Resposta correcta: ' + correctAnswer;
+      }
+    });
+    scores[sectionId] = correctCount;
+    document.getElementById(sectionId + '-score').textContent = correctCount + ' / ' + ids.length + ' encertades';
+    updateGlobal();
+  };
+
+  updateGlobal();
+})();
+</script>
+
+</body></html>

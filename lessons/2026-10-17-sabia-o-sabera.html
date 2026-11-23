@@ -1,0 +1,720 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Sabia o sabera?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Disposició: capçalera tipo quadern + taula de teoria + targetes d'activitats apilades, estil llibreta/pissarra */
+  :root{
+    --bg:#eef1ea;
+    --surface:#ffffff;
+    --surface-2:#e1e7d8;
+    --ink:#20261f;
+    --ink-soft:#57604c;
+    --accent:#3c6148;
+    --accent-ink:#ffffff;
+    --accent-soft:#dde6d6;
+    --accent-soft-ink:#24402c;
+    --line:#c7d0bb;
+    --good:#2f7d4f;
+    --good-bg:#e1f1e4;
+    --bad:#9c3a2f;
+    --bad-bg:#f6e1dc;
+    --shadow: 0 1px 2px rgba(32,38,31,.06), 0 10px 24px -14px rgba(32,38,31,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141f18;
+      --surface:#1b2a21;
+      --surface-2:#223328;
+      --ink:#eef3e7;
+      --ink-soft:#a7b89d;
+      --accent:#f0d978;
+      --accent-ink:#1b2a21;
+      --accent-soft:#30402a;
+      --accent-soft-ink:#f3e7b0;
+      --line:#324536;
+      --good:#8fdca3;
+      --good-bg:#1f3a28;
+      --bad:#e8988a;
+      --bad-bg:#3a241f;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141f18;
+    --surface:#1b2a21;
+    --surface-2:#223328;
+    --ink:#eef3e7;
+    --ink-soft:#a7b89d;
+    --accent:#f0d978;
+    --accent-ink:#1b2a21;
+    --accent-soft:#30402a;
+    --accent-soft-ink:#f3e7b0;
+    --line:#324536;
+    --good:#8fdca3;
+    --good-bg:#1f3a28;
+    --bad:#e8988a;
+    --bad-bg:#3a241f;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Figtree', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.56;
+    padding-block:22px 64px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+    max-width:880px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a{ color:var(--accent); }
+
+  .backlink{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.76rem;
+    text-decoration:none;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:5px 11px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  .backlink:hover{ background:var(--accent); color:var(--accent-ink); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:600; }
+  header.top p.sub{ margin:10px 0 0; max-width:60ch; opacity:.92; font-size:.95rem; }
+  .meta-row{
+    display:flex; gap:16px; flex-wrap:wrap; align-items:center;
+    margin-top:16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    opacity:.9;
+  }
+
+  .score-bar{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+  }
+  .score-bar b{ font-family:'Fraunces', serif; font-size:1.2rem; font-weight:600; color:var(--accent); }
+
+  section{ margin-bottom:26px; }
+  section > h2{
+    font-size:1.25rem;
+    margin-bottom:10px;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  section > h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--ink-soft);
+  }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 20px 20px;
+    box-shadow:var(--shadow);
+  }
+  p.lead{ color:var(--ink-soft); margin:0 0 14px; font-size:.95rem; }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+  table{ border-collapse:collapse; width:100%; min-width:460px; font-size:.92rem; }
+  thead th{
+    background:var(--surface-2);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.inf{ font-weight:600; }
+  td input[type=text]{ width:100%; min-width:90px; }
+
+  input[type=text]{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.92rem;
+    padding:7px 9px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+  }
+  input[type=text]:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  select{
+    font-family:'Figtree', sans-serif;
+    font-size:.9rem;
+    padding:7px 9px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    max-width:100%;
+  }
+  select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .item{
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+    padding-block:9px;
+    border-top:1px solid var(--line);
+    font-size:.95rem;
+  }
+  .item:first-child{ border-top:none; padding-top:0; }
+  .item .blank-label{ color:var(--ink-soft); font-size:.86rem; }
+  .fb{ min-width:0; }
+  .fb.ok{ border-color:var(--good); background:var(--good-bg); }
+  .fb.bad{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .mcq{ padding-block:11px; border-top:1px solid var(--line); }
+  .mcq:first-child{ border-top:none; padding-top:0; }
+  .mcq p.q{ margin:0 0 8px; font-weight:600; }
+  .mcq .opts{ display:flex; flex-direction:column; gap:6px; }
+  .opts label{
+    display:flex; align-items:center; gap:8px;
+    padding:6px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    cursor:pointer;
+    font-size:.92rem;
+  }
+  .opts label.ok{ border-color:var(--good); background:var(--good-bg); }
+  .opts label.bad{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .dialogue p{ margin:0 0 10px; }
+  .dialogue .who{ font-weight:700; font-family:'IBM Plex Mono', monospace; font-size:.82rem; color:var(--accent); display:block; margin-bottom:2px; }
+
+  .vocab-row{
+    display:grid; grid-template-columns:1.1fr 1fr; gap:10px;
+    align-items:center;
+    padding-block:9px;
+    border-top:1px solid var(--line);
+  }
+  .vocab-row:first-child{ border-top:none; padding-top:0; }
+  .vocab-row .term{ font-weight:600; }
+  select.vok{ border-color:var(--good); background:var(--good-bg); }
+  select.vbad{ border-color:var(--bad); background:var(--bad-bg); }
+
+  @media (max-width:600px){
+    .vocab-row{ grid-template-columns:1fr; }
+  }
+
+  button.check{
+    font-family:'Figtree', sans-serif;
+    font-weight:600;
+    font-size:.88rem;
+    padding:10px 18px;
+    border-radius:10px;
+    border:none;
+    background:var(--accent);
+    color:var(--accent-ink);
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check:hover{ opacity:.9; }
+  button.check:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+
+  .fb-msg{
+    margin-top:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+    color:var(--ink-soft);
+  }
+  .fb-msg b{ color:var(--accent); }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:4px 20px 18px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.1rem;
+    padding:16px 0;
+    cursor:pointer;
+  }
+  .sol-item{ padding-block:9px; border-top:1px solid var(--line); font-size:.9rem; }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item .ans{ color:var(--good); font-weight:700; font-family:'IBM Plex Mono', monospace; }
+  .sol-item .exp{ color:var(--ink-soft); display:block; margin-top:2px; }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:30px; }
+</style>
+
+<a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Alacant · Oral en valencià per al professorat d'informàtica</div>
+    <h1>Sabia o sabera?</h1>
+    <p class="sub">Tema gramatical d'avui: <strong>Imperfet d'indicatiu i de subjuntiu dels irregulars.</strong> Bloc de vocabulari: <strong>PIAR I · Scratch, Microbit i IA (2n-3r ESO).</strong></p>
+    <div class="meta-row">
+      <span>📅 17 octubre 2026</span>
+      <span>🎯 Nivell B1-B2</span>
+      <span>🗣️ Competència oral</span>
+    </div>
+  </div>
+</header>
+
+<div class="score-bar">
+  <span>Puntuació acumulada</span>
+  <span><b id="scoreTotal">0</b> / <span id="scoreMax">32</span></span>
+</div>
+
+<section id="teoria">
+  <h2><span class="num">00</span> Dos passats, dos usos</h2>
+  <div class="card">
+    <p>L'imperfet d'indicatiu conta accions habituals o contínues en el passat ("quan era jove, programava en Basic"). L'imperfet de subjuntiu, en canvi, apareix sobretot darrere de <span class="mono">si</span> en frases condicionals irreals, i es combina amb un condicional ("si sabera Python, faria l'script jo mateixa"). En valencià estàndard, l'imperfet de subjuntiu es forma amb la terminació <span class="mono">-ra</span> (sabera, tinguera, poguera), no amb <span class="mono">-ara/-ase</span> com en castellà.</p>
+    <p>La bona notícia és que l'imperfet d'indicatiu és, de tots els temps verbals, el més regular: fins i tot els verbs més irregulars (fer, dir, voler, saber...) prenen simplement les terminacions <span class="mono">-ia, -ies, -ia, -íem, -íeu, -ien</span> sobre l'arrel de l'infinitiu. L'única excepció de veritat és <span class="mono">ser</span> (era, eres, era...). L'imperfet de subjuntiu, en canvi, sol partir de l'arrel irregular d'altres temps (la mateixa que el present de subjuntiu o l'imperatiu), i per això cal memoritzar-lo verb a verb.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Infinitiu</th><th>Imperfet indicatiu (jo)</th><th>Imperfet subjuntiu (jo)</th></tr></thead>
+        <tbody>
+          <tr><td class="inf">ser</td><td>era</td><td>fóra</td></tr>
+          <tr><td class="inf">estar</td><td>estava</td><td>estiguera</td></tr>
+          <tr><td class="inf">haver</td><td>havia</td><td>haguera</td></tr>
+          <tr><td class="inf">anar</td><td>anava</td><td>anara</td></tr>
+          <tr><td class="inf">fer</td><td>feia</td><td>fera</td></tr>
+          <tr><td class="inf">dir</td><td>deia</td><td>diguera</td></tr>
+          <tr><td class="inf">voler</td><td>volia</td><td>volguera</td></tr>
+          <tr><td class="inf">poder</td><td>podia</td><td>poguera</td></tr>
+          <tr><td class="inf">saber</td><td>sabia</td><td>sabera</td></tr>
+          <tr><td class="inf">tindre</td><td>tenia</td><td>tinguera</td></tr>
+          <tr><td class="inf">vindre</td><td>venia</td><td>vinguera</td></tr>
+          <tr><td class="inf">eixir</td><td>eixia</td><td>eixira</td></tr>
+          <tr><td class="inf">veure</td><td>veia</td><td>veiera</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="act1">
+  <h2><span class="num">01</span> Omple els buits · imperfet d'indicatiu</h2>
+  <div class="card">
+    <p class="lead">Escriu la forma correcta de l'imperfet d'indicatiu. Situacions d'un institut d'abans i d'ara.</p>
+
+    <div class="item">
+      <span>1. Quan</span><input type="text" class="fb" id="a1-1" data-ans="era" style="width:110px">
+      <span class="blank-label">(jo / ser)</span><span>alumna, no teníem ordinadors en cada aula.</span>
+    </div>
+    <div class="item">
+      <span>2. Abans, el professorat</span><input type="text" class="fb" id="a1-2" data-ans="havia" style="width:110px">
+      <span class="blank-label">(haver)</span><span>d'explicar-ho tot amb guix i pissarra.</span>
+    </div>
+    <div class="item">
+      <span>3. Cada divendres</span><input type="text" class="fb" id="a1-3" data-ans="feiem" style="width:110px">
+      <span class="blank-label">(nosaltres / fer)</span><span>una classe pràctica amb Scratch.</span>
+    </div>
+    <div class="item">
+      <span>4. Els alumnes de 2n</span><input type="text" class="fb" id="a1-4" data-ans="volien" style="width:110px">
+      <span class="blank-label">(voler)</span><span>acabar el projecte de Microbit abans de Nadal.</span>
+    </div>
+    <div class="item">
+      <span>5. Jo no</span><input type="text" class="fb" id="a1-5" data-ans="sabia" style="width:110px">
+      <span class="blank-label">(saber)</span><span>programar en Python fins que vaig fer el curs del CEFIRE.</span>
+    </div>
+    <div class="item">
+      <span>6. El servidor de XAMPP</span><input type="text" class="fb" id="a1-6" data-ans="anava" style="width:110px">
+      <span class="blank-label">(anar)</span><span>més lent cada vegada que el laboratori estava ple.</span>
+    </div>
+
+    <button class="check" data-act="a1" data-count="6" onclick="checkFill('a1',6)">Comprova les respostes</button>
+    <div class="fb-msg" id="a1-msg"></div>
+  </div>
+</section>
+
+<section id="act2">
+  <h2><span class="num">02</span> Tipus test · imperfet de subjuntiu</h2>
+  <div class="card">
+    <p class="lead">Tria la forma correcta en frases condicionals amb <span class="mono">si</span>. Pensa en el departament d'informàtica.</p>
+
+    <div class="mcq">
+      <p class="q">1. Si jo <u>____</u> (saber) bé Python, canviaria tot el codi de Teachable Machine.</p>
+      <div class="opts" id="a2-1" data-ans="a">
+        <label><input type="radio" name="a2-1" value="a"> sabera</label>
+        <label><input type="radio" name="a2-1" value="b"> sabia</label>
+        <label><input type="radio" name="a2-1" value="c"> sàpia</label>
+        <label><input type="radio" name="a2-1" value="d"> sabré</label>
+      </div>
+    </div>
+    <div class="mcq">
+      <p class="q">2. Si l'equip <u>____</u> (tindre) més memòria RAM, la màquina virtual de VirtualBox aniria més fluida.</p>
+      <div class="opts" id="a2-2" data-ans="b">
+        <label><input type="radio" name="a2-2" value="a"> tenia</label>
+        <label><input type="radio" name="a2-2" value="b"> tinguera</label>
+        <label><input type="radio" name="a2-2" value="c"> tindrà</label>
+        <label><input type="radio" name="a2-2" value="d"> tinga</label>
+      </div>
+    </div>
+    <div class="mcq">
+      <p class="q">3. Si nosaltres <u>____</u> (poder) triar, actualitzaríem el WordPress del departament hui mateix.</p>
+      <div class="opts" id="a2-3" data-ans="a">
+        <label><input type="radio" name="a2-3" value="a"> poguérem</label>
+        <label><input type="radio" name="a2-3" value="b"> podíem</label>
+        <label><input type="radio" name="a2-3" value="c"> puguem</label>
+        <label><input type="radio" name="a2-3" value="d"> podrem</label>
+      </div>
+    </div>
+    <div class="mcq">
+      <p class="q">4. Si tu <u>____</u> (voler) ajuda amb la consulta SQL, només havies de dir-ho.</p>
+      <div class="opts" id="a2-4" data-ans="b">
+        <label><input type="radio" name="a2-4" value="a"> volies</label>
+        <label><input type="radio" name="a2-4" value="b"> volgueres</label>
+        <label><input type="radio" name="a2-4" value="c"> vulgues</label>
+        <label><input type="radio" name="a2-4" value="d"> voldràs</label>
+      </div>
+    </div>
+    <div class="mcq">
+      <p class="q">5. Si <u>____</u> (ser) més fàcil connectar la placa Microbit, tots els alumnes acabarien a temps.</p>
+      <div class="opts" id="a2-5" data-ans="b">
+        <label><input type="radio" name="a2-5" value="a"> era</label>
+        <label><input type="radio" name="a2-5" value="b"> fóra</label>
+        <label><input type="radio" name="a2-5" value="c"> siga</label>
+        <label><input type="radio" name="a2-5" value="d"> serà</label>
+      </div>
+    </div>
+
+    <button class="check" onclick="checkMcq()">Comprova les respostes</button>
+    <div class="fb-msg" id="a2-msg"></div>
+  </div>
+</section>
+
+<section id="act3">
+  <h2><span class="num">03</span> Completa la taula de conjugació</h2>
+  <div class="card">
+    <p class="lead">Omple les dues formes (jo) de cada verb.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Infinitiu</th><th>Imperfet indicatiu (jo)</th><th>Imperfet subjuntiu (jo)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="inf">fer</td>
+            <td><input type="text" class="fb" id="a3-fer-i" data-ans="feia"></td>
+            <td><input type="text" class="fb" id="a3-fer-s" data-ans="fera"></td>
+          </tr>
+          <tr>
+            <td class="inf">voler</td>
+            <td><input type="text" class="fb" id="a3-vol-i" data-ans="volia"></td>
+            <td><input type="text" class="fb" id="a3-vol-s" data-ans="volguera"></td>
+          </tr>
+          <tr>
+            <td class="inf">saber</td>
+            <td><input type="text" class="fb" id="a3-sab-i" data-ans="sabia"></td>
+            <td><input type="text" class="fb" id="a3-sab-s" data-ans="sabera"></td>
+          </tr>
+          <tr>
+            <td class="inf">tindre</td>
+            <td><input type="text" class="fb" id="a3-tin-i" data-ans="tenia"></td>
+            <td><input type="text" class="fb" id="a3-tin-s" data-ans="tinguera"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button class="check" onclick="checkFill('a3',8)">Comprova les respostes</button>
+    <div class="fb-msg" id="a3-msg"></div>
+  </div>
+</section>
+
+<section id="act4">
+  <h2><span class="num">04</span> Mini-diàleg al departament d'informàtica</h2>
+  <div class="card dialogue">
+    <p class="lead">Omple els buits amb la forma verbal correcta (indicatiu o subjuntiu, segons el context).</p>
+    <p><span class="who">Professora A</span>Quan jo <input type="text" class="fb" id="a4-1" data-ans="era" style="width:95px"> <span class="blank-label">(ser)</span> més jove, no hi <input type="text" class="fb" id="a4-2" data-ans="havia" style="width:95px"> <span class="blank-label">(haver)</span> tanta tecnologia als instituts.</p>
+    <p><span class="who">Professor B</span>És veritat. Abans <input type="text" class="fb" id="a4-3" data-ans="feiem" style="width:95px"> <span class="blank-label">(nosaltres / fer)</span> les classes de programació amb llibres de paper, sense MakeCode ni Scratch.</p>
+    <p><span class="who">Professora A</span>I si ara <input type="text" class="fb" id="a4-4" data-ans="tinguerem" style="width:95px"> <span class="blank-label">(nosaltres / tindre)</span> més pressupost, instal·laríem XAMPP en tots els equips del laboratori.</p>
+    <p><span class="who">Professor B</span>Doncs si jo <input type="text" class="fb" id="a4-5" data-ans="poguera" style="width:95px"> <span class="blank-label">(poder)</span> triar, també migraria el correu del departament a Microsoft 365.</p>
+
+    <button class="check" onclick="checkFill('a4',5)">Comprova les respostes</button>
+    <div class="fb-msg" id="a4-msg"></div>
+  </div>
+</section>
+
+<section id="vocab">
+  <h2><span class="num">05</span> Vocabulari · PIAR I (Scratch, Microbit i IA)</h2>
+  <div class="card">
+    <p class="lead">Selecciona la traducció correcta al castellà de cada terme valencià.</p>
+
+    <div class="vocab-row">
+      <span class="term">bloc (de Scratch)</span>
+      <select id="v-1" data-ans="bloque">
+        <option value="">— tria —</option>
+        <option value="bloque">bloque</option>
+        <option value="bloqueo">bloqueo</option>
+        <option value="bloc de notas">bloc de notas</option>
+        <option value="nudo">nudo</option>
+      </select>
+    </div>
+    <div class="vocab-row">
+      <span class="term">personatge / titella</span>
+      <select id="v-2" data-ans="personaje/sprite">
+        <option value="">— tria —</option>
+        <option value="personaje/sprite">personaje/sprite</option>
+        <option value="marioneta">marioneta</option>
+        <option value="actor">actor</option>
+        <option value="títere de madera">títere de madera</option>
+      </select>
+    </div>
+    <div class="vocab-row">
+      <span class="term">esdeveniment</span>
+      <select id="v-3" data-ans="evento">
+        <option value="">— tria —</option>
+        <option value="evento">evento</option>
+        <option value="acontecimiento histórico">acontecimiento histórico</option>
+        <option value="suceso aleatorio">suceso aleatorio</option>
+        <option value="aviso">aviso</option>
+      </select>
+    </div>
+    <div class="vocab-row">
+      <span class="term">placa controladora</span>
+      <select id="v-4" data-ans="placa controladora">
+        <option value="">— tria —</option>
+        <option value="placa controladora">placa controladora</option>
+        <option value="placa madre">placa madre</option>
+        <option value="tarjeta gráfica">tarjeta gráfica</option>
+        <option value="circuito impreso">circuito impreso</option>
+      </select>
+    </div>
+    <div class="vocab-row">
+      <span class="term">sensor de distància</span>
+      <select id="v-5" data-ans="sensor de distancia">
+        <option value="">— tria —</option>
+        <option value="sensor de distancia">sensor de distancia</option>
+        <option value="sensor de movimiento">sensor de movimiento</option>
+        <option value="sensor de luz">sensor de luz</option>
+        <option value="sensor de temperatura">sensor de temperatura</option>
+      </select>
+    </div>
+    <div class="vocab-row">
+      <span class="term">servomotor</span>
+      <select id="v-6" data-ans="servomotor">
+        <option value="">— tria —</option>
+        <option value="servomotor">servomotor</option>
+        <option value="motor eléctrico">motor eléctrico</option>
+        <option value="generador">generador</option>
+        <option value="altavoz">altavoz</option>
+      </select>
+    </div>
+    <div class="vocab-row">
+      <span class="term">xarxa neuronal</span>
+      <select id="v-7" data-ans="red neuronal">
+        <option value="">— tria —</option>
+        <option value="red neuronal">red neuronal</option>
+        <option value="red social">red social</option>
+        <option value="red eléctrica">red eléctrica</option>
+        <option value="red de sensores">red de sensores</option>
+      </select>
+    </div>
+    <div class="vocab-row">
+      <span class="term">biaix (en IA)</span>
+      <select id="v-8" data-ans="sesgo">
+        <option value="">— tria —</option>
+        <option value="sesgo">sesgo</option>
+        <option value="error de cálculo">error de cálculo</option>
+        <option value="ruido">ruido</option>
+        <option value="retraso">retraso</option>
+      </select>
+    </div>
+
+    <button class="check" onclick="checkVocab()">Comprova les respostes</button>
+    <div class="fb-msg" id="vocab-msg"></div>
+  </div>
+</section>
+
+<section id="solucions">
+  <h2><span class="num">06</span> Solucions i explicacions</h2>
+  <details class="solutions">
+    <summary>Veure totes les respostes correctes</summary>
+
+    <div class="sol-item"><span class="ans">1. era</span><span class="exp">"Ser" és l'única arrel vertadarament irregular de l'imperfet d'indicatiu.</span></div>
+    <div class="sol-item"><span class="ans">2. havia</span><span class="exp">"Haver" segueix el patró regular -ia sobre l'arrel hav-.</span></div>
+    <div class="sol-item"><span class="ans">3. fèiem</span><span class="exp">"Fer" + -íem per a "nosaltres": fèiem.</span></div>
+    <div class="sol-item"><span class="ans">4. volien</span><span class="exp">"Voler" + -ien per a "ells": volien.</span></div>
+    <div class="sol-item"><span class="ans">5. sabia</span><span class="exp">"Saber" és regular en imperfet d'indicatiu: sabia.</span></div>
+    <div class="sol-item"><span class="ans">6. anava</span><span class="exp">"Anar" és completament regular: anava, no "ia".</span></div>
+
+    <div class="sol-item"><span class="ans">7. sabera</span><span class="exp">Imperfet de subjuntiu de "saber": arrel sab- + -era.</span></div>
+    <div class="sol-item"><span class="ans">8. tinguera</span><span class="exp">"Tindre": arrel irregular tingu- + -era.</span></div>
+    <div class="sol-item"><span class="ans">9. poguérem</span><span class="exp">"Poder", persona "nosaltres": pogu- + -érem.</span></div>
+    <div class="sol-item"><span class="ans">10. volgueres</span><span class="exp">"Voler", persona "tu": volgu- + -eres.</span></div>
+    <div class="sol-item"><span class="ans">11. fóra</span><span class="exp">Imperfet de subjuntiu de "ser": fóra (no "siga", que és present de subjuntiu).</span></div>
+
+    <div class="sol-item"><span class="ans">12. fer → feia / fera</span></div>
+    <div class="sol-item"><span class="ans">13. voler → volia / volguera</span></div>
+    <div class="sol-item"><span class="ans">14. saber → sabia / sabera</span></div>
+    <div class="sol-item"><span class="ans">15. tindre → tenia / tinguera</span></div>
+
+    <div class="sol-item"><span class="ans">16. era</span><span class="exp">Imperfet d'indicatiu de "ser", context narratiu ("quan jo era...").</span></div>
+    <div class="sol-item"><span class="ans">17. havia</span><span class="exp">Forma impersonal "hi havia" (imperfet indicatiu de haver-hi).</span></div>
+    <div class="sol-item"><span class="ans">18. fèiem</span><span class="exp">"Fer" per a "nosaltres" en narració del passat.</span></div>
+    <div class="sol-item"><span class="ans">19. tinguérem</span><span class="exp">Imperfet de subjuntiu darrere de "si" condicional irreal.</span></div>
+    <div class="sol-item"><span class="ans">20. poguera</span><span class="exp">Imperfet de subjuntiu darrere de "si", persona "jo".</span></div>
+
+    <div class="sol-item"><span class="ans">bloc → bloque</span><span class="exp">A Scratch, cada peça del programa és un "bloque".</span></div>
+    <div class="sol-item"><span class="ans">personatge/titella → personaje/sprite</span><span class="exp">L'element que es mou i actua a l'escenari.</span></div>
+    <div class="sol-item"><span class="ans">esdeveniment → evento</span><span class="exp">Allò que dispara una acció (clicar, prémer una tecla...).</span></div>
+    <div class="sol-item"><span class="ans">placa controladora → placa controladora</span><span class="exp">Com la Microbit: el "cervell" físic del projecte.</span></div>
+    <div class="sol-item"><span class="ans">sensor de distància → sensor de distancia</span><span class="exp">Detecta la proximitat d'un objecte.</span></div>
+    <div class="sol-item"><span class="ans">servomotor → servomotor</span><span class="exp">Motor que es pot posicionar amb precisió (robòtica).</span></div>
+    <div class="sol-item"><span class="ans">xarxa neuronal → red neuronal</span><span class="exp">Model inspirat en el cervell, base de la IA.</span></div>
+    <div class="sol-item"><span class="ans">biaix (en IA) → sesgo</span><span class="exp">Error sistemàtic d'un model per dades no equilibrades.</span></div>
+  </details>
+</section>
+
+<footer class="note">IES Jorge Juan, Alacant · Exercici diari de valencià oral per a l'àmbit educatiu-informàtic</footer>
+
+<script>
+  var score = { a1:0, a2:0, a3:0, a4:0, vocab:0 };
+  var maxes = { a1:6, a2:5, a3:8, a4:5, vocab:8 };
+
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/\s+/g,' ');
+  }
+
+  function updateTotal(){
+    var total = 0, max = 0;
+    for (var k in score){ total += score[k]; }
+    for (var k in maxes){ max += maxes[k]; }
+    var totalEl = document.getElementById('scoreTotal');
+    var maxEl = document.getElementById('scoreMax');
+    if (totalEl) totalEl.textContent = total;
+    if (maxEl) maxEl.textContent = max;
+  }
+
+  function checkFill(prefix, count){
+    var ids;
+    if (prefix === 'a1') ids = ['a1-1','a1-2','a1-3','a1-4','a1-5','a1-6'];
+    else if (prefix === 'a3') ids = ['a3-fer-i','a3-fer-s','a3-vol-i','a3-vol-s','a3-sab-i','a3-sab-s','a3-tin-i','a3-tin-s'];
+    else if (prefix === 'a4') ids = ['a4-1','a4-2','a4-3','a4-4','a4-5'];
+    else ids = [];
+
+    var correct = 0;
+    for (var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if (!el) continue;
+      var ok = norm(el.value) === norm(el.getAttribute('data-ans'));
+      el.classList.remove('ok','bad');
+      el.classList.add(ok ? 'ok' : 'bad');
+      if (ok) correct++;
+    }
+    score[prefix] = correct;
+    updateTotal();
+    var msg = document.getElementById(prefix + '-msg');
+    if (msg) msg.innerHTML = 'Encertades: <b>' + correct + ' / ' + ids.length + '</b>. Revisa les solucions de baix si cal.';
+  }
+
+  function checkMcq(){
+    var groups = ['a2-1','a2-2','a2-3','a2-4','a2-5'];
+    var correct = 0;
+    for (var i=0;i<groups.length;i++){
+      var wrap = document.getElementById(groups[i]);
+      if (!wrap) continue;
+      var ans = wrap.getAttribute('data-ans');
+      var radios = wrap.querySelectorAll('input[type=radio]');
+      var picked = null;
+      radios.forEach(function(r){
+        r.parentElement.classList.remove('ok','bad');
+        if (r.checked) picked = r.value;
+      });
+      var ok = picked === ans;
+      if (ok) correct++;
+      radios.forEach(function(r){
+        if (r.value === ans) r.parentElement.classList.add('ok');
+        else if (r.checked) r.parentElement.classList.add('bad');
+      });
+    }
+    score.a2 = correct;
+    updateTotal();
+    var msg = document.getElementById('a2-msg');
+    if (msg) msg.innerHTML = 'Encertades: <b>' + correct + ' / ' + groups.length + '</b>. Revisa les solucions de baix si cal.';
+  }
+
+  function checkVocab(){
+    var ids = ['v-1','v-2','v-3','v-4','v-5','v-6','v-7','v-8'];
+    var correct = 0;
+    for (var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if (!el) continue;
+      var ok = el.value === el.getAttribute('data-ans');
+      el.classList.remove('vok','vbad');
+      el.classList.add(ok ? 'vok' : 'vbad');
+      if (ok) correct++;
+    }
+    score.vocab = correct;
+    updateTotal();
+    var msg = document.getElementById('vocab-msg');
+    if (msg) msg.innerHTML = 'Encertades: <b>' + correct + ' / ' + ids.length + '</b>. Revisa les solucions de baix si cal.';
+  }
+
+  updateTotal();
+</script>
+
+</body></html>

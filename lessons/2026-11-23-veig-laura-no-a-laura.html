@@ -1,0 +1,590 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Veig Laura, no a Laura</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout: una sola columna editorial; la teoria porta una "a" ratllada com a marca d'aigua
+     que recorda l'absència de preposició; cada activitat és una targeta autocontinguda amb
+     el seu propi botó de correcció, i un xip de puntuació global fix segueix el progrés. */
+  :root{
+    --bg:#f7f2ea;
+    --surface:#ffffff;
+    --surface-2:#f0e8da;
+    --ink:#211f2b;
+    --ink-soft:#6b6676;
+    --accent:#c4483f;
+    --accent-ink:#ffffff;
+    --accent-soft:#f3dbd6;
+    --accent-soft-ink:#8a2f28;
+    --good:#2f7a52;
+    --good-bg:#dcefe2;
+    --bad:#c4483f;
+    --bad-bg:#f8ded9;
+    --line:#e3d8c4;
+    --shadow: 0 1px 2px rgba(33,31,43,.06), 0 10px 26px -14px rgba(33,31,43,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17151d;
+      --surface:#201d28;
+      --surface-2:#282333;
+      --ink:#ece8f0;
+      --ink-soft:#a39db0;
+      --accent:#e8897f;
+      --accent-ink:#241011;
+      --accent-soft:#3a2420;
+      --accent-soft-ink:#f0bcb4;
+      --good:#7fd0a0;
+      --good-bg:#1c3326;
+      --bad:#e8897f;
+      --bad-bg:#3a2420;
+      --line:#352f41;
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 26px -14px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17151d;
+    --surface:#201d28;
+    --surface-2:#282333;
+    --ink:#ece8f0;
+    --ink-soft:#a39db0;
+    --accent:#e8897f;
+    --accent-ink:#241011;
+    --accent-soft:#3a2420;
+    --accent-soft-ink:#f0bcb4;
+    --good:#7fd0a0;
+    --good-bg:#1c3326;
+    --bad:#e8897f;
+    --bad-bg:#3a2420;
+    --line:#352f41;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 26px -14px rgba(0,0,0,.5);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:auto; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:26px;
+    padding-bottom:70px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+  }
+  .wrap{ max-width:760px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Space Grotesk', ui-sans-serif, sans-serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  .backlink{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  .backlink:hover{ background:var(--accent); color:var(--accent-ink); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:20px;
+    padding:28px 26px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"a";
+    position:absolute;
+    right:-6px; bottom:-38px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:11rem;
+    line-height:1;
+    opacity:.14;
+    color:var(--accent-ink);
+    pointer-events:none;
+    text-decoration:line-through;
+    text-decoration-thickness:6px;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.88;
+    margin-bottom:10px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:600; }
+  header.top p{ margin:12px 0 0; max-width:54ch; opacity:.94; font-size:.96rem; }
+  .topic-chip{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    background:rgba(255,255,255,.18);
+    padding:4px 11px;
+    border-radius:999px;
+    margin-top:14px;
+    margin-right:6px;
+  }
+
+  .score-bar{
+    position:sticky; top:env(safe-area-inset-top,0px);
+    z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem;
+  }
+  .score-bar b{ font-family:'Space Grotesk', sans-serif; font-size:1.05rem; }
+
+  section{ margin-bottom:28px; }
+  section > h2{
+    font-size:1.15rem;
+    margin-bottom:12px;
+    display:flex; align-items:center; gap:8px;
+  }
+  section > h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    border-radius:999px;
+    width:1.9em; height:1.9em;
+    display:inline-flex; align-items:center; justify-content:center;
+    flex:none;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    box-shadow:var(--shadow);
+  }
+  .theory p{ margin:0 0 12px; }
+  .theory p:last-child{ margin-bottom:0; }
+  .rule{
+    background:var(--surface-2);
+    border-left:3px solid var(--accent);
+    border-radius:0 10px 10px 0;
+    padding:12px 16px;
+    margin:14px 0;
+    font-size:.95rem;
+  }
+  .ex{ color:var(--ink-soft); font-style:italic; }
+  .ex b{ font-style:normal; color:var(--ink); }
+  .strike{ text-decoration:line-through; text-decoration-color:var(--accent); text-decoration-thickness:2px; color:var(--bad); }
+  .ok{ color:var(--good); font-weight:600; }
+  table.conj{ width:100%; border-collapse:collapse; margin:14px 0; font-size:.92rem; min-width:420px; }
+  .table-scroll{ overflow-x:auto; }
+  table.conj th, table.conj td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
+  table.conj th{ font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); }
+
+  .q{ padding:14px 0; border-top:1px solid var(--line); }
+  .q:first-child{ border-top:none; padding-top:0; }
+  .q .stem{ margin:0 0 10px; font-weight:500; }
+  .opt{ display:flex; align-items:flex-start; gap:8px; padding:6px 0; cursor:pointer; border-radius:8px; }
+  .opt input{ margin-top:4px; flex:none; }
+  select.blank{
+    font:inherit; font-family:'IBM Plex Mono', monospace; font-size:.88rem;
+    padding:5px 9px; border-radius:8px; border:1px solid var(--line);
+    background:var(--surface-2); color:var(--ink);
+  }
+  .feedback{ display:none; margin-top:8px; font-size:.86rem; padding:8px 11px; border-radius:8px; }
+  .q.correct .feedback.fb-ok{ display:block; background:var(--good-bg); color:var(--good); }
+  .q.incorrect .feedback.fb-bad{ display:block; background:var(--bad-bg); color:var(--bad); }
+
+  .checkbtn{
+    font:inherit; font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:.92rem;
+    background:var(--accent); color:var(--accent-ink);
+    border:none; border-radius:10px; padding:10px 18px;
+    cursor:pointer; margin-top:16px;
+  }
+  .checkbtn:hover{ filter:brightness(1.07); }
+  .activity-score{
+    font-family:'IBM Plex Mono', monospace; font-size:.8rem; color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    cursor:pointer; font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:1.05rem;
+  }
+  details.solutions .sol-block{ margin-top:16px; padding-top:14px; border-top:1px solid var(--line); }
+  details.solutions .sol-block:first-of-type{ border-top:none; margin-top:14px; padding-top:0; }
+  details.solutions h4{ font-family:'Space Grotesk', sans-serif; font-size:.95rem; margin:0 0 8px; }
+  details.solutions ol{ margin:0; padding-left:1.2em; }
+  details.solutions li{ margin-bottom:8px; font-size:.88rem; }
+  details.solutions li b{ color:var(--accent); }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:30px; }
+
+  @media (max-width:480px){
+    header.top{ padding:22px 18px 20px; }
+    header.top::after{ font-size:7rem; }
+  }
+</style>
+
+<div class="wrap">
+
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 23 novembre 2026</div>
+      <h1>Veig Laura, no a Laura</h1>
+      <p>Avui treballem l'absència de la "a" personal davant de complement directe, un dels contrastos més habituals entre el valencià i el castellà a l'hora de parlar a classe. Hi afegim un repàs breu dels participis irregulars.</p>
+      <span class="topic-chip">Tema gramatical: Absència de la "a" personal davant de complement directe</span>
+      <span class="topic-chip">Repàs breu: Participis irregulars i temps compostos</span>
+    </div>
+  </header>
+
+  <div class="score-bar">
+    <span>Puntuació acumulada</span>
+    <span><b id="globalScore">0</b> / <span id="globalMax">22</span></span>
+  </div>
+
+  <section class="theory">
+    <h2><span class="num">i</span>La "a" que no hi és</h2>
+    <div class="card">
+      <div class="rule">
+        <p><b>Regla general:</b> en valencià, quan el complement directe (CD) és de persona i segueix el verb en l'ordre normal, <b>no porta la preposició "a"</b> — a diferència del castellà.</p>
+      </div>
+      <p class="ex"><span class="strike">Veig a Laura</span> al laboratori. → <b class="ok">Veig Laura</b> al laboratori.</p>
+      <p class="ex"><span class="strike">Hem avisat al tutor</span> de 2n ESO. → <b class="ok">Hem avisat el tutor</b> de 2n ESO.</p>
+      <p class="ex"><span class="strike">Busque a la tècnica</span> d'informàtica. → <b class="ok">Busque la tècnica</b> d'informàtica.</p>
+
+      <div class="rule">
+        <p><b>Excepció:</b> quan el CD de persona s'avança davant del verb (dislocació, com vam vore el 14 de novembre), <b>sí</b> apareix la "a", i el verb porta un pronom feble de represa que concorda en gènere i nombre.</p>
+      </div>
+      <p class="ex"><b class="ok">A Laura</b>, la vaig vore ahir al departament.</p>
+      <p class="ex"><b class="ok">Als alumnes</b> de 4t, els hem avisat per Microsoft 365.</p>
+
+      <p>Un error molt freqüent entre professorat valencianoparlant és calcar el castellà i afegir la "a" fins i tot en l'ordre normal: <span class="strike">he vist a l'alumne</span> a soles al laboratori (correcte: <b class="ok">he vist l'alumne</b> a soles al laboratori); <span class="strike">vull presentar-vos a la nova professora</span> de Robòtica (correcte: <b class="ok">vull presentar-vos la nova professora</b> de Robòtica).</p>
+
+      <div class="table-scroll">
+        <table class="conj">
+          <thead><tr><th>Ordre</th><th>Hi ha "a"?</th><th>Exemple</th></tr></thead>
+          <tbody>
+            <tr><td>Normal (verb + CD)</td><td>No</td><td>Crida l'alumne de 1r.</td></tr>
+            <tr><td>Dislocat (CD + verb + pronom)</td><td>Sí</td><td>A l'alumne de 1r, el crida.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="act1">
+    <h2><span class="num">1</span>Tria la frase correcta</h2>
+    <div class="card">
+
+      <div class="q" data-correct="b">
+        <p class="stem">1. Com avisaries un alumne que xarra massa durant la classe de PIAR?</p>
+        <label class="opt"><input type="radio" name="q1-1" value="a"> Hui he cridat a l'alumne de 1r perquè parlava massa.</label>
+        <label class="opt"><input type="radio" name="q1-1" value="b"> Hui he cridat l'alumne de 1r perquè parlava massa.</label>
+        <div class="feedback fb-ok">Correcte: el CD en ordre normal no porta "a".</div>
+        <div class="feedback fb-bad">No: en ordre normal, el CD de persona no porta "a".</div>
+      </div>
+
+      <div class="q" data-correct="b">
+        <p class="stem">2. Com diries que has convocat les famílies a la reunió del departament?</p>
+        <label class="opt"><input type="radio" name="q1-2" value="a"> Hem convidat a tots els pares a la reunió de Robòtica.</label>
+        <label class="opt"><input type="radio" name="q1-2" value="b"> Hem convidat tots els pares a la reunió de Robòtica.</label>
+        <div class="feedback fb-ok">Correcte: sense "a" davant del CD.</div>
+        <div class="feedback fb-bad">No: "convidar" + CD de persona no porta "a" en ordre normal.</div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p class="stem">3. Com explicaries que ja has parlat amb la coordinadora TIC abans de classe?</p>
+        <label class="opt"><input type="radio" name="q1-3" value="a"> A la coordinadora, l'he avisada abans de la classe.</label>
+        <label class="opt"><input type="radio" name="q1-3" value="b"> A la coordinadora, he avisada abans de la classe.</label>
+        <div class="feedback fb-ok">Correcte: CD dislocat amb "a" i pronom de represa "l'" (concorda amb "la coordinadora").</div>
+        <div class="feedback fb-bad">No: falta el pronom de represa "l'" davant del verb.</div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p class="stem">4. Com diries que necessites el tècnic per a arreglar un ordinador?</p>
+        <label class="opt"><input type="radio" name="q1-4" value="a"> Busque el tècnic d'informàtica per a reparar l'ordinador.</label>
+        <label class="opt"><input type="radio" name="q1-4" value="b"> Busque al tècnic d'informàtica per a reparar l'ordinador.</label>
+        <div class="feedback fb-ok">Correcte: "buscar" + CD de persona, sense "a".</div>
+        <div class="feedback fb-bad">No: en ordre normal no s'hi posa "a".</div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p class="stem">5. Com avisaries que ja has dit a Joan que hi havia un problema amb el servidor?</p>
+        <label class="opt"><input type="radio" name="q1-5" value="a"> A Joan, el vaig avisar que hi havia un problema amb el servidor.</label>
+        <label class="opt"><input type="radio" name="q1-5" value="b"> Joan, el vaig avisar que hi havia un problema amb el servidor.</label>
+        <div class="feedback fb-ok">Correcte: el nom dislocat davant necessita la "a".</div>
+        <div class="feedback fb-bad">No: un CD de persona dislocat davant del verb sí que porta "a".</div>
+      </div>
+
+      <button class="checkbtn" onclick="checkActivity('act1',5)">Comprova les respostes</button>
+      <p class="activity-score" id="act1-score"></p>
+    </div>
+  </section>
+
+  <section id="act2">
+    <h2><span class="num">2</span>Omple el buit: "a" o res?</h2>
+    <div class="card">
+
+      <div class="q" data-correct="no">
+        <p class="stem">1. Cada matí <select class="blank"><option value="">—</option><option value="a">a</option><option value="no">(res)</option></select> salude els alumnes de 1r ESO abans d'entrar a classe.</p>
+        <div class="feedback fb-ok">Correcte: ordre normal, sense "a".</div>
+        <div class="feedback fb-bad">No: en ordre normal el CD de persona no porta "a".</div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p class="stem">2. <select class="blank"><option value="">—</option><option value="a">A</option><option value="no">(res)</option></select> Marta, la coordinadora TIC, l'hem avisada que cal actualitzar el WordPress del departament.</p>
+        <div class="feedback fb-ok">Correcte: CD dislocat davant ("Marta"), cal la "a".</div>
+        <div class="feedback fb-bad">No: quan el nom de persona va davant del verb i es repren amb pronom, porta "a".</div>
+      </div>
+
+      <div class="q" data-correct="no">
+        <p class="stem">3. Hem citat <select class="blank"><option value="">—</option><option value="a">a</option><option value="no">(res)</option></select> els pares per a parlar del projecte de Scratch.</p>
+        <div class="feedback fb-ok">Correcte: sense "a" en ordre normal.</div>
+        <div class="feedback fb-bad">No: "citar" + CD de persona no porta "a" en ordre normal.</div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p class="stem">4. <select class="blank"><option value="">—</option><option value="a">A</option><option value="no">(res)</option></select> l'alumne que ha copiat en l'examen, el crida el cap d'estudis.</p>
+        <div class="feedback fb-ok">Correcte: dislocació amb pronom de represa "el", cal la "a".</div>
+        <div class="feedback fb-bad">No: el CD dislocat davant necessita la "a".</div>
+      </div>
+
+      <div class="q" data-correct="no">
+        <p class="stem">5. No conec <select class="blank"><option value="">—</option><option value="a">a</option><option value="no">(res)</option></select> eixe tècnic nou del departament d'informàtica.</p>
+        <div class="feedback fb-ok">Correcte: "conéixer" + CD de persona, sense "a".</div>
+        <div class="feedback fb-bad">No: en ordre normal no porta "a".</div>
+      </div>
+
+      <div class="q" data-correct="no">
+        <p class="stem">6. Deixa entrar <select class="blank"><option value="">—</option><option value="a">a</option><option value="no">(res)</option></select> els alumnes que porten l'ordinador portàtil.</p>
+        <div class="feedback fb-ok">Correcte: sense "a" en ordre normal.</div>
+        <div class="feedback fb-bad">No: en ordre normal el CD de persona no porta "a".</div>
+      </div>
+
+      <button class="checkbtn" onclick="checkActivity('act2',6)">Comprova les respostes</button>
+      <p class="activity-score" id="act2-score"></p>
+    </div>
+  </section>
+
+  <section id="act3">
+    <h2><span class="num">3</span>Transforma la frase</h2>
+    <div class="card">
+      <p style="margin-top:0;color:var(--ink-soft);font-size:.88rem">Tria la versió dislocada correcta de cada frase, amb la "a" i el pronom de represa que toque.</p>
+
+      <div class="q" data-correct="a">
+        <p class="stem">1. Frase normal: "Vam avisar el conserge abans de l'examen."</p>
+        <label class="opt"><input type="radio" name="q3-1" value="a"> Al conserge, el vam avisar abans de l'examen.</label>
+        <label class="opt"><input type="radio" name="q3-1" value="b"> El conserge, vam avisar abans de l'examen.</label>
+        <label class="opt"><input type="radio" name="q3-1" value="c"> Al conserge, vam avisar abans de l'examen.</label>
+        <div class="feedback fb-ok">Correcte: "al" (a+el) + pronom de represa "el".</div>
+        <div class="feedback fb-bad">No: cal la "a" i el pronom de represa "el" junts.</div>
+      </div>
+
+      <div class="q" data-correct="c">
+        <p class="stem">2. Frase normal: "Entrenarem la nova IA amb Teachable Machine la setmana que ve."</p>
+        <label class="opt"><input type="radio" name="q3-2" value="a"> La nova IA, entrenarem amb Teachable Machine la setmana que ve.</label>
+        <label class="opt"><input type="radio" name="q3-2" value="b"> A la nova IA, entrenarem amb Teachable Machine la setmana que ve.</label>
+        <label class="opt"><input type="radio" name="q3-2" value="c"> La nova IA, l'entrenarem amb Teachable Machine la setmana que ve.</label>
+        <div class="feedback fb-ok">Correcte: "IA" no és persona, així que no porta "a" encara que vaja davant; sí cal el pronom "l'".</div>
+        <div class="feedback fb-bad">No: com que "la IA" no és persona, mai porta "a" personal; però sí que cal el pronom de represa.</div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p class="stem">3. Frase normal: "Vaig trobar la directora al passadís del departament."</p>
+        <label class="opt"><input type="radio" name="q3-3" value="a"> A la directora, la vaig trobar al passadís del departament.</label>
+        <label class="opt"><input type="radio" name="q3-3" value="b"> La directora, la vaig trobar al passadís del departament.</label>
+        <label class="opt"><input type="radio" name="q3-3" value="c"> A la directora, vaig trobar al passadís del departament.</label>
+        <div class="feedback fb-ok">Correcte: "a" + pronom "la" (concordança femenina).</div>
+        <div class="feedback fb-bad">No: li falta la "a" o el pronom de represa.</div>
+      </div>
+
+      <div class="q" data-correct="b">
+        <p class="stem">4. Frase normal: "Els de Batxillerat han instal·lat la màquina virtual amb VirtualBox."</p>
+        <label class="opt"><input type="radio" name="q3-4" value="a"> A la màquina virtual, l'han instal·lat amb VirtualBox.</label>
+        <label class="opt"><input type="radio" name="q3-4" value="b"> La màquina virtual, l'han instal·lada amb VirtualBox.</label>
+        <label class="opt"><input type="radio" name="q3-4" value="c"> A la màquina virtual, han instal·lat amb VirtualBox.</label>
+        <div class="feedback fb-ok">Correcte: sense "a" (no és persona) i amb el pronom "l'" concordant en femení.</div>
+        <div class="feedback fb-bad">No: "la màquina virtual" no és persona, així que no du "a"; i el participi ha de concordar en femení.</div>
+      </div>
+
+      <div class="q" data-correct="a">
+        <p class="stem">5. Frase normal: "Hem avisat els alumnes de 4t sobre l'examen de SQL."</p>
+        <label class="opt"><input type="radio" name="q3-5" value="a"> Als alumnes de 4t, els hem avisat sobre l'examen de SQL.</label>
+        <label class="opt"><input type="radio" name="q3-5" value="b"> Els alumnes de 4t, hem avisat sobre l'examen de SQL.</label>
+        <label class="opt"><input type="radio" name="q3-5" value="c"> Als alumnes de 4t, hem avisat sobre l'examen de SQL.</label>
+        <div class="feedback fb-ok">Correcte: "als" (a+els) + pronom de represa "els".</div>
+        <div class="feedback fb-bad">No: li falta la "a" o el pronom de represa "els".</div>
+      </div>
+
+      <button class="checkbtn" onclick="checkActivity('act3',5)">Comprova les respostes</button>
+      <p class="activity-score" id="act3-score"></p>
+    </div>
+  </section>
+
+  <section id="act4">
+    <h2><span class="num">4</span>Repàs breu: participis irregulars</h2>
+    <div class="card">
+      <p style="margin-top:0;color:var(--ink-soft);font-size:.88rem">Completa cada frase amb el participi correcte per a formar el temps compost.</p>
+
+      <div class="q" data-correct="escrit">
+        <p class="stem">1. Hui els alumnes de Batxillerat han <select class="blank"><option value="">—</option><option value="escrit">escrit</option><option value="escriut">escriut</option><option value="escrivit">escrivit</option></select> el codi en Python sense errors.</p>
+        <div class="feedback fb-ok">Correcte: "escriure" → participi "escrit".</div>
+        <div class="feedback fb-bad">No: el participi correcte és "escrit".</div>
+      </div>
+
+      <div class="q" data-correct="obert">
+        <p class="stem">2. El tècnic ja havia <select class="blank"><option value="">—</option><option value="obert">obert</option><option value="obrit">obrit</option><option value="obrat">obrat</option></select> l'aula d'informàtica quan vaig arribar.</p>
+        <div class="feedback fb-ok">Correcte: "obrir" → participi "obert".</div>
+        <div class="feedback fb-bad">No: el participi correcte és "obert".</div>
+      </div>
+
+      <div class="q" data-correct="resolt">
+        <p class="stem">3. Encara no hem <select class="blank"><option value="">—</option><option value="resolt">resolt</option><option value="resolgut">resolgut</option><option value="resolut">resolut</option></select> el problema de connexió amb el servidor.</p>
+        <div class="feedback fb-ok">Correcte: "resoldre" → participi "resolt".</div>
+        <div class="feedback fb-bad">No: el participi correcte és "resolt".</div>
+      </div>
+
+      <div class="q" data-correct="fet">
+        <p class="stem">4. Els alumnes de PIAR han <select class="blank"><option value="">—</option><option value="fet">fet</option><option value="fat">fat</option><option value="faixut">faixut</option></select> un prototip amb la placa Microbit.</p>
+        <div class="feedback fb-ok">Correcte: "fer" → participi "fet".</div>
+        <div class="feedback fb-bad">No: el participi correcte és "fet".</div>
+      </div>
+
+      <div class="q" data-correct="vist">
+        <p class="stem">5. He <select class="blank"><option value="">—</option><option value="vist">vist</option><option value="veut">veut</option><option value="vegut">vegut</option></select> que el document de WordPress s'ha actualitzat.</p>
+        <div class="feedback fb-ok">Correcte: "vore" → participi "vist".</div>
+        <div class="feedback fb-bad">No: el participi correcte és "vist".</div>
+      </div>
+
+      <div class="q" data-correct="dit">
+        <p class="stem">6. Hauríem <select class="blank"><option value="">—</option><option value="dit">dit</option><option value="dicut">dicut</option><option value="deit">deit</option></select> als alumnes que guardaren una còpia de seguretat abans.</p>
+        <div class="feedback fb-ok">Correcte: "dir" → participi "dit".</div>
+        <div class="feedback fb-bad">No: el participi correcte és "dit".</div>
+      </div>
+
+      <button class="checkbtn" onclick="checkActivity('act4',6)">Comprova les respostes</button>
+      <p class="activity-score" id="act4-score"></p>
+    </div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-block">
+      <h4>1. Tria la frase correcta</h4>
+      <ol>
+        <li><b>b.</b> "Hui he cridat l'alumne de 1r..." — ordre normal, sense "a".</li>
+        <li><b>b.</b> "Hem convidat tots els pares..." — ordre normal, sense "a".</li>
+        <li><b>a.</b> "A la coordinadora, l'he avisada..." — dislocació amb pronom de represa femení "l'".</li>
+        <li><b>a.</b> "Busque el tècnic..." — ordre normal, sense "a".</li>
+        <li><b>a.</b> "A Joan, el vaig avisar..." — dislocació, cal "a" + pronom "el".</li>
+      </ol>
+    </div>
+
+    <div class="sol-block">
+      <h4>2. Omple el buit</h4>
+      <ol>
+        <li><b>(res).</b> "Cada matí salude els alumnes..." — ordre normal.</li>
+        <li><b>A.</b> "A Marta... l'hem avisada" — dislocació.</li>
+        <li><b>(res).</b> "Hem citat els pares..." — ordre normal.</li>
+        <li><b>A.</b> "A l'alumne que ha copiat... el crida..." — dislocació.</li>
+        <li><b>(res).</b> "No conec eixe tècnic..." — ordre normal.</li>
+        <li><b>(res).</b> "Deixa entrar els alumnes..." — ordre normal.</li>
+      </ol>
+    </div>
+
+    <div class="sol-block">
+      <h4>3. Transforma la frase</h4>
+      <ol>
+        <li><b>a.</b> "Al conserge, el vam avisar..." — "al" + pronom "el".</li>
+        <li><b>c.</b> "La nova IA, l'entrenarem..." — sense "a" (no és persona), amb pronom "l'".</li>
+        <li><b>a.</b> "A la directora, la vaig trobar..." — "a" + pronom femení "la".</li>
+        <li><b>b.</b> "La màquina virtual, l'han instal·lada..." — sense "a", participi en femení.</li>
+        <li><b>a.</b> "Als alumnes de 4t, els hem avisat..." — "als" + pronom "els".</li>
+      </ol>
+    </div>
+
+    <div class="sol-block">
+      <h4>4. Repàs breu: participis irregulars</h4>
+      <ol>
+        <li><b>escrit</b> (escriure)</li>
+        <li><b>obert</b> (obrir)</li>
+        <li><b>resolt</b> (resoldre)</li>
+        <li><b>fet</b> (fer)</li>
+        <li><b>vist</b> (vore)</li>
+        <li><b>dit</b> (dir)</li>
+      </ol>
+    </div>
+  </details>
+
+  <footer class="note">Exercici diari de valencià oral per a l'àmbit educatiu · IES Jorge Juan, Alacant</footer>
+</div>
+
+<script>
+  var scores = {};
+  function checkActivity(sectionId, total){
+    var section = document.getElementById(sectionId);
+    var qs = section.querySelectorAll('.q');
+    var correct = 0;
+    qs.forEach(function(q){
+      var expected = q.getAttribute('data-correct');
+      var value = null;
+      var sel = q.querySelector('select.blank');
+      if(sel){
+        value = sel.value;
+      } else {
+        var radios = q.querySelectorAll('input[type=radio]');
+        radios.forEach(function(r){ if(r.checked) value = r.value; });
+      }
+      q.classList.remove('correct','incorrect');
+      if(value === expected){
+        q.classList.add('correct');
+        correct++;
+      } else {
+        q.classList.add('incorrect');
+      }
+    });
+    scores[sectionId] = correct;
+    var scoreLabel = document.getElementById(sectionId + '-score');
+    if(scoreLabel) scoreLabel.textContent = 'Puntuació d\'esta activitat: ' + correct + ' / ' + total;
+    updateGlobal();
+  }
+  function updateGlobal(){
+    var total = 0;
+    for(var k in scores){ total += scores[k]; }
+    document.getElementById('globalScore').textContent = total;
+  }
+</script>
+
+</body></html>

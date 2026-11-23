@@ -1,0 +1,747 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Sabré o sabria?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Disseny: capçalera "horitzó" amb degradat ascendent (futur) i corba descendent
+     (condicional) com a motiu gràfic recurrent; cos en dues columnes de contingut
+     amb targetes d'activitat uniformes i una banda de puntuació fixa a dalt. */
+  :root{
+    --bg:#eef1f6;
+    --surface:#ffffff;
+    --surface-2:#e3e9f1;
+    --ink:#1c2533;
+    --ink-soft:#5b6b80;
+    --accent:#33548f;
+    --accent-ink:#ffffff;
+    --accent-soft:#dde6f6;
+    --accent-soft-ink:#233a66;
+    --line:#d3dce8;
+    --good:#2f8f5b;
+    --good-bg:#e1f3e8;
+    --bad:#c0392b;
+    --bad-bg:#fbe4e1;
+    --cond:#a0612c;
+    --cond-bg:#f7e7d8;
+    --shadow:0 1px 2px rgba(28,37,51,.06), 0 10px 24px -14px rgba(28,37,51,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141822;
+      --surface:#1b212e;
+      --surface-2:#232a3a;
+      --ink:#e8ecf4;
+      --ink-soft:#9aabc2;
+      --accent:#8fb0ef;
+      --accent-ink:#121a2c;
+      --accent-soft:#263252;
+      --accent-soft-ink:#c3d6f7;
+      --line:#2d3650;
+      --good:#79d6a4;
+      --good-bg:#15301f;
+      --bad:#f3a79a;
+      --bad-bg:#3a1c17;
+      --cond:#e2a569;
+      --cond-bg:#3a2714;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141822;
+    --surface:#1b212e;
+    --surface-2:#232a3a;
+    --ink:#e8ecf4;
+    --ink-soft:#9aabc2;
+    --accent:#8fb0ef;
+    --accent-ink:#121a2c;
+    --accent-soft:#263252;
+    --accent-soft-ink:#c3d6f7;
+    --line:#2d3650;
+    --good:#79d6a4;
+    --good-bg:#15301f;
+    --bad:#f3a79a;
+    --bad-bg:#3a1c17;
+    --cond:#e2a569;
+    --cond-bg:#3a2714;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  *{ box-sizing:border-box; }
+  html,body{ background:var(--bg); }
+  body{
+    color:var(--ink);
+    font-family:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+    padding-block:0 70px;
+    max-width:900px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Literata', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+  a{ color:var(--accent); }
+
+  .backlink{
+    display:inline-block;
+    margin-top:14px;
+    font-size:.82rem;
+    font-family:'JetBrains Mono', monospace;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:5px 12px;
+    border-radius:999px;
+    text-decoration:none;
+    border:1px solid var(--line);
+  }
+  .backlink:hover{ background:var(--accent); color:var(--accent-ink); }
+
+  header.top{
+    background:linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, var(--cond)) 100%);
+    color:var(--accent-ink);
+    border-radius:0 0 22px 22px;
+    margin:0 calc(-1 * max(16px, env(safe-area-inset-left,0px))) 22px calc(-1 * max(16px, env(safe-area-inset-right,0px)));
+    padding:calc(18px + env(safe-area-inset-top,0px)) max(16px, env(safe-area-inset-left,0px)) 26px max(16px, env(safe-area-inset-right,0px));
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top svg.horizon{
+    position:absolute; left:0; right:0; bottom:-2px; width:100%; height:46px;
+    opacity:.5;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:600; position:relative; z-index:1; }
+  header.top p.lead{ margin:10px 0 0; max-width:60ch; opacity:.94; font-size:.95rem; position:relative; z-index:1; }
+  .topic-pill-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; position:relative; z-index:1; }
+  .pill{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);
+    white-space:nowrap;
+  }
+
+  .score-bar{
+    position:sticky; top:env(safe-area-inset-top,0px);
+    z-index:20;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:10px 16px;
+    margin-bottom:24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.86rem;
+  }
+  .score-bar b{ font-size:1.05rem; font-family:'Literata', serif; }
+  .score-bar .tot{ color:var(--ink-soft); }
+
+  section{ margin-bottom:30px; }
+  section > h2{
+    font-size:1.25rem;
+    margin-bottom:4px;
+  }
+  .sec-sub{ color:var(--ink-soft); font-size:.86rem; margin:4px 0 14px; }
+  .sec-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.74rem;
+    color:var(--accent);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 20px 20px;
+    box-shadow:var(--shadow);
+  }
+
+  table.verbtable{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.88rem;
+    min-width:560px;
+  }
+  .table-scroll{ overflow-x:auto; border-radius:10px; }
+  table.verbtable th, table.verbtable td{
+    padding:9px 10px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+  }
+  table.verbtable thead th{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    background:var(--surface-2);
+  }
+  table.verbtable td.root{ font-family:'JetBrains Mono', monospace; color:var(--accent); }
+  table.verbtable td.fut{ font-family:'JetBrains Mono', monospace; }
+  table.verbtable td.cond{ font-family:'JetBrains Mono', monospace; color:var(--cond); }
+  table.verbtable tbody tr:last-child td{ border-bottom:none; }
+
+  .ending-row{
+    display:flex; gap:18px; flex-wrap:wrap; margin-top:14px;
+    font-size:.86rem;
+  }
+  .ending-box{
+    background:var(--surface-2);
+    border-radius:10px;
+    padding:10px 14px;
+    flex:1;
+    min-width:220px;
+  }
+  .ending-box .label{ font-family:'JetBrains Mono', monospace; font-size:.72rem; text-transform:uppercase; color:var(--ink-soft); display:block; margin-bottom:4px; }
+  .ending-box .fut{ color:var(--accent); font-weight:600; }
+  .ending-box .cond{ color:var(--cond); font-weight:600; }
+
+  .item{
+    padding-block:14px;
+    border-top:1px solid var(--line);
+  }
+  .item:first-child{ border-top:none; padding-top:0; }
+  .item p.prompt{ margin:0 0 8px; }
+  .item .hint{ color:var(--ink-soft); font-size:.8rem; font-style:italic; }
+
+  input.blank{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.92rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:5px 9px;
+    background:var(--surface-2);
+    color:var(--ink);
+    width:150px;
+    max-width:60vw;
+  }
+  input.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  input.blank.ok{ border-color:var(--good); background:var(--good-bg); }
+  input.blank.bad{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .mark{ display:inline-block; margin-left:6px; font-weight:600; }
+  .mark.ok{ color:var(--good); }
+  .mark.bad{ color:var(--bad); }
+
+  .choices{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .choice-btn{
+    font-family:'Work Sans', sans-serif;
+    font-size:.86rem;
+    border:1.5px solid var(--line);
+    background:var(--surface-2);
+    color:var(--ink);
+    border-radius:999px;
+    padding:6px 14px;
+    cursor:pointer;
+  }
+  .choice-btn:hover{ border-color:var(--accent); }
+  .choice-btn.selected{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .choice-btn.ok{ background:var(--good); color:#fff; border-color:var(--good); }
+  .choice-btn.bad{ background:var(--bad); color:#fff; border-color:var(--bad); }
+
+  select.vocab-select{
+    font-family:'Work Sans', sans-serif;
+    font-size:.88rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 9px;
+    background:var(--surface-2);
+    color:var(--ink);
+    max-width:100%;
+  }
+  select.vocab-select.ok{ border-color:var(--good); background:var(--good-bg); }
+  select.vocab-select.bad{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .dialog-line{ display:flex; gap:10px; margin-bottom:10px; align-items:baseline; }
+  .dialog-line .who{ font-family:'JetBrains Mono', monospace; font-weight:600; color:var(--accent); flex:none; width:1.4em; }
+
+  .check-btn{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:.9rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:16px;
+  }
+  .check-btn:hover{ filter:brightness(1.08); }
+  .result-line{
+    margin-top:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.84rem;
+    color:var(--ink-soft);
+  }
+
+  .vocab-grid{ display:grid; grid-template-columns:1fr; gap:10px; }
+  .vocab-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    flex-wrap:wrap;
+    padding-block:10px;
+    border-top:1px solid var(--line);
+  }
+  .vocab-row:first-child{ border-top:none; padding-top:0; }
+  .vocab-row .term{ font-weight:600; min-width:200px; flex:1; }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px 20px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Literata', serif;
+    font-weight:600;
+    font-size:1.1rem;
+  }
+  .sol-block{ margin-top:16px; }
+  .sol-block h4{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--accent);
+    margin:0 0 8px;
+  }
+  .sol-item{
+    font-size:.88rem;
+    padding-block:7px;
+    border-top:1px solid var(--line);
+  }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item b.answer{ color:var(--good); font-family:'JetBrains Mono', monospace; }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:30px;
+  }
+
+  @media (max-width:480px){
+    .score-bar{ font-size:.78rem; }
+    input.blank{ width:120px; }
+  }
+</style>
+
+<a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="eyebrow">IES Jorge Juan · Alacant — Departament d'Informàtica</div>
+  <h1>Sabré o sabria?</h1>
+  <p class="lead">Exercici oral diari de valencià: hui treballem l'arrel irregular que comparteixen el futur i el condicional, i practiquem el vocabulari de relacions digitals responsables.</p>
+  <div class="topic-pill-row">
+    <span class="pill">📘 Tema: Futur i condicional dels irregulars</span>
+    <span class="pill">💬 Vocabulari: RDR · Relacions Digitals Responsables (1r ESO)</span>
+  </div>
+  <svg class="horizon" viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0,40 C80,10 140,36 200,18 C260,2 320,30 400,8 L400,46 L0,46 Z" fill="#ffffff"/></svg>
+</header>
+
+<div class="score-bar">
+  <span>Puntuació acumulada</span>
+  <span><b id="scoreVal">0</b> <span class="tot">/ <span id="scoreTot">28</span></span></span>
+</div>
+
+<section>
+  <span class="sec-num">Teoria</span>
+  <h2>Una arrel, dos temps</h2>
+  <p class="sec-sub">El futur i el condicional dels verbs irregulars comparteixen exactament la mateixa arrel irregular; només canvien les terminacions.</p>
+  <div class="card">
+    <p>En valencià, un grup reduït de verbs forma el futur i el condicional sobre una arrel especial (no sobre l'infinitiu sencer). Eixa arrel és <b>la mateixa</b> per als dos temps: només hi afegim terminacions diferents.</p>
+    <div class="table-scroll">
+      <table class="verbtable">
+        <thead><tr><th>Infinitiu</th><th>Arrel irregular</th><th>Futur (jo)</th><th>Condicional (jo)</th></tr></thead>
+        <tbody>
+          <tr><td>haver</td><td class="root">haur-</td><td class="fut">hauré</td><td class="cond">hauria</td></tr>
+          <tr><td>saber</td><td class="root">sabr-</td><td class="fut">sabré</td><td class="cond">sabria</td></tr>
+          <tr><td>poder</td><td class="root">podr-</td><td class="fut">podré</td><td class="cond">podria</td></tr>
+          <tr><td>voler</td><td class="root">voldr-</td><td class="fut">voldré</td><td class="cond">voldria</td></tr>
+          <tr><td>tindre</td><td class="root">tindr-</td><td class="fut">tindré</td><td class="cond">tindria</td></tr>
+          <tr><td>vindre</td><td class="root">vindr-</td><td class="fut">vindré</td><td class="cond">vindria</td></tr>
+          <tr><td>fer</td><td class="root">far-</td><td class="fut">faré</td><td class="cond">faria</td></tr>
+          <tr><td>anar</td><td class="root">anir-</td><td class="fut">aniré</td><td class="cond">aniria</td></tr>
+          <tr><td>caldre</td><td class="root">caldr-</td><td class="fut">caldrà <span class="hint">(impers.)</span></td><td class="cond">caldria <span class="hint">(impers.)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ending-row">
+      <div class="ending-box">
+        <span class="label">Terminacions del futur</span>
+        <span class="fut mono">-é, -às, -à, -em, -eu, -an</span>
+      </div>
+      <div class="ending-box">
+        <span class="label">Terminacions del condicional</span>
+        <span class="cond mono">-ia, -ies, -ia, -íem, -íeu, -ien</span>
+      </div>
+    </div>
+    <p style="margin-top:14px;">Exemple complet amb <b>voler</b>: futur → <span class="mono">voldré, voldràs, voldrà, voldrem, voldreu, voldran</span>; condicional → <span class="mono">voldria, voldries, voldria, voldríem, voldríeu, voldrien</span>.</p>
+  </div>
+</section>
+
+<section id="act1">
+  <span class="sec-num">Activitat 1 · 6 punts</span>
+  <h2>Omple els buits</h2>
+  <p class="sec-sub">Escriu la forma correcta del verb indicat (futur o condicional, segons s'indica).</p>
+  <div class="card">
+    <div class="item">
+      <p class="prompt">1. Demà <input type="text" class="blank" data-act="1" data-q="0" data-ans="haurem"> d'actualitzar el servidor de WordPress del departament. <span class="hint">(haver, futur, nosaltres)</span></p>
+    </div>
+    <div class="item">
+      <p class="prompt">2. Si tinguéreu temps, <input type="text" class="blank" data-act="1" data-q="1" data-ans="podríeu"> acabar l'script de Python abans de la classe? <span class="hint">(poder, condicional, vosaltres)</span></p>
+    </div>
+    <div class="item">
+      <p class="prompt">3. La setmana que ve <input type="text" class="blank" data-act="1" data-q="2" data-ans="faré"> una demostració amb Teachable Machine a 3r d'ESO. <span class="hint">(fer, futur, jo)</span></p>
+    </div>
+    <div class="item">
+      <p class="prompt">4. Amb més memòria RAM, la màquina virtual de VirtualBox <input type="text" class="blank" data-act="1" data-q="3" data-ans="aniria"> molt més ràpida. <span class="hint">(anar, condicional, ella)</span></p>
+    </div>
+    <div class="item">
+      <p class="prompt">5. <input type="text" class="blank" data-act="1" data-q="4" data-ans="Vindràs" style="text-transform:none;"> al claustre de demà per a parlar del nou pla digital? <span class="hint">(vindre, futur, tu)</span></p>
+    </div>
+    <div class="item">
+      <p class="prompt">6. Si no configurem bé el XAMPP, <input type="text" class="blank" data-act="1" data-q="5" data-ans="caldria"> tornar a instal·lar-ho tot. <span class="hint">(caldre, condicional)</span></p>
+    </div>
+    <button class="check-btn" onclick="checkFill(1,6)">Comprova les respostes</button>
+    <div class="result-line" id="res1"></div>
+  </div>
+</section>
+
+<section id="act2">
+  <span class="sec-num">Activitat 2 · 4 punts</span>
+  <h2>Tria l'opció correcta</h2>
+  <p class="sec-sub">Clica l'opció que completa bé la frase.</p>
+  <div class="card">
+    <div class="item">
+      <p class="prompt">1. Quan acabe les proves, <span class="mono">_____</span> els resultats a la carpeta compartida.</p>
+      <div class="choices" data-act="2" data-q="0" data-ans="pujaré">
+        <button class="choice-btn" data-val="puge">puge</button>
+        <button class="choice-btn" data-val="pujaré">pujaré</button>
+        <button class="choice-btn" data-val="pujava">pujava</button>
+      </div>
+    </div>
+    <div class="item">
+      <p class="prompt">2. Si l'alumnat ho demanara, <span class="mono">_____</span> més temps per a l'examen pràctic de SQL.</p>
+      <div class="choices" data-act="2" data-q="1" data-ans="donaria">
+        <button class="choice-btn" data-val="donaré">donaré</button>
+        <button class="choice-btn" data-val="donaria">donaria</button>
+        <button class="choice-btn" data-val="done">done</button>
+      </div>
+    </div>
+    <div class="item">
+      <p class="prompt">3. L'any que ve <span class="mono">_____</span> un nou mòdul de robòtica a 4t d'ESO.</p>
+      <div class="choices" data-act="2" data-q="2" data-ans="tindrem">
+        <button class="choice-btn" data-val="tindrem">tindrem</button>
+        <button class="choice-btn" data-val="tenim">tenim</button>
+        <button class="choice-btn" data-val="tindríem">tindríem</button>
+      </div>
+    </div>
+    <div class="item">
+      <p class="prompt">4. Amb una bona còpia de seguretat, no <span class="mono">_____</span> tants problemes amb el servidor de correu.</p>
+      <div class="choices" data-act="2" data-q="3" data-ans="tindríem">
+        <button class="choice-btn" data-val="tindrem">tindrem</button>
+        <button class="choice-btn" data-val="tindríem">tindríem</button>
+        <button class="choice-btn" data-val="tenim">tenim</button>
+      </div>
+    </div>
+    <button class="check-btn" onclick="checkChoice(2,4)">Comprova les respostes</button>
+    <div class="result-line" id="res2"></div>
+  </div>
+</section>
+
+<section id="act3">
+  <span class="sec-num">Activitat 3 · 6 punts</span>
+  <h2>Completa la conjugació de "voler"</h2>
+  <p class="sec-sub">Es donen algunes formes com a exemple; completa les cel·les buides.</p>
+  <div class="card">
+    <div class="table-scroll">
+      <table class="verbtable">
+        <thead><tr><th>Persona</th><th>Futur</th><th>Condicional</th></tr></thead>
+        <tbody>
+          <tr><td>jo</td><td class="fut mono">voldré</td><td class="cond mono">voldria</td></tr>
+          <tr><td>tu</td><td><input type="text" class="blank" data-act="3" data-q="0" data-ans="voldràs" style="width:120px;"></td><td><input type="text" class="blank" data-act="3" data-q="1" data-ans="voldries" style="width:120px;"></td></tr>
+          <tr><td>ell / ella</td><td class="fut mono">voldrà</td><td class="cond mono">voldria</td></tr>
+          <tr><td>nosaltres</td><td><input type="text" class="blank" data-act="3" data-q="2" data-ans="voldrem" style="width:120px;"></td><td class="cond mono">voldríem</td></tr>
+          <tr><td>vosaltres</td><td class="fut mono">voldreu</td><td><input type="text" class="blank" data-act="3" data-q="3" data-ans="voldríeu" style="width:120px;"></td></tr>
+          <tr><td>ells / elles</td><td><input type="text" class="blank" data-act="3" data-q="4" data-ans="voldran" style="width:120px;"></td><td><input type="text" class="blank" data-act="3" data-q="5" data-ans="voldrien" style="width:120px;"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <button class="check-btn" onclick="checkFill(3,6)">Comprova les respostes</button>
+    <div class="result-line" id="res3"></div>
+  </div>
+</section>
+
+<section id="act4">
+  <span class="sec-num">Activitat 4 · 4 punts</span>
+  <h2>Mini-diàleg: abans de la reunió de departament</h2>
+  <p class="sec-sub">Completa el diàleg entre dos professors del departament d'informàtica.</p>
+  <div class="card">
+    <div class="dialog-line"><span class="who">A:</span><p class="prompt">Bon dia! Demà <input type="text" class="blank" data-act="4" data-q="0" data-ans="tindrem"> la reunió de departament per a organitzar el curs de Scratch. <span class="hint">(tindre, futur, nosaltres)</span></p></div>
+    <div class="dialog-line"><span class="who">B:</span><p class="prompt">Perfecte. Jo <input type="text" class="blank" data-act="4" data-q="1" data-ans="voldria"> portar també l'activitat amb Microbit, si hi ha temps. <span class="hint">(voler, condicional, jo)</span></p></div>
+    <div class="dialog-line"><span class="who">A:</span><p class="prompt"><input type="text" class="blank" data-act="4" data-q="2" data-ans="Podrem" style="text-transform:none;"> acabar-ho tot en una hora, crec. <span class="hint">(poder, futur, nosaltres)</span></p></div>
+    <div class="dialog-line"><span class="who">B:</span><p class="prompt">Si no, <input type="text" class="blank" data-act="4" data-q="3" data-ans="caldria"> deixar la part de MakeCode per a la setmana següent. <span class="hint">(caldre, condicional)</span></p></div>
+    <button class="check-btn" onclick="checkFill(4,4)">Comprova les respostes</button>
+    <div class="result-line" id="res4"></div>
+  </div>
+</section>
+
+<section id="act5">
+  <span class="sec-num">Activitat 5 · Vocabulari · 8 punts</span>
+  <h2>RDR: relacions digitals responsables</h2>
+  <p class="sec-sub">Tria la traducció correcta al castellà de cada terme valencià.</p>
+  <div class="card">
+    <div class="vocab-grid">
+      <div class="vocab-row"><span class="term">1. dispositiu mòbil</span>
+        <select class="vocab-select" data-act="5" data-q="0" data-ans="dispositivo móvil">
+          <option value="">— tria —</option>
+          <option value="dispositivo móvil">dispositivo móvil</option>
+          <option value="dispositivo fijo">dispositivo fijo</option>
+          <option value="aparato eléctrico">aparato eléctrico</option>
+        </select>
+      </div>
+      <div class="vocab-row"><span class="term">2. petjada digital</span>
+        <select class="vocab-select" data-act="5" data-q="1" data-ans="huella digital">
+          <option value="">— tria —</option>
+          <option value="marca de agua">marca de agua</option>
+          <option value="huella digital">huella digital</option>
+          <option value="pisada virtual">pisada virtual</option>
+        </select>
+      </div>
+      <div class="vocab-row"><span class="term">3. ciberassetjament</span>
+        <select class="vocab-select" data-act="5" data-q="2" data-ans="ciberacoso">
+          <option value="">— tria —</option>
+          <option value="ciberseguridad">ciberseguridad</option>
+          <option value="ciberdelito">ciberdelito</option>
+          <option value="ciberacoso">ciberacoso</option>
+        </select>
+      </div>
+      <div class="vocab-row"><span class="term">4. nomofòbia</span>
+        <select class="vocab-select" data-act="5" data-q="3" data-ans="nomofobia">
+          <option value="">— tria —</option>
+          <option value="tecnofobia">tecnofobia</option>
+          <option value="nomofobia">nomofobia</option>
+          <option value="claustrofobia">claustrofobia</option>
+        </select>
+      </div>
+      <div class="vocab-row"><span class="term">5. bretxa digital</span>
+        <select class="vocab-select" data-act="5" data-q="4" data-ans="brecha digital">
+          <option value="">— tria —</option>
+          <option value="grieta digital">grieta digital</option>
+          <option value="fractura tecnológica">fractura tecnológica</option>
+          <option value="brecha digital">brecha digital</option>
+        </select>
+      </div>
+      <div class="vocab-row"><span class="term">6. àlies</span>
+        <select class="vocab-select" data-act="5" data-q="5" data-ans="alias">
+          <option value="">— tria —</option>
+          <option value="alianza">alianza</option>
+          <option value="alérgeno">alérgeno</option>
+          <option value="alias">alias</option>
+        </select>
+      </div>
+      <div class="vocab-row"><span class="term">7. bo (informació falsa)</span>
+        <select class="vocab-select" data-act="5" data-q="6" data-ans="bulo">
+          <option value="">— tria —</option>
+          <option value="bono">bono</option>
+          <option value="boletín">boletín</option>
+          <option value="bulo">bulo</option>
+        </select>
+      </div>
+      <div class="vocab-row"><span class="term">8. discurs d'odi</span>
+        <select class="vocab-select" data-act="5" data-q="7" data-ans="discurso de odio">
+          <option value="">— tria —</option>
+          <option value="discurso político">discurso político</option>
+          <option value="discurso de odio">discurso de odio</option>
+          <option value="discurso de ánimo">discurso de ánimo</option>
+        </select>
+      </div>
+    </div>
+    <button class="check-btn" onclick="checkVocab(5,8)">Comprova les respostes</button>
+    <div class="result-line" id="res5"></div>
+  </div>
+</section>
+
+<section>
+  <span class="sec-num">Solucions i explicacions</span>
+  <details class="solutions">
+    <summary>Veure totes les solucions explicades</summary>
+
+    <div class="sol-block">
+      <h4>Activitat 1 · Omple els buits</h4>
+      <div class="sol-item">1. <b class="answer">haurem</b> — futur de "haver", nosaltres: arrel <span class="mono">haur-</span> + <span class="mono">-em</span>.</div>
+      <div class="sol-item">2. <b class="answer">podríeu</b> — condicional de "poder", vosaltres: arrel <span class="mono">podr-</span> + <span class="mono">-íeu</span>.</div>
+      <div class="sol-item">3. <b class="answer">faré</b> — futur de "fer", jo: arrel <span class="mono">far-</span> + <span class="mono">-é</span>.</div>
+      <div class="sol-item">4. <b class="answer">aniria</b> — condicional de "anar", ella: arrel <span class="mono">anir-</span> + <span class="mono">-ia</span>.</div>
+      <div class="sol-item">5. <b class="answer">Vindràs</b> — futur de "vindre", tu: arrel <span class="mono">vindr-</span> + <span class="mono">-às</span>.</div>
+      <div class="sol-item">6. <b class="answer">caldria</b> — condicional de "caldre" (verb impersonal, només 3a persona): arrel <span class="mono">caldr-</span> + <span class="mono">-ia</span>.</div>
+    </div>
+
+    <div class="sol-block">
+      <h4>Activitat 2 · Tria l'opció correcta</h4>
+      <div class="sol-item">1. <b class="answer">pujaré</b> — futur regular; les altres opcions són present ("puge") i imperfet ("pujava"), no futur.</div>
+      <div class="sol-item">2. <b class="answer">donaria</b> — la frase condicional ("si l'alumnat ho demanara...") demana condicional, no futur ("donaré") ni present ("done").</div>
+      <div class="sol-item">3. <b class="answer">tindrem</b> — futur irregular de "tindre": és un fet previst per a l'any que ve, no una hipòtesi (per això no és "tindríem").</div>
+      <div class="sol-item">4. <b class="answer">tindríem</b> — condicional perquè depén d'una condició ("amb una bona còpia de seguretat").</div>
+    </div>
+
+    <div class="sol-block">
+      <h4>Activitat 3 · Conjugació de "voler"</h4>
+      <div class="sol-item">Futur: voldré, <b class="answer">voldràs</b>, voldrà, <b class="answer">voldrem</b>, voldreu, <b class="answer">voldran</b>.</div>
+      <div class="sol-item">Condicional: voldria, <b class="answer">voldries</b>, voldria, voldríem, <b class="answer">voldríeu</b>, <b class="answer">voldrien</b>.</div>
+      <div class="sol-item">Fixa't que l'arrel <span class="mono">voldr-</span> és idèntica en tots els casos; només canvia la terminació.</div>
+    </div>
+
+    <div class="sol-block">
+      <h4>Activitat 4 · Mini-diàleg</h4>
+      <div class="sol-item">1. <b class="answer">tindrem</b> — futur, és un fet programat (la reunió de demà).</div>
+      <div class="sol-item">2. <b class="answer">voldria</b> — condicional, expressa un desig suau/educat, típic en peticions.</div>
+      <div class="sol-item">3. <b class="answer">Podrem</b> — futur, previsió sobre si serà possible acabar-ho.</div>
+      <div class="sol-item">4. <b class="answer">caldria</b> — condicional, perquè depén d'una condició ("si no...").</div>
+    </div>
+
+    <div class="sol-block">
+      <h4>Activitat 5 · Vocabulari RDR</h4>
+      <div class="sol-item">1. dispositiu mòbil → <b class="answer">dispositivo móvil</b>: qualsevol aparell portàtil amb connexió (mòbil, tauleta...).</div>
+      <div class="sol-item">2. petjada digital → <b class="answer">huella digital</b>: el rastre que deixem a internet amb la nostra activitat.</div>
+      <div class="sol-item">3. ciberassetjament → <b class="answer">ciberacoso</b>: assetjament continuat a través de mitjans digitals.</div>
+      <div class="sol-item">4. nomofòbia → <b class="answer">nomofobia</b>: por o ansietat a estar sense el mòbil.</div>
+      <div class="sol-item">5. bretxa digital → <b class="answer">brecha digital</b>: desigualtat d'accés o ús de la tecnologia entre persones o col·lectius.</div>
+      <div class="sol-item">6. àlies → <b class="answer">alias</b>: nom fictici que s'usa en lloc del nom real, per exemple en una xarxa social.</div>
+      <div class="sol-item">7. bo (informació falsa) → <b class="answer">bulo</b>: notícia o informació falsa que es difon com si fora certa.</div>
+      <div class="sol-item">8. discurs d'odi → <b class="answer">discurso de odio</b>: expressió que incita a l'odi o la violència contra un col·lectiu.</div>
+    </div>
+  </details>
+</section>
+
+<footer class="note">Exercici generat automàticament cada dia · IES Jorge Juan, Alacant · Departament d'Informàtica</footer>
+
+<script>
+(function(){
+  var scores = {1:0,2:0,3:0,4:0,5:0};
+  var checked = {1:false,2:false,3:false,4:false,5:false};
+
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase().replace(/\s+/g,' ');
+  }
+
+  function updateTotal(){
+    var sum = 0;
+    for(var k in scores){ sum += scores[k]; }
+    document.getElementById('scoreVal').textContent = sum;
+  }
+
+  window.checkFill = function(act, total){
+    var inputs = document.querySelectorAll('input.blank[data-act="'+act+'"]');
+    var correct = 0;
+    inputs.forEach(function(inp){
+      var ans = inp.getAttribute('data-ans');
+      var val = inp.value;
+      inp.classList.remove('ok','bad');
+      var existingMark = inp.parentNode.querySelector('.mark[data-for="'+inp.getAttribute('data-q')+'"]');
+      if(existingMark) existingMark.remove();
+      var mark = document.createElement('span');
+      mark.className = 'mark';
+      mark.setAttribute('data-for', inp.getAttribute('data-q'));
+      if(norm(val) === norm(ans)){
+        inp.classList.add('ok');
+        mark.classList.add('ok');
+        mark.textContent = '✓';
+        correct++;
+      } else {
+        inp.classList.add('bad');
+        mark.classList.add('bad');
+        mark.textContent = '✗';
+      }
+      inp.insertAdjacentElement('afterend', mark);
+    });
+    scores[act] = correct;
+    checked[act] = true;
+    document.getElementById('res'+act).textContent = correct + ' / ' + total + ' correctes. Mira les solucions a baix per a l\'explicació.';
+    updateTotal();
+  };
+
+  window.checkChoice = function(act, total){
+    var groups = document.querySelectorAll('.choices[data-act="'+act+'"]');
+    var correct = 0;
+    groups.forEach(function(g){
+      var ans = g.getAttribute('data-ans');
+      var selected = g.getAttribute('data-selected');
+      g.querySelectorAll('.choice-btn').forEach(function(btn){
+        btn.classList.remove('ok','bad');
+        var isAns = btn.getAttribute('data-val') === ans;
+        var isSel = btn.getAttribute('data-val') === selected;
+        if(isAns) btn.classList.add('ok');
+        else if(isSel) btn.classList.add('bad');
+      });
+      if(selected === ans) correct++;
+    });
+    scores[act] = correct;
+    checked[act] = true;
+    document.getElementById('res'+act).textContent = correct + ' / ' + total + ' correctes. Mira les solucions a baix per a l\'explicació.';
+    updateTotal();
+  };
+
+  document.querySelectorAll('.choice-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var group = btn.closest('.choices');
+      group.querySelectorAll('.choice-btn').forEach(function(b){ b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      group.setAttribute('data-selected', btn.getAttribute('data-val'));
+    });
+  });
+
+  window.checkVocab = function(act, total){
+    var selects = document.querySelectorAll('select.vocab-select[data-act="'+act+'"]');
+    var correct = 0;
+    selects.forEach(function(sel){
+      var ans = sel.getAttribute('data-ans');
+      sel.classList.remove('ok','bad');
+      if(norm(sel.value) === norm(ans)){
+        sel.classList.add('ok');
+        correct++;
+      } else {
+        sel.classList.add('bad');
+      }
+    });
+    scores[act] = correct;
+    checked[act] = true;
+    document.getElementById('res'+act).textContent = correct + ' / ' + total + ' correctes. Mira les solucions a baix per a l\'explicació.';
+    updateTotal();
+  };
+})();
+</script>
+
+</body></html>

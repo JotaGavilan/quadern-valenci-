@@ -1,0 +1,753 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Em dic, m'agrada, porta'm</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  /* Layout: pronoms febles com a puntades de fil que cosen la frase —
+     una línia de puntada travessa cada bloc i marca on "s'agafa" el pronom al verb. */
+  :root{
+    --bg:#eef1e7;
+    --surface:#ffffff;
+    --surface-2:#e2e7d6;
+    --ink:#2b332a;
+    --ink-soft:#6a7363;
+    --accent:#9c3b4a;
+    --accent-ink:#ffffff;
+    --accent-soft:#f3dcdf;
+    --accent-soft-ink:#7a2c38;
+    --thread:#3f6b5e;
+    --line:#cdd3bd;
+    --good:#2f7d52;
+    --good-bg:#dcece0;
+    --bad:#b23b35;
+    --bad-bg:#f6dcda;
+    --verbbox:#2f4d78;
+    --verbbox-bg:#dde6f2;
+    --verbbox-ink:#17304f;
+    --shadow:0 1px 2px rgba(43,51,42,.08), 0 10px 26px -14px rgba(43,51,42,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#181d16;
+      --surface:#212720;
+      --surface-2:#2a3127;
+      --ink:#e9ede3;
+      --ink-soft:#a7b09c;
+      --accent:#e08b96;
+      --accent-ink:#2a0d12;
+      --accent-soft:#3a2024;
+      --accent-soft-ink:#f0bcc2;
+      --thread:#8fc3af;
+      --line:#3a4336;
+      --good:#82d4a4;
+      --good-bg:#1f3527;
+      --bad:#e8958f;
+      --bad-bg:#3a201e;
+      --verbbox:#9cbce8;
+      --verbbox-bg:#1d2c42;
+      --verbbox-ink:#cfe0f7;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#181d16;
+    --surface:#212720;
+    --surface-2:#2a3127;
+    --ink:#e9ede3;
+    --ink-soft:#a7b09c;
+    --accent:#e08b96;
+    --accent-ink:#2a0d12;
+    --accent-soft:#3a2024;
+    --accent-soft-ink:#f0bcc2;
+    --thread:#8fc3af;
+    --line:#3a4336;
+    --good:#82d4a4;
+    --good-bg:#1f3527;
+    --bad:#e8958f;
+    --bad-bg:#3a201e;
+    --verbbox:#9cbce8;
+    --verbbox-bg:#1d2c42;
+    --verbbox-ink:#cfe0f7;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Figtree', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:26px;
+    padding-bottom:60px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page{ max-width:780px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Instrument Serif', Georgia, serif; text-wrap:balance; margin:0; font-weight:400; }
+  .mono{ font-family:'Space Mono', ui-monospace, monospace; }
+
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'Space Mono', monospace;
+    font-size:.76rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .back-link:hover{ text-decoration:underline; }
+
+  header.top{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:26px 26px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:6px;
+    background-image: repeating-linear-gradient(90deg, var(--thread) 0 14px, transparent 14px 24px);
+  }
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  header.top h1{ font-size:clamp(1.9rem, 6vw, 2.6rem); font-style:italic; color:var(--accent); }
+  header.top p{ margin:12px 0 0; max-width:58ch; color:var(--ink-soft); font-size:.95rem; }
+  .pill-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:var(--surface-2);
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  .pill.verb{ background:var(--verbbox-bg); color:var(--verbbox-ink); }
+
+  .score-bar{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:5;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    box-shadow:var(--shadow);
+    flex-wrap:wrap;
+  }
+  .score-bar .label{ font-size:.86rem; color:var(--ink-soft); }
+  .score-bar .score{
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--accent);
+  }
+  .score-bar button{
+    font-family:'Figtree', sans-serif;
+    font-weight:600;
+    font-size:.88rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+  }
+  .score-bar button:hover{ opacity:.9; }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  section.card::before{
+    content:"";
+    position:absolute; top:0; left:22px; right:22px; height:3px;
+    background-image: repeating-linear-gradient(90deg, var(--thread) 0 8px, transparent 8px 14px);
+  }
+  section.card h2{ font-size:1.3rem; margin-bottom:4px; }
+  section.card .kicker{
+    font-family:'Space Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--accent);
+    margin-bottom:6px;
+    display:block;
+  }
+  section.card p.intro{ color:var(--ink-soft); font-size:.92rem; margin:8px 0 16px; max-width:62ch; }
+
+  section.verbbox{
+    background:var(--verbbox-bg);
+    border:1px solid var(--verbbox);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.verbbox h2{ font-size:1.2rem; margin-bottom:4px; color:var(--verbbox-ink); }
+  section.verbbox .kicker{
+    font-family:'Space Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--verbbox);
+    margin-bottom:6px;
+    display:block;
+  }
+  section.verbbox p.intro{ color:var(--verbbox-ink); opacity:.85; font-size:.92rem; margin:8px 0 16px; max-width:62ch; }
+
+  .theory-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.9rem;
+    margin:14px 0;
+    overflow-x:auto;
+    display:block;
+  }
+  .theory-table table{ width:100%; border-collapse:collapse; min-width:480px; }
+  .theory-table thead th{
+    background:var(--surface-2);
+    font-family:'Space Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+  }
+  .theory-table tbody td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  .theory-table .form{ color:var(--accent); font-weight:700; font-family:'Space Mono', monospace; }
+
+  .qblock{
+    padding:14px 0;
+    border-top:1px solid var(--line);
+  }
+  .qblock:first-of-type{ border-top:none; padding-top:4px; }
+  .qnum{
+    font-family:'Space Mono', monospace;
+    font-size:.76rem;
+    color:var(--ink-soft);
+    margin-right:4px;
+  }
+  .qtext{ font-size:.96rem; }
+
+  select.blank{
+    font-family:'Figtree', sans-serif;
+    font-weight:600;
+    font-size:.9rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    background:var(--surface);
+    color:var(--ink);
+    margin:0 4px;
+  }
+  select.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  input[type="text"].blank{
+    font-family:'Space Mono', monospace;
+    font-size:.9rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    width:110px;
+    background:var(--surface);
+    color:var(--ink);
+    margin:0 4px;
+  }
+  input[type="text"].blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .mc-options{ display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+  .mc-options label{
+    display:flex; align-items:center; gap:8px;
+    font-size:.92rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+  }
+  .mc-options label:hover{ background:var(--surface-2); }
+  .mc-options input{ accent-color:var(--accent); }
+
+  .feedback{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:.84rem;
+    font-weight:600;
+    margin-left:8px;
+    padding:2px 9px;
+    border-radius:999px;
+  }
+  .feedback.ok{ background:var(--good-bg); color:var(--good); }
+  .feedback.bad{ background:var(--bad-bg); color:var(--bad); }
+  .feedback[hidden]{ display:none !important; }
+
+  .rule-table{ width:100%; border-collapse:collapse; margin-top:10px; overflow-x:auto; display:block; }
+  .rule-table table{ width:100%; border-collapse:collapse; min-width:520px; }
+  .rule-table th{
+    background:var(--surface-2); text-align:left; font-size:.74rem;
+    font-family:'Space Mono', monospace; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); padding:8px 12px; border-bottom:1px solid var(--line);
+  }
+  .rule-table td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:.88rem; }
+
+  .solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-top:26px;
+    box-shadow:var(--shadow);
+  }
+  .solutions h2{ font-size:1.25rem; margin-bottom:6px; }
+  .solutions .sol-item{
+    padding:10px 0;
+    border-top:1px solid var(--line);
+    font-size:.9rem;
+  }
+  .solutions .sol-item:first-of-type{ border-top:none; }
+  .solutions .sol-item .ans{ color:var(--accent); font-weight:700; font-family:'Space Mono', monospace; }
+  .solutions details{ margin-top:16px; }
+  .solutions summary{
+    cursor:pointer;
+    font-family:'Space Mono', monospace;
+    font-size:.8rem;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:26px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:22px 18px 20px; }
+    section.card, section.verbbox{ padding:18px 16px 20px; }
+  }
+</style>
+
+<div class="page">
+
+<a class="back-link" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 7 de novembre de 2026</div>
+    <h1>Em dic, m'agrada, porta'm</h1>
+    <p>Tema d'avui: <strong>Pronoms febles: formes plenes, reforçades i reduïdes (em, me, 'm, m')</strong>. Són quatre maneres de dir el mateix pronom — la que facis servir depén només d'on va i de quin so toca al costat. Un detall xicotet que es nota molt quan parles valencià en veu alta a classe.</p>
+    <div class="pill-row">
+      <span class="pill">Pronoms febles · em / me / 'm / m'</span>
+      <span class="pill verb">Verb del dia: present d'indicatiu dels irregulars</span>
+    </div>
+  </div>
+</header>
+
+<div class="score-bar">
+  <span class="label">Puntuació acumulada</span>
+  <span class="score"><span id="scoreVal">0</span> / <span id="scoreMax">22</span></span>
+  <button id="checkBtn">Comprova les respostes</button>
+</div>
+
+<section class="card">
+  <span class="kicker">Teoria</span>
+  <h2>Un pronom, quatre vestits</h2>
+  <p class="intro">El pronom feble de primera persona del singular (<em>em</em>, "a mi") no és una paraula fixa: canvia de forma segons <strong>on se situa</strong> respecte del verb (davant o darrere) i segons <strong>quin so toca al costat</strong>. Encara que pareguen quatre paraules diferents, és sempre el mateix pronom.</p>
+  <div class="theory-table">
+    <table>
+      <thead><tr><th>Posició</th><th>Condició</th><th>Forma</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td>Proclítica<br><span class="mono" style="font-size:.78rem;color:var(--ink-soft)">(davant del verb)</span></td><td>El verb comença en consonant</td><td class="form">em</td><td>No <strong>em</strong> convence eixe argument.</td></tr>
+        <tr><td>Proclítica</td><td>El verb comença en vocal o h muda</td><td class="form">m'</td><td><strong>M'</strong>agrada explicar robòtica.</td></tr>
+        <tr><td>Enclítica<br><span class="mono" style="font-size:.78rem;color:var(--ink-soft)">(darrere del verb, amb guionet)</span></td><td>El verb acaba en consonant, o en -u / -i</td><td class="form">me</td><td>Expliqueu-<strong>me</strong> l'error.</td></tr>
+        <tr><td>Enclítica</td><td>El verb acaba en -a, -e, -o</td><td class="form">'m</td><td>Porta<strong>'m</strong> l'USB.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="intro" style="margin-bottom:0">El mateix patró de quatre formes es repeteix amb els altres pronoms febles (<span class="mono">et/te/'t</span>, <span class="mono">es/se/'s</span>, <span class="mono">ens/nos</span>...), així que una vegada domines "em", ja tens la clau de tota la sèrie.</p>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 1 · Tria la forma</span>
+  <h2>A la sala de professors</h2>
+  <p class="intro">Selecciona la forma correcta del pronom per a cada frase.</p>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">A mi, sincerament,
+      <select class="blank" id="a1q1" data-answer="em">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select>
+      costa molt explicar la intel·ligència artificial sense exemples pràctics.</span>
+    <span class="feedback" id="fb-a1q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">
+      <select class="blank" id="a1q2" data-answer="m'">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select>
+      he oblidat la contrasenya del servidor de correu una altra volta!</span>
+    <span class="feedback" id="fb-a1q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">Xics, ajudeu-<select class="blank" id="a1q3" data-answer="me">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select> a connectar el projector abans que entre l'altra classe.</span>
+    <span class="feedback" id="fb-a1q3" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext">Porta-<select class="blank" id="a1q4" data-answer="'m">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select> l'adaptador HDMI, per favor, que el necessite ara mateix.</span>
+    <span class="feedback" id="fb-a1q4" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">5.</span>
+    <span class="qtext">No
+      <select class="blank" id="a1q5" data-answer="em">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select>
+      veu ningú des d'ahí darrere; apropeu-vos una miqueta.</span>
+    <span class="feedback" id="fb-a1q5" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">6.</span>
+    <span class="qtext">Digueu-<select class="blank" id="a1q6" data-answer="me">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select> si l'ordinador no engega bé, que ho miraré de seguida.</span>
+    <span class="feedback" id="fb-a1q6" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">7.</span>
+    <span class="qtext">Dona-<select class="blank" id="a1q7" data-answer="'m">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select> un minut per a reiniciar la màquina virtual de VirtualBox.</span>
+    <span class="feedback" id="fb-a1q7" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 2 · Tipus test</span>
+  <h2>La regla i la frase correcta</h2>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">Quina forma cal fer servir <strong>davant</strong> d'un verb que comença en vocal o h muda?</span>
+    <div class="mc-options" data-qid="a2q1" data-answer="m'">
+      <label><input type="radio" name="a2q1" value="em"> em</label>
+      <label><input type="radio" name="a2q1" value="me"> me</label>
+      <label><input type="radio" name="a2q1" value="m'"> m'</label>
+      <label><input type="radio" name="a2q1" value="'m"> 'm</label>
+    </div>
+    <span class="feedback" id="fb-a2q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">Quina forma cal fer servir <strong>darrere</strong> d'un verb que acaba en -a, -e o -o?</span>
+    <div class="mc-options" data-qid="a2q2" data-answer="'m">
+      <label><input type="radio" name="a2q2" value="em"> em</label>
+      <label><input type="radio" name="a2q2" value="'m"> 'm</label>
+      <label><input type="radio" name="a2q2" value="me"> me</label>
+      <label><input type="radio" name="a2q2" value="m'"> m'</label>
+    </div>
+    <span class="feedback" id="fb-a2q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">Quina frase està ben escrita?</span>
+    <div class="mc-options" data-qid="a2q3" data-answer="b">
+      <label><input type="radio" name="a2q3" value="a"> Em agrada el nou gestor de continguts.</label>
+      <label><input type="radio" name="a2q3" value="b"> M'agrada el nou gestor de continguts.</label>
+      <label><input type="radio" name="a2q3" value="c"> Me agrada el nou gestor de continguts.</label>
+      <label><input type="radio" name="a2q3" value="d"> 'M agrada el nou gestor de continguts.</label>
+    </div>
+    <span class="feedback" id="fb-a2q3" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext">Quina frase està ben escrita?</span>
+    <div class="mc-options" data-qid="a2q4" data-answer="a">
+      <label><input type="radio" name="a2q4" value="a"> Passa'm l'USB.</label>
+      <label><input type="radio" name="a2q4" value="b"> Passa-me l'USB.</label>
+      <label><input type="radio" name="a2q4" value="c"> Passa em l'USB.</label>
+      <label><input type="radio" name="a2q4" value="d"> Passa m' l'USB.</label>
+    </div>
+    <span class="feedback" id="fb-a2q4" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 3 · Completa la taula</span>
+  <h2>Repassa les quatre formes</h2>
+  <p class="intro">Escriu la forma del pronom que falta en cada exemple (fixa't en la posició i en el so del costat).</p>
+  <div class="rule-table">
+    <table>
+      <thead><tr><th>Regla</th><th>Exemple a completar</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Proclítica + consonant</td>
+          <td>No <input type="text" class="blank" id="a3q1" data-answer="em" autocomplete="off"> dutxe mai abans de les huit. <span class="feedback" id="fb-a3q1" hidden></span></td>
+        </tr>
+        <tr>
+          <td>Proclítica + vocal/h</td>
+          <td><input type="text" class="blank" id="a3q2" data-answer="m'" autocomplete="off"> he deixat l'USB a sobre de la taula. <span class="feedback" id="fb-a3q2" hidden></span></td>
+        </tr>
+        <tr>
+          <td>Enclítica + consonant / -u / -i</td>
+          <td>Expliqueu-<input type="text" class="blank" id="a3q3" data-answer="me" autocomplete="off"> el funcionament del router, per favor. <span class="feedback" id="fb-a3q3" hidden></span></td>
+        </tr>
+        <tr>
+          <td>Enclítica + -a / -e / -o</td>
+          <td>Deixa-<input type="text" class="blank" id="a3q4" data-answer="'m" autocomplete="off"> acabar la configuració del XAMPP. <span class="feedback" id="fb-a3q4" hidden></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 4 · Mini-diàleg al laboratori</span>
+  <h2>Abans de començar la pràctica</h2>
+  <p class="intro">Completa cada intervenció amb la forma correcta del pronom.</p>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">— Profe, <select class="blank" id="a4q1" data-answer="m'">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select>ha quedat penjat l'entorn de MakeCode, no sé què fer.</span>
+    <span class="feedback" id="fb-a4q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">— Tranquil, torna-<select class="blank" id="a4q2" data-answer="'m">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select> a dir quin missatge d'error ix a la pantalla.</span>
+    <span class="feedback" id="fb-a4q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">— A mi tampoc
+      <select class="blank" id="a4q3" data-answer="em">
+        <option value="">— tria —</option>
+        <option value="em">em</option>
+        <option value="m'">m'</option>
+        <option value="me">me</option>
+        <option value="'m">'m</option>
+      </select>
+      deixa guardar el projecte des d'ahir.</span>
+    <span class="feedback" id="fb-a4q3" hidden></span>
+  </div>
+</section>
+
+<section class="verbbox">
+  <span class="kicker">Verb del dia · repàs breu</span>
+  <h2>Present d'indicatiu dels irregulars</h2>
+  <p class="intro">Tres verbs molt freqüents en la parla diària de classe, amb la primera persona irregular del present.</p>
+  <div class="qblock" style="border-top:none;padding-top:0">
+    <span class="qnum">1.</span>
+    <span class="qtext">Cada matí <input type="text" class="blank" id="v1" data-answer="isc" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(eixir)</span> de classe per a preparar el laboratori abans que arribe l'alumnat. <span class="feedback" id="fb-v1" hidden></span></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">Quan algú em fa una pregunta difícil sobre xarxes, no <input type="text" class="blank" id="v2" data-answer="sé" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(saber)</span> sempre la resposta a la primera. <span class="feedback" id="fb-v2" hidden></span></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext"><input type="text" class="blank" id="v3" data-answer="vull" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(voler)</span> que proveu Teachable Machine abans d'acabar la classe d'avui. <span class="feedback" id="fb-v3" hidden></span></span>
+  </div>
+</section>
+
+<div class="solutions">
+  <h2>Solucions i explicacions</h2>
+  <details>
+    <summary>Mostra totes les solucions</summary>
+
+    <div class="sol-item"><strong>Activitat 1.1</strong> — <span class="ans">em</span>. Proclítica davant de consonant ("costa").</div>
+    <div class="sol-item"><strong>Activitat 1.2</strong> — <span class="ans">m'</span>. Proclítica davant de vocal/h muda ("he").</div>
+    <div class="sol-item"><strong>Activitat 1.3</strong> — <span class="ans">me</span>. Enclítica darrere d'un verb acabat en -u ("ajudeu").</div>
+    <div class="sol-item"><strong>Activitat 1.4</strong> — <span class="ans">'m</span>. Enclítica darrere d'un verb acabat en -a ("porta").</div>
+    <div class="sol-item"><strong>Activitat 1.5</strong> — <span class="ans">em</span>. Proclítica davant de consonant ("veu").</div>
+    <div class="sol-item"><strong>Activitat 1.6</strong> — <span class="ans">me</span>. Enclítica darrere d'un verb acabat en -u ("digueu").</div>
+    <div class="sol-item"><strong>Activitat 1.7</strong> — <span class="ans">'m</span>. Enclítica darrere d'un verb acabat en -a ("dona").</div>
+
+    <div class="sol-item"><strong>Activitat 2.1</strong> — <span class="ans">m'</span>. Davant de vocal o h muda, la forma plena "em" elideix la vocal.</div>
+    <div class="sol-item"><strong>Activitat 2.2</strong> — <span class="ans">'m</span>. Darrere d'un verb acabat en -a/-e/-o, el pronom es redueix i s'uneix amb apòstrof.</div>
+    <div class="sol-item"><strong>Activitat 2.3</strong> — <span class="ans">M'agrada el nou gestor de continguts.</span> "Agrada" comença en vocal, així que cal "m'", mai "em" ni "me" soltes.</div>
+    <div class="sol-item"><strong>Activitat 2.4</strong> — <span class="ans">Passa'm l'USB.</span> "Passa" acaba en -a, així que la forma enclítica és la reduïda "'m", sense guionet.</div>
+
+    <div class="sol-item"><strong>Activitat 3</strong> — <span class="ans">em</span> (davant de consonant), <span class="ans">m'</span> (davant de vocal/h), <span class="ans">me</span> (darrere de "expliqueu", acabat en -u), <span class="ans">'m</span> (darrere de "deixa", acabat en -a).</div>
+
+    <div class="sol-item"><strong>Activitat 4.1</strong> — <span class="ans">m'</span>. Davant del verb "ha", que comença en h muda.</div>
+    <div class="sol-item"><strong>Activitat 4.2</strong> — <span class="ans">'m</span>. Darrere de "torna", acabat en -a.</div>
+    <div class="sol-item"><strong>Activitat 4.3</strong> — <span class="ans">em</span>. Davant del verb "deixa", que comença en consonant.</div>
+
+    <div class="sol-item"><strong>Verb del dia 1</strong> — <span class="ans">isc</span>. De <em>eixir</em>: 1a persona irregular del present (isc, ixes, ix, eixim, eixiu, ixen).</div>
+    <div class="sol-item"><strong>Verb del dia 2</strong> — <span class="ans">sé</span>. De <em>saber</em>: 1a persona irregular (sé, saps, sap, sabem, sabeu, saben).</div>
+    <div class="sol-item"><strong>Verb del dia 3</strong> — <span class="ans">vull</span>. De <em>voler</em>: 1a persona irregular (vull, vols, vol, volem, voleu, volen).</div>
+  </details>
+</div>
+
+<footer class="note">IES Jorge Juan, Alacant · Quadern de valencià oral per al professorat d'informàtica</footer>
+
+</div>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase();
+  }
+
+  function checkTextInput(id){
+    var el = document.getElementById(id);
+    var fb = document.getElementById('fb-' + id);
+    if(!el || !fb) return false;
+    var raw = el.getAttribute('data-answer') || '';
+    var accepted = raw.split('|').map(norm);
+    var val = norm(el.value);
+    var ok = val.length > 0 && accepted.indexOf(val) !== -1;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  function checkSelect(id){
+    var el = document.getElementById(id);
+    var fb = document.getElementById('fb-' + id);
+    if(!el || !fb) return false;
+    var answer = norm(el.getAttribute('data-answer'));
+    var val = norm(el.value);
+    var ok = val.length > 0 && val === answer;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  function checkMC(qid){
+    var group = document.querySelector('.mc-options[data-qid="' + qid + '"]');
+    var fb = document.getElementById('fb-' + qid);
+    if(!group || !fb) return false;
+    var answer = group.getAttribute('data-answer');
+    var checked = group.querySelector('input[type="radio"]:checked');
+    var ok = !!checked && checked.value === answer;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  var selectIds = ['a1q1','a1q2','a1q3','a1q4','a1q5','a1q6','a1q7','a4q1','a4q2','a4q3'];
+  var mcIds = ['a2q1','a2q2','a2q3','a2q4'];
+  var textIds = ['a3q1','a3q2','a3q3','a3q4','v1','v2','v3'];
+
+  var total = selectIds.length + mcIds.length + textIds.length;
+  document.getElementById('scoreMax').textContent = total;
+
+  function runCheck(){
+    var score = 0;
+    selectIds.forEach(function(id){ if(checkSelect(id)) score++; });
+    mcIds.forEach(function(id){ if(checkMC(id)) score++; });
+    textIds.forEach(function(id){ if(checkTextInput(id)) score++; });
+    document.getElementById('scoreVal').textContent = score;
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', runCheck);
+})();
+</script>
+
+</body></html>

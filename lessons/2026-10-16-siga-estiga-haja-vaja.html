@@ -1,0 +1,708 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Siga, estiga, haja, vaja</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout concept: four verb "pillars" (Ser · Estar · Haver · Anar) run down the page like
+     connected circuit traces -- a nod to the hardware/xarxes vocabulary block of the day --
+     joined by a thin plum trace-line that threads through section headers. */
+  :root{
+    --bg:#f5eef1;
+    --surface:#ffffff;
+    --surface-2:#ece0e7;
+    --ink:#2a1f27;
+    --ink-soft:#6b5866;
+    --accent:#6b3d63;
+    --accent-ink:#ffffff;
+    --accent-soft:#ecdcea;
+    --accent-soft-ink:#4a2a44;
+    --line:#ddc8d3;
+    --good:#2f7d52;
+    --good-bg:#def0e4;
+    --bad:#a8373a;
+    --bad-bg:#f8e2e0;
+    --mono-ink:#f5eef1;
+    --mono-bg:#3a2a35;
+    --shadow:0 1px 2px rgba(42,31,39,.07), 0 10px 26px -14px rgba(42,31,39,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1c1518;
+      --surface:#241a1f;
+      --surface-2:#2d2027;
+      --ink:#f1e8ec;
+      --ink-soft:#bfa8b4;
+      --accent:#e2a6d4;
+      --accent-ink:#2a1324;
+      --accent-soft:#3a2535;
+      --accent-soft-ink:#f1cce8;
+      --line:#45313c;
+      --good:#7fd4a0;
+      --good-bg:#1c3328;
+      --bad:#e89590;
+      --bad-bg:#3a2222;
+      --mono-ink:#f1e8ec;
+      --mono-bg:#2d2027;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1c1518;
+    --surface:#241a1f;
+    --surface-2:#2d2027;
+    --ink:#f1e8ec;
+    --ink-soft:#bfa8b4;
+    --accent:#e2a6d4;
+    --accent-ink:#2a1324;
+    --accent-soft:#3a2535;
+    --accent-soft-ink:#f1cce8;
+    --line:#45313c;
+    --good:#7fd4a0;
+    --good-bg:#1c3328;
+    --bad:#e89590;
+    --bad-bg:#3a2222;
+    --mono-ink:#f1e8ec;
+    --mono-bg:#2d2027;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ background:var(--bg); }
+  body{
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    font-size:15.5px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+    padding-block:22px 64px;
+    max-width:860px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a.back-link{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+    border:1px solid var(--line);
+  }
+  a.back-link:hover{ background:var(--accent); color:var(--accent-ink); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:26px 26px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1.5px, transparent 1.5px 34px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1.5px, transparent 1.5px 34px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.88;
+    margin-bottom:10px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.35rem); font-weight:600; }
+  header.top p{ margin:12px 0 0; max-width:60ch; opacity:.92; font-size:.95rem; }
+  .pillars{
+    display:flex; gap:10px; flex-wrap:wrap;
+    margin-top:18px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.76rem;
+  }
+  .pillars span{
+    background:rgba(255,255,255,.16);
+    padding:5px 11px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.3);
+  }
+
+  section{ margin-top:30px; }
+  section > h2{
+    font-size:1.25rem;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  section > h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    border:1.5px solid var(--accent);
+    border-radius:999px;
+    width:1.8em; height:1.8em;
+    display:inline-flex; align-items:center; justify-content:center;
+    flex:none;
+  }
+  section > p.lead{ margin:6px 0 16px; color:var(--ink-soft); font-size:.92rem; max-width:65ch; }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px;
+    box-shadow:var(--shadow);
+  }
+
+  table.conj{ border-collapse:collapse; width:100%; font-size:.92rem; }
+  .table-wrap{ overflow-x:auto; }
+  table.conj th, table.conj td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+    white-space:nowrap;
+  }
+  table.conj thead th{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    background:var(--surface-2);
+  }
+  table.conj tbody tr:last-child td{ border-bottom:none; }
+  table.conj td.pron{ font-weight:600; color:var(--accent-soft-ink); background:var(--accent-soft); }
+
+  .note{
+    margin-top:16px;
+    padding:14px 16px;
+    background:var(--surface-2);
+    border-left:3px solid var(--accent);
+    border-radius:0 10px 10px 0;
+    font-size:.88rem;
+  }
+  .note b{ color:var(--accent); }
+
+  .q{ margin-bottom:16px; }
+  .q:last-child{ margin-bottom:0; }
+  .q .stem{ font-size:.95rem; margin-bottom:8px; }
+  .q .stem .hint{ font-family:'IBM Plex Mono', monospace; font-size:.78rem; color:var(--ink-soft); }
+
+  input.blank{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.92rem;
+    width:7.5em;
+    padding:6px 9px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+  }
+  input.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  input.blank.correct{ border-color:var(--good); background:var(--good-bg); }
+  input.blank.incorrect{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .options{ display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+  .opt{
+    display:flex; align-items:center; gap:9px;
+    padding:8px 11px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+    font-size:.92rem;
+    background:var(--surface);
+  }
+  .opt:hover{ background:var(--surface-2); }
+  .opt input{ accent-color:var(--accent); flex:none; }
+  .opt.correct{ border-color:var(--good); background:var(--good-bg); }
+  .opt.incorrect{ border-color:var(--bad); background:var(--bad-bg); }
+
+  select.vocab-select{
+    font-family:'Inter', sans-serif;
+    font-size:.9rem;
+    padding:7px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    min-width:min(220px, 100%);
+    max-width:100%;
+  }
+  select.vocab-select.correct{ border-color:var(--good); background:var(--good-bg); }
+  select.vocab-select.incorrect{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .vocab-row{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding:10px 0;
+    border-top:1px solid var(--line);
+  }
+  .vocab-row:first-of-type{ border-top:none; padding-top:0; }
+  .vocab-row .term{ font-family:'IBM Plex Mono', monospace; font-weight:600; min-width:13em; }
+
+  .dialogue p{ margin:0 0 12px; font-size:.95rem; }
+  .dialogue p:last-child{ margin-bottom:0; }
+  .dialogue .who{ font-weight:700; color:var(--accent-soft-ink); }
+
+  .feedback-icon{ font-weight:700; margin-left:6px; font-size:.85rem; }
+  .feedback-icon.ok{ color:var(--good); }
+  .feedback-icon.bad{ color:var(--bad); }
+
+  .check-bar{
+    position:sticky;
+    bottom:12px;
+    display:flex; justify-content:center;
+    margin-top:34px;
+    z-index:5;
+  }
+  button#checkBtn{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border:none;
+    padding:13px 30px;
+    border-radius:999px;
+    box-shadow:var(--shadow);
+    cursor:pointer;
+  }
+  button#checkBtn:hover{ filter:brightness(1.07); }
+
+  .score-panel{
+    margin-top:18px;
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.95rem;
+    color:var(--ink-soft);
+  }
+  .score-panel b{
+    font-family:'Fraunces', serif;
+    font-size:1.4rem;
+    color:var(--accent);
+    display:block;
+    margin-bottom:2px;
+  }
+
+  details.solutions{
+    margin-top:36px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:var(--surface);
+    box-shadow:var(--shadow);
+    padding:4px 22px 6px;
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.1rem;
+    padding:16px 0;
+  }
+  details.solutions ol{ padding-left:1.3em; margin:0 0 18px; }
+  details.solutions ol li{ margin-bottom:10px; font-size:.9rem; }
+  details.solutions h4{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    margin:18px 0 6px;
+  }
+  details.solutions .mono{ color:var(--accent); }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:34px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:20px 18px 20px; }
+    .card{ padding:16px 16px; }
+  }
+</style>
+
+<a class="back-link" href="../index.html">&larr; Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 16 d'octubre de 2026</div>
+    <h1>Siga, estiga, haja, vaja</h1>
+    <p><b>Tema gramatical d'avui:</b> Ser / estar / haver / anar en diversos temps. Estos quatre verbs són els més usats &mdash; i els més irregulars &mdash; de tot el valencià; dominar-los en diversos temps és imprescindible per a parlar amb fluïdesa a classe.</p>
+    <div class="pillars">
+      <span>SER</span><span>ESTAR</span><span>HAVER</span><span>ANAR</span>
+    </div>
+  </div>
+</header>
+
+<section id="s0">
+  <h2><span class="num">i</span>Quatre verbs, diversos temps</h2>
+  <p class="lead">Repassem com es comporten <i>ser</i>, <i>estar</i>, <i>haver</i> i <i>anar</i> en present d'indicatiu i, sobretot, en present de subjuntiu &mdash; el temps que més costa i el que fem servir cada dia darrere de <span class="mono">cal que...</span>, <span class="mono">vull que...</span> o <span class="mono">quan...</span>.</p>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table class="conj">
+        <thead><tr><th>Pronom</th><th>Ser</th><th>Estar</th><th>Haver</th><th>Anar</th></tr></thead>
+        <tbody>
+          <tr><td class="pron">jo</td><td>sóc</td><td>estic</td><td>he</td><td>vaig</td></tr>
+          <tr><td class="pron">tu</td><td>ets</td><td>estàs</td><td>has</td><td>vas</td></tr>
+          <tr><td class="pron">ell / ella</td><td>és</td><td>està</td><td>ha</td><td>va</td></tr>
+          <tr><td class="pron">nosaltres</td><td>som</td><td>estem</td><td>hem</td><td>anem</td></tr>
+          <tr><td class="pron">vosaltres</td><td>sou</td><td>esteu</td><td>heu</td><td>aneu</td></tr>
+          <tr><td class="pron">ells</td><td>són</td><td>estan</td><td>han</td><td>van</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin:14px 0 4px; font-size:.82rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; font-family:'IBM Plex Mono',monospace;">Present de subjuntiu</p>
+    <div class="table-wrap">
+      <table class="conj">
+        <thead><tr><th>Pronom (que...)</th><th>Ser</th><th>Estar</th><th>Haver</th><th>Anar</th></tr></thead>
+        <tbody>
+          <tr><td class="pron">jo</td><td>siga</td><td>estiga</td><td>haja / hage</td><td>vaja</td></tr>
+          <tr><td class="pron">tu</td><td>sigues</td><td>estigues</td><td>hages</td><td>vages</td></tr>
+          <tr><td class="pron">ell / ella</td><td>siga</td><td>estiga</td><td>haja / hage</td><td>vaja</td></tr>
+          <tr><td class="pron">nosaltres</td><td>siguem</td><td>estiguem</td><td>hàgem</td><td>vàgem</td></tr>
+          <tr><td class="pron">vosaltres</td><td>sigueu</td><td>estigueu</td><td>hàgeu</td><td>vàgeu</td></tr>
+          <tr><td class="pron">ells</td><td>siguen</td><td>estiguen</td><td>hagen</td><td>vagen</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <b>Patró d'irregularitat.</b> El subjuntiu d'estos quatre verbs es forma sobre una arrel pròpia que no s'assembla gens al present d'indicatiu: <span class="mono">sig-</span> (ser), <span class="mono">estig-</span> (estar), <span class="mono">haj-/hag-</span> (haver), <span class="mono">vaj-/vag-</span> (anar). A més, recorda que <i>haver</i> i <i>anar</i> no sols funcionen com a verbs independents (<span class="mono">he d'anar-hi</span>, <span class="mono">vaig al departament</span>) sinó també com a auxiliars: <i>anar</i> en el pretèrit perfet perifràstic (<span class="mono">vaig fer</span>) i <i>haver</i> en els temps compostos (<span class="mono">he fet</span>, <span class="mono">hages fet</span>).
+    </div>
+  </div>
+</section>
+
+<section id="s1">
+  <h2><span class="num">1</span>Omple els buits</h2>
+  <p class="lead">Escriu la forma correcta del verb indicat, en el temps que marca el context. Val també sense accents.</p>
+  <div class="card">
+    <div class="q"><div class="stem">1. Cada matí, abans de començar la classe, <input type="text" class="blank" id="b1_1" data-answers="estic"> (estar, jo) a l'aula d'informàtica preparant l'ordinador del professor.</div></div>
+    <div class="q"><div class="stem">2. Als alumnes de 4t els agrada que l'ordinador <input type="text" class="blank" id="b1_2" data-answers="estiga"> (estar) ben configurat abans de la pràctica de SQL.</div></div>
+    <div class="q"><div class="stem">3. El meu company del departament <input type="text" class="blank" id="b1_3" data-answers="es,és"> (ser) el responsable de la xarxa del centre.</div></div>
+    <div class="q"><div class="stem">4. Cal que tots els ordinadors <input type="text" class="blank" id="b1_4" data-answers="hagen,hajen"> (haver) fet la còpia de seguretat abans d'actualitzar el WordPress del departament.</div></div>
+    <div class="q"><div class="stem">5. Cada divendres <input type="text" class="blank" id="b1_5" data-answers="anem"> (anar, nosaltres) al laboratori a fer pràctiques amb XAMPP.</div></div>
+    <div class="q"><div class="stem">6. Espere que <input type="text" class="blank" id="b1_6" data-answers="hages"> (haver, tu) acabat la instal·lació de VirtualBox per a la pràctica d'enguany.</div></div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2><span class="num">2</span>Tria l'opció correcta</h2>
+  <p class="lead">El context (ahir, demà, fa deu minuts, cal que...) et diu quin temps toca.</p>
+  <div class="card">
+    <div class="q">
+      <div class="stem">1. Demà, quan arribem a classe, els ordinadors ja <span class="hint">(estar)</span>...</div>
+      <div class="options" data-correct="b">
+        <label class="opt"><input type="radio" name="q2_1" value="a"> estan encesos</label>
+        <label class="opt"><input type="radio" name="q2_1" value="b"> estaran encesos</label>
+        <label class="opt"><input type="radio" name="q2_1" value="c"> estiguen encesos</label>
+      </div>
+    </div>
+    <div class="q">
+      <div class="stem">2. Fa deu minuts que els alumnes <span class="hint">(estar)</span> al laboratori practicant amb Python.</div>
+      <div class="options" data-correct="a">
+        <label class="opt"><input type="radio" name="q2_2" value="a"> estan</label>
+        <label class="opt"><input type="radio" name="q2_2" value="b"> estiguen</label>
+        <label class="opt"><input type="radio" name="q2_2" value="c"> estaven</label>
+      </div>
+    </div>
+    <div class="q">
+      <div class="stem">3. Cal que l'alumnat <span class="hint">(estar)</span> atent quan expliques les normes de ciberconvivència.</div>
+      <div class="options" data-correct="b">
+        <label class="opt"><input type="radio" name="q2_3" value="a"> està</label>
+        <label class="opt"><input type="radio" name="q2_3" value="b"> estiga</label>
+        <label class="opt"><input type="radio" name="q2_3" value="c"> estarà</label>
+      </div>
+    </div>
+    <div class="q">
+      <div class="stem">4. No <span class="hint">(haver, jo)</span> fet mai una classe amb IA fins l'any passat.</div>
+      <div class="options" data-correct="b">
+        <label class="opt"><input type="radio" name="q2_4" value="a"> he</label>
+        <label class="opt"><input type="radio" name="q2_4" value="b"> havia</label>
+        <label class="opt"><input type="radio" name="q2_4" value="c"> haja</label>
+      </div>
+    </div>
+    <div class="q">
+      <div class="stem">5. L'any que ve, el professorat <span class="hint">(anar)</span> a la formació de noves tecnologies.</div>
+      <div class="options" data-correct="b">
+        <label class="opt"><input type="radio" name="q2_5" value="a"> van</label>
+        <label class="opt"><input type="radio" name="q2_5" value="b"> aniran</label>
+        <label class="opt"><input type="radio" name="q2_5" value="c"> vagen</label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s3">
+  <h2><span class="num">3</span>Completa la taula (present de subjuntiu)</h2>
+  <p class="lead">Fixa't en la fila d'exemple (<i>ell/ella</i>) i completa les caselles buides.</p>
+  <div class="card">
+    <div class="table-wrap">
+      <table class="conj">
+        <thead><tr><th>Pronom (que...)</th><th>Ser</th><th>Estar</th><th>Haver</th><th>Anar</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="pron">jo</td>
+            <td><input type="text" class="blank" id="t1" data-answers="siga"></td>
+            <td>estiga</td>
+            <td><input type="text" class="blank" id="t2" data-answers="haja,hage"></td>
+            <td>vaja</td>
+          </tr>
+          <tr>
+            <td class="pron">tu</td>
+            <td>sigues</td>
+            <td><input type="text" class="blank" id="t3" data-answers="estigues"></td>
+            <td>hages</td>
+            <td><input type="text" class="blank" id="t4" data-answers="vages"></td>
+          </tr>
+          <tr>
+            <td class="pron">ell / ella <span class="hint">(exemple)</span></td>
+            <td>siga</td><td>estiga</td><td>haja / hage</td><td>vaja</td>
+          </tr>
+          <tr>
+            <td class="pron">nosaltres</td>
+            <td><input type="text" class="blank" id="t5" data-answers="siguem"></td>
+            <td>estiguem</td>
+            <td><input type="text" class="blank" id="t6" data-answers="hagem,hàgem"></td>
+            <td>vàgem</td>
+          </tr>
+          <tr>
+            <td class="pron">vosaltres</td>
+            <td>sigueu</td>
+            <td><input type="text" class="blank" id="t7" data-answers="estigueu"></td>
+            <td>hàgeu</td>
+            <td>vàgeu</td>
+          </tr>
+          <tr>
+            <td class="pron">ells</td>
+            <td>siguen</td><td>estiguen</td><td>hagen</td>
+            <td><input type="text" class="blank" id="t8" data-answers="vagen"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <h2><span class="num">4</span>Al departament d'informàtica</h2>
+  <p class="lead">Omple els buits d'este mini-diàleg de claustre i practica'l en veu alta.</p>
+  <div class="card dialogue">
+    <p><span class="who">Professor:</span> Bon dia a tots! Abans de començar, vull que <input type="text" class="blank" id="d1" data-answers="estigueu"> (estar) atents a les instruccions de hui.</p>
+    <p><span class="who">Alumne:</span> Professor, ahir no vam poder acabar la pràctica de SQL amb XAMPP perquè l'ordinador <input type="text" class="blank" id="d2" data-answers="anava"> (anar) molt lent.</p>
+    <p><span class="who">Professor:</span> D'acord. Quan <input type="text" class="blank" id="d3" data-answers="siguem"> (ser, nosaltres) al laboratori la setmana que ve, provarem un ordinador nou.</p>
+    <p><span class="who">Cap de departament:</span> Cal que tots <input type="text" class="blank" id="d4" data-answers="hagen,hajen"> (haver) enviat la programació didàctica abans de divendres.</p>
+    <p><span class="who">Professor:</span> Perfecte. Esta vesprada <input type="text" class="blank" id="d5" data-answers="vaig"> (anar, jo) al departament a actualitzar el lloc de WordPress.</p>
+  </div>
+</section>
+
+<section id="s5">
+  <h2><span class="num">5</span>Vocabulari: Digitalització &middot; maquinari i xarxes</h2>
+  <p class="lead">Relaciona cada terme valencià amb la seua traducció al castellà.</p>
+  <div class="card">
+    <div class="vocab-row"><span class="term">maquinari</span>
+      <select class="vocab-select" id="v1" data-answer="hardware">
+        <option value="">— selecciona —</option>
+        <option value="hardware">hardware</option>
+        <option value="software">software</option>
+        <option value="componente físico">componente físico</option>
+      </select></div>
+    <div class="vocab-row"><span class="term">programari</span>
+      <select class="vocab-select" id="v2" data-answer="software">
+        <option value="">— selecciona —</option>
+        <option value="hardware">hardware</option>
+        <option value="software">software</option>
+        <option value="licencia de software">licencia de software</option>
+      </select></div>
+    <div class="vocab-row"><span class="term">perifèric</span>
+      <select class="vocab-select" id="v3" data-answer="periférico">
+        <option value="">— selecciona —</option>
+        <option value="periférico">periférico</option>
+        <option value="componente físico">componente físico</option>
+        <option value="servidor web">servidor web</option>
+      </select></div>
+    <div class="vocab-row"><span class="term">xarxa sense fil</span>
+      <select class="vocab-select" id="v4" data-answer="red inalámbrica">
+        <option value="">— selecciona —</option>
+        <option value="red cableada">red cableada</option>
+        <option value="red inalámbrica">red inalámbrica</option>
+        <option value="internet de las cosas">internet de las cosas</option>
+      </select></div>
+    <div class="vocab-row"><span class="term">internet de les coses</span>
+      <select class="vocab-select" id="v5" data-answer="internet de las cosas">
+        <option value="">— selecciona —</option>
+        <option value="comercio electrónico">comercio electrónico</option>
+        <option value="internet de las cosas">internet de las cosas</option>
+        <option value="realidad aumentada">realidad aumentada</option>
+      </select></div>
+    <div class="vocab-row"><span class="term">realitat augmentada</span>
+      <select class="vocab-select" id="v6" data-answer="realidad aumentada">
+        <option value="">— selecciona —</option>
+        <option value="realidad virtual">realidad virtual</option>
+        <option value="realidad aumentada">realidad aumentada</option>
+        <option value="firma digital">firma digital</option>
+      </select></div>
+    <div class="vocab-row"><span class="term">signatura digital</span>
+      <select class="vocab-select" id="v7" data-answer="firma digital">
+        <option value="">— selecciona —</option>
+        <option value="firma digital">firma digital</option>
+        <option value="certificado digital">certificado digital</option>
+        <option value="licencia de software">licencia de software</option>
+      </select></div>
+    <div class="vocab-row"><span class="term">servidor web</span>
+      <select class="vocab-select" id="v8" data-answer="servidor web">
+        <option value="">— selecciona —</option>
+        <option value="servidor web">servidor web</option>
+        <option value="gestor de contenidos">gestor de contenidos</option>
+        <option value="comercio electrónico">comercio electrónico</option>
+      </select></div>
+  </div>
+</section>
+
+<div class="check-bar">
+  <button id="checkBtn" type="button">Comprova les respostes</button>
+</div>
+<div class="score-panel" id="scorePanel" hidden>
+  <b id="scoreNum">0 / 32</b> respostes correctes
+</div>
+
+<details class="solutions">
+  <summary>Solucions i explicacions completes</summary>
+
+  <h4>1 · Omple els buits</h4>
+  <ol>
+    <li><span class="mono">estic</span> — present d'indicatiu, 1a persona: <i>jo estic</i>.</li>
+    <li><span class="mono">estiga</span> — present de subjuntiu darrere de <i>agrada que</i>.</li>
+    <li><span class="mono">és</span> — present d'indicatiu, 3a persona de <i>ser</i>.</li>
+    <li><span class="mono">hagen</span> (o <i>hajen</i>) — present de subjuntiu, 3a pl., darrere de <i>cal que</i>.</li>
+    <li><span class="mono">anem</span> — present d'indicatiu, 1a pl. de <i>anar</i>.</li>
+    <li><span class="mono">hages</span> — present de subjuntiu, 2a persona, darrere de <i>espere que</i>.</li>
+  </ol>
+
+  <h4>2 · Tria l'opció correcta</h4>
+  <ol>
+    <li><b>estaran encesos</b> — demà és futur: cal el futur simple, no el present ni el subjuntiu.</li>
+    <li><b>estan</b> — "fa deu minuts que" + acció que encara dura es diu en present d'indicatiu.</li>
+    <li><b>estiga</b> — darrere de <i>cal que</i> sempre va subjuntiu.</li>
+    <li><b>havia</b> — "fins l'any passat" demana imperfet, no present ni subjuntiu.</li>
+    <li><b>aniran</b> — "l'any que ve" és futur.</li>
+  </ol>
+
+  <h4>3 · Taula de subjuntiu</h4>
+  <p style="font-size:.9rem; margin:0 0 6px;">jo: <span class="mono">siga</span>, <span class="mono">haja/hage</span> &middot; tu: <span class="mono">estigues</span>, <span class="mono">vages</span> &middot; nosaltres: <span class="mono">siguem</span>, <span class="mono">hàgem</span> &middot; vosaltres: <span class="mono">estigueu</span> &middot; ells: <span class="mono">vagen</span>.</p>
+  <p style="font-size:.88rem; color:var(--ink-soft); margin:0 0 18px;">L'arrel del subjuntiu (<i>sig-</i>, <i>estig-</i>, <i>haj-/hag-</i>, <i>vaj-/vag-</i>) no coincideix amb la del present d'indicatiu: cal memoritzar-la a part.</p>
+
+  <h4>4 · Al departament d'informàtica</h4>
+  <ol>
+    <li><span class="mono">estigueu</span> — subjuntiu darrere de <i>vull que</i>, 2a pl.</li>
+    <li><span class="mono">anava</span> — "anar lent/lenta" és l'expressió per a dir que un aparell funciona a poc ritme; imperfet perquè descriu una situació passada que durava.</li>
+    <li><span class="mono">siguem</span> — darrere de <i>quan</i> amb valor de futur incert, va subjuntiu.</li>
+    <li><span class="mono">hagen</span> (o <i>hajen</i>) — subjuntiu darrere de <i>cal que</i>, 3a pl.</li>
+    <li><span class="mono">vaig</span> — present d'indicatiu, 1a persona de <i>anar</i>.</li>
+  </ol>
+
+  <h4>5 · Vocabulari (Digitalització)</h4>
+  <ol>
+    <li>maquinari → <b>hardware</b></li>
+    <li>programari → <b>software</b></li>
+    <li>perifèric → <b>periférico</b></li>
+    <li>xarxa sense fil → <b>red inalámbrica</b></li>
+    <li>internet de les coses → <b>internet de las cosas</b></li>
+    <li>realitat augmentada → <b>realidad aumentada</b></li>
+    <li>signatura digital → <b>firma digital</b></li>
+    <li>servidor web → <b>servidor web</b></li>
+  </ol>
+</details>
+
+<footer class="note">Exercici diari de valencià oral per a l'àmbit educatiu-informàtic · IES Jorge Juan, Alacant</footer>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'').toString().toLowerCase().trim()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'');
+  }
+
+  var totalQuestions = 0;
+  var blankIds = ['b1_1','b1_2','b1_3','b1_4','b1_5','b1_6','t1','t2','t3','t4','t5','t6','t7','t8','d1','d2','d3','d4','d5'];
+  var radioNames = ['q2_1','q2_2','q2_3','q2_4','q2_5'];
+  var selectIds = ['v1','v2','v3','v4','v5','v6','v7','v8'];
+  totalQuestions = blankIds.length + radioNames.length + selectIds.length;
+
+  document.getElementById('scoreNum').textContent = '0 / ' + totalQuestions;
+
+  document.getElementById('checkBtn').addEventListener('click', function(){
+    var score = 0;
+
+    blankIds.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var accepted = (el.getAttribute('data-answers')||'').split(',').map(norm);
+      var ok = accepted.indexOf(norm(el.value)) !== -1 && el.value.trim() !== '';
+      el.classList.remove('correct','incorrect');
+      el.classList.add(ok ? 'correct' : 'incorrect');
+      if(ok) score++;
+    });
+
+    radioNames.forEach(function(name){
+      var radios = document.querySelectorAll('input[name="'+name+'"]');
+      if(!radios.length) return;
+      var group = radios[0].closest('.options');
+      var correctVal = group.getAttribute('data-correct');
+      var checked = null;
+      radios.forEach(function(r){
+        var label = r.closest('.opt');
+        label.classList.remove('correct','incorrect');
+        if(r.checked) checked = r.value;
+      });
+      radios.forEach(function(r){
+        var label = r.closest('.opt');
+        if(r.value === correctVal) label.classList.add('correct');
+        else if(r.checked) label.classList.add('incorrect');
+      });
+      if(checked === correctVal) score++;
+    });
+
+    selectIds.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var ok = el.value !== '' && norm(el.value) === norm(el.getAttribute('data-answer'));
+      el.classList.remove('correct','incorrect');
+      el.classList.add(ok ? 'correct' : 'incorrect');
+      if(ok) score++;
+    });
+
+    var panel = document.getElementById('scorePanel');
+    panel.hidden = false;
+    document.getElementById('scoreNum').textContent = score + ' / ' + totalQuestions;
+    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+})();
+</script>
+
+</body></html>

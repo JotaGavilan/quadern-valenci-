@@ -1,0 +1,661 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Cap a on, fins quan?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout concept: a signpost / route-marker motif — theory as a compass rose card,
+     activities as waypoint cards along a quiet vertical path, verb review as a short detour. */
+  :root{
+    --bg:#f3ece0;
+    --surface:#fffdf9;
+    --surface-2:#ece0ca;
+    --ink:#2a2318;
+    --ink-soft:#6c6150;
+    --accent:#b5542c;
+    --accent-ink:#fff8f1;
+    --accent-soft:#f3ddc9;
+    --accent-soft-ink:#7a3317;
+    --line:#e2d4b8;
+    --good:#3f7d54;
+    --good-bg:#e3efe2;
+    --bad:#b23b3b;
+    --bad-bg:#f6e2de;
+    --shadow: 0 1px 2px rgba(42,35,24,.07), 0 10px 24px -14px rgba(42,35,24,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1b1610;
+      --surface:#241d15;
+      --surface-2:#2d2419;
+      --ink:#f0e8d8;
+      --ink-soft:#bcae95;
+      --accent:#e3875a;
+      --accent-ink:#20120a;
+      --accent-soft:#3a2416;
+      --accent-soft-ink:#f0c6a8;
+      --line:#3c3122;
+      --good:#7ed99a;
+      --good-bg:#1e3326;
+      --bad:#e2897f;
+      --bad-bg:#3a201d;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1b1610;
+    --surface:#241d15;
+    --surface-2:#2d2419;
+    --ink:#f0e8d8;
+    --ink-soft:#bcae95;
+    --accent:#e3875a;
+    --accent-ink:#20120a;
+    --accent-soft:#3a2416;
+    --accent-soft-ink:#f0c6a8;
+    --line:#3c3122;
+    --good:#7ed99a;
+    --good-bg:#1e3326;
+    --bad:#e2897f;
+    --bad-bg:#3a201d;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.55);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-inline:max(16px, env(safe-area-inset-left,0px)) max(16px, env(safe-area-inset-right,0px));
+    padding-block:22px 56px;
+  }
+  .wrap{ max-width:880px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  .back-link{
+    display:inline-block;
+    font-size:.84rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:16px;
+    border:1px solid var(--line);
+  }
+  .back-link:hover{ text-decoration:underline; }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:22px 24px 20px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  header.top > *{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:600; }
+  header.top p.lede{ margin:10px 0 0; max-width:62ch; opacity:.95; font-size:.96rem; }
+  .score-badge{
+    display:inline-flex; align-items:baseline; gap:6px;
+    margin-top:16px;
+    background:rgba(255,255,255,.16);
+    border-radius:999px;
+    padding:7px 16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.86rem;
+  }
+  .score-badge b{ font-size:1.1rem; font-family:'Fraunces', serif; }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
+  }
+  .card h2{ font-size:1.25rem; font-weight:600; margin-bottom:4px; }
+  .card .instr{ color:var(--ink-soft); font-size:.92rem; margin:4px 0 14px; }
+
+  .theory-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.92rem;
+    margin:12px 0;
+  }
+  .theory-table th, .theory-table td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  .theory-table th{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+  }
+  .theory-table td.loc{ font-weight:600; color:var(--accent-soft-ink); white-space:nowrap; }
+  .theory-table-wrap{ overflow-x:auto; }
+  .tip{
+    background:var(--surface-2);
+    border-left:3px solid var(--accent);
+    border-radius:0 10px 10px 0;
+    padding:10px 14px;
+    font-size:.88rem;
+    margin-top:8px;
+  }
+
+  ol.qlist{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  ol.qlist li{
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+    font-size:.96rem;
+    padding:10px 12px;
+    background:var(--surface-2);
+    border-radius:10px;
+    min-width:0;
+  }
+  ol.qlist li .qnum{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    flex:none;
+  }
+  select.blank, input.blank{
+    font:inherit;
+    font-size:.92rem;
+    padding:5px 8px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    min-width:140px;
+  }
+  select.blank:focus, input.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .result-icon{ font-weight:700; font-size:1rem; flex:none; min-width:1.2em; }
+  .is-correct{ border-color:var(--good) !important; background:var(--good-bg) !important; }
+  .is-wrong{ border-color:var(--bad) !important; background:var(--bad-bg) !important; }
+  .result-icon.ok{ color:var(--good); }
+  .result-icon.no{ color:var(--bad); }
+
+  .mcq{ display:flex; flex-direction:column; gap:14px; }
+  .mcq .q{
+    background:var(--surface-2);
+    border-radius:10px;
+    padding:12px 14px;
+  }
+  .mcq .q p.stem{ margin:0 0 8px; font-size:.95rem; }
+  .mcq .opts{ display:flex; flex-wrap:wrap; gap:10px 18px; }
+  .mcq label{
+    display:flex; align-items:center; gap:6px;
+    font-size:.9rem;
+    cursor:pointer;
+    padding:4px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+  }
+  .mcq label.opt-correct{ border-color:var(--good); background:var(--good-bg); }
+  .mcq label.opt-wrong{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .match-table{ width:100%; border-collapse:collapse; font-size:.94rem; }
+  .match-table td{ padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  .match-table td.term{ font-weight:600; color:var(--accent-soft-ink); white-space:nowrap; }
+
+  .dialogue{ display:flex; flex-direction:column; gap:10px; }
+  .dialogue .line{ display:flex; gap:10px; align-items:baseline; flex-wrap:wrap; }
+  .dialogue .who{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    border-radius:6px;
+    padding:2px 8px;
+    flex:none;
+  }
+  .dialogue .txt{ flex:1 1 260px; min-width:0; font-size:.95rem; }
+
+  button.check-btn, button#showSolutions{
+    font:inherit;
+    font-weight:600;
+    font-size:.9rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border:none;
+    border-radius:999px;
+    padding:10px 20px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check-btn:hover, button#showSolutions:hover{ filter:brightness(1.08); }
+  button.check-btn:active, button#showSolutions:active{ transform:translateY(1px); }
+  .section-score{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.84rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+    min-height:1.2em;
+  }
+
+  .verb-review{ border-top:3px solid var(--accent); }
+  .verb-table{ width:100%; border-collapse:collapse; font-size:.92rem; margin:10px 0; }
+  .verb-table th, .verb-table td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
+  .verb-table th{ font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase; color:var(--ink-soft); }
+
+  #solutionsSection{ border-top:3px solid var(--accent); }
+  #solutionsSection ol{ padding-left:1.2em; display:flex; flex-direction:column; gap:8px; font-size:.92rem; }
+  #solutionsSection h3{ font-size:1.05rem; margin:18px 0 6px; }
+  #solutionsSection h3:first-of-type{ margin-top:4px; }
+  #solutionsSection b.ans{ color:var(--accent-soft-ink); }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:22px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:18px 16px 18px; }
+    .card{ padding:16px 16px 18px; }
+  }
+</style>
+
+<div class="wrap">
+  <a class="back-link" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 19 de novembre de 2026</div>
+    <h1>Cap a on, fins quan?</h1>
+    <p class="lede">Tema gramatical d'avui: <strong>Fins a, cap a, a prop de, al voltant de</strong> — quatre locucions prepositives de direcció, límit i proximitat. S'hi afig, com cada dia, un repàs breu d'un temps verbal: avui, el <strong>pretèrit perfet perifràstic</strong>.</p>
+    <div class="score-badge">Puntuació acumulada: <b><span id="totalScore">0</span> / <span id="totalMax">24</span></b></div>
+  </header>
+
+  <section class="card theory">
+    <h2>1 · Teoria: direcció, límit i proximitat</h2>
+    <div class="theory-table-wrap">
+      <table class="theory-table">
+        <thead><tr><th>Locució</th><th>Valor</th><th>Equivalent en castellà</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td class="loc">Fins a</td><td>Límit o punt final (espai, temps o quantitat): s'hi arriba.</td><td>hasta</td><td>Caminem <em>fins a</em> l'aula d'informàtica. Hem d'entregar-ho <em>fins al</em> divendres.</td></tr>
+          <tr><td class="loc">Cap a</td><td>Direcció o orientació, o aproximació horària: no cal arribar-hi exactament.</td><td>hacia</td><td>Anem <em>cap a</em> la sala d'actes. Arribarem <em>cap a</em> les deu.</td></tr>
+          <tr><td class="loc">A prop de</td><td>Proximitat espacial (o figurada) a un lloc concret.</td><td>cerca de</td><td>El servidor està <em>a prop de</em> la consergeria.</td></tr>
+          <tr><td class="loc">Al voltant de</td><td>Situació al voltant d'un punt, o aproximació numèrica.</td><td>alrededor de</td><td>Seiem <em>al voltant de</em> l'ordinador. Hi havia <em>al voltant de</em> trenta alumnes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tip">La diferència clau: <strong>fins a</strong> marca un límit precís que s'assoleix; <strong>cap a</strong> indica una orientació o una hora aproximada, sense arribar-hi necessàriament. Igualment, <strong>a prop de</strong> situa alguna cosa prop d'un punt fix, mentre que <strong>al voltant de</strong> pot indicar «al seu entorn físic» o bé una quantitat aproximada.</p>
+  </section>
+
+  <section class="card activity" data-activity="1" data-max="6">
+    <h2>Activitat 2 · Omple els buits</h2>
+    <p class="instr">Tria la locució adequada per a cada frase.</p>
+    <ol class="qlist">
+      <li><span class="qnum">1.</span><span>Hem quedat</span>
+        <select class="blank" data-correct="cap a">
+          <option value="">— tria —</option>
+          <option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option>
+        </select>
+        <span>les quatre de la vesprada per a repassar les notes de l'avaluació; encara no sé l'hora exacta.</span>
+        <span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">2.</span><span>Cal entregar la programació didàctica</span>
+        <select class="blank" data-correct="fins a">
+          <option value="">— tria —</option>
+          <option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option>
+        </select>
+        <span>divendres, no més tard.</span>
+        <span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">3.</span><span>La sala de servidors es troba</span>
+        <select class="blank" data-correct="a prop de">
+          <option value="">— tria —</option>
+          <option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option>
+        </select>
+        <span>la consergeria, al mateix passadís.</span>
+        <span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">4.</span><span>En la reunió de claustre hi havia</span>
+        <select class="blank" data-correct="al voltant de">
+          <option value="">— tria —</option>
+          <option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option>
+        </select>
+        <span>trenta professors, encara que no ho he comptat exactament.</span>
+        <span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">5.</span><span>Caminàrem</span>
+        <select class="blank" data-correct="cap a">
+          <option value="">— tria —</option>
+          <option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option>
+        </select>
+        <span>la biblioteca per a fer la pràctica de cerca d'informació.</span>
+        <span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">6.</span><span>Treballarem en esta unitat didàctica de robòtica</span>
+        <select class="blank" data-correct="fins a">
+          <option value="">— tria —</option>
+          <option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option>
+        </select>
+        <span>la fi del trimestre.</span>
+        <span class="result-icon"></span>
+      </li>
+    </ol>
+    <button class="check-btn" data-target="1">Comprova les respostes</button>
+    <p class="section-score" id="score1"></p>
+  </section>
+
+  <section class="card activity" data-activity="2" data-max="4">
+    <h2>Activitat 3 · Tria l'opció correcta</h2>
+    <p class="instr">Selecciona la locució que encaixa millor en cada context.</p>
+    <div class="mcq">
+      <div class="q">
+        <p class="stem">1. Ahir vaig arribar a classe ___ les huit del matí; no mirava el rellotge, així que no sé l'hora exacta.</p>
+        <div class="opts" data-correct="cap a">
+          <label><input type="radio" name="mcq1" value="fins a"> fins a</label>
+          <label><input type="radio" name="mcq1" value="cap a"> cap a</label>
+          <label><input type="radio" name="mcq1" value="a prop de"> a prop de</label>
+        </div>
+      </div>
+      <div class="q">
+        <p class="stem">2. L'ordinador portàtil del professor estava ___ la finestra, damunt la taula.</p>
+        <div class="opts" data-correct="a prop de">
+          <label><input type="radio" name="mcq2" value="al voltant de"> al voltant de</label>
+          <label><input type="radio" name="mcq2" value="a prop de"> a prop de</label>
+          <label><input type="radio" name="mcq2" value="fins a"> fins a</label>
+        </div>
+      </div>
+      <div class="q">
+        <p class="stem">3. Han participat en el concurs de programació ___ quaranta alumnes de tot el centre; encara no tenim el nombre exacte.</p>
+        <div class="opts" data-correct="al voltant de">
+          <label><input type="radio" name="mcq3" value="al voltant de"> al voltant de</label>
+          <label><input type="radio" name="mcq3" value="a prop de"> a prop de</label>
+          <label><input type="radio" name="mcq3" value="cap a"> cap a</label>
+        </div>
+      </div>
+      <div class="q">
+        <p class="stem">4. Hem de lliurar les notes del primer trimestre ___ el 20 de desembre: és la data límit.</p>
+        <div class="opts" data-correct="fins a">
+          <label><input type="radio" name="mcq4" value="cap a"> cap a</label>
+          <label><input type="radio" name="mcq4" value="fins a"> fins a</label>
+          <label><input type="radio" name="mcq4" value="al voltant de"> al voltant de</label>
+        </div>
+      </div>
+    </div>
+    <button class="check-btn" data-target="2">Comprova les respostes</button>
+    <p class="section-score" id="score2"></p>
+  </section>
+
+  <section class="card activity" data-activity="3" data-max="4">
+    <h2>Activitat 4 · Relaciona cada locució amb el seu significat</h2>
+    <p class="instr">Tria l'equivalent correcte en castellà per a cada locució valenciana.</p>
+    <table class="match-table">
+      <tbody>
+        <tr><td class="term">Fins a</td><td>
+          <select class="blank" data-correct="hasta">
+            <option value="">— tria —</option>
+            <option>hasta</option><option>hacia</option><option>cerca de</option><option>alrededor de</option>
+          </select>
+          <span class="result-icon"></span>
+        </td></tr>
+        <tr><td class="term">Cap a</td><td>
+          <select class="blank" data-correct="hacia">
+            <option value="">— tria —</option>
+            <option>hasta</option><option>hacia</option><option>cerca de</option><option>alrededor de</option>
+          </select>
+          <span class="result-icon"></span>
+        </td></tr>
+        <tr><td class="term">A prop de</td><td>
+          <select class="blank" data-correct="cerca de">
+            <option value="">— tria —</option>
+            <option>hasta</option><option>hacia</option><option>cerca de</option><option>alrededor de</option>
+          </select>
+          <span class="result-icon"></span>
+        </td></tr>
+        <tr><td class="term">Al voltant de</td><td>
+          <select class="blank" data-correct="alrededor de">
+            <option value="">— tria —</option>
+            <option>hasta</option><option>hacia</option><option>cerca de</option><option>alrededor de</option>
+          </select>
+          <span class="result-icon"></span>
+        </td></tr>
+      </tbody>
+    </table>
+    <button class="check-btn" data-target="3">Comprova les respostes</button>
+    <p class="section-score" id="score3"></p>
+  </section>
+
+  <section class="card activity" data-activity="4" data-max="5">
+    <h2>Activitat 5 · Mini-diàleg al departament d'informàtica</h2>
+    <p class="instr">Completa el diàleg amb la locució adequada.</p>
+    <div class="dialogue">
+      <div class="line"><span class="who">Professor</span><span class="txt">Bon dia! Anem
+        <select class="blank" data-correct="cap a"><option value="">— tria —</option><option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option></select>
+        l'aula d'informàtica; hui toca sessió de robòtica amb la Microbit.
+        <span class="result-icon"></span></span></div>
+      <div class="line"><span class="who">Alumne</span><span class="txt">Quant de temps tenim per a programar amb MakeCode?</span></div>
+      <div class="line"><span class="who">Professor</span><span class="txt">Treballarem
+        <select class="blank" data-correct="fins a"><option value="">— tria —</option><option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option></select>
+        les dotze i mitja; eixa és l'hora límit per a entregar el muntatge.
+        <span class="result-icon"></span></span></div>
+      <div class="line"><span class="who">Alumna</span><span class="txt">I eixe ordinador que no engega?</span></div>
+      <div class="line"><span class="who">Professor</span><span class="txt">Està espatlat. El tècnic arribarà
+        <select class="blank" data-correct="cap a"><option value="">— tria —</option><option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option></select>
+        les onze, més o manco; encara no m'ha confirmat l'hora exacta.
+        <span class="result-icon"></span></span></div>
+      <div class="line"><span class="who">Alumna</span><span class="txt">Puc seure
+        <select class="blank" data-correct="a prop de"><option value="">— tria —</option><option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option></select>
+        la finestra? Ahí hi ha més llum per a vore la placa.
+        <span class="result-icon"></span></span></div>
+      <div class="line"><span class="who">Professor</span><span class="txt">Sí, i quan tingueu el sensor de distància configurat, reuniu-vos
+        <select class="blank" data-correct="al voltant de"><option value="">— tria —</option><option>fins a</option><option>cap a</option><option>a prop de</option><option>al voltant de</option></select>
+        la taula gran per a vore la demostració entre tots.
+        <span class="result-icon"></span></span></div>
+    </div>
+    <button class="check-btn" data-target="4">Comprova les respostes</button>
+    <p class="section-score" id="score4"></p>
+  </section>
+
+  <section class="card activity verb-review" data-activity="5" data-max="5">
+    <h2>Repàs breu · Pretèrit perfet perifràstic</h2>
+    <p class="instr">Es forma amb el present del verb <em>anar</em> (<span class="mono">vaig, vas, va, vam, vau, van</span>) seguit de l'infinitiu. Expressa una acció acabada en el passat.</p>
+    <div class="theory-table-wrap">
+      <table class="verb-table">
+        <thead><tr><th>Persona</th><th>Forma d'<em>anar</em></th><th>Exemple: <em>connectar</em></th></tr></thead>
+        <tbody>
+          <tr><td>jo</td><td>vaig</td><td>vaig connectar</td></tr>
+          <tr><td>tu</td><td>vas</td><td>vas connectar</td></tr>
+          <tr><td>ell / ella / vosté</td><td>va</td><td>va connectar</td></tr>
+          <tr><td>nosaltres</td><td>vam</td><td>vam connectar</td></tr>
+          <tr><td>vosaltres</td><td>vau</td><td>vau connectar</td></tr>
+          <tr><td>ells / elles / vostés</td><td>van</td><td>van connectar</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ol class="qlist">
+      <li><span class="qnum">1.</span><span>Ahir (jo)</span>
+        <select class="blank" data-correct="vaig"><option value="">— tria —</option><option>vaig</option><option>vas</option><option>va</option><option>vam</option><option>vau</option><option>van</option></select>
+        <span>connectar l'ordinador nou del laboratori.</span><span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">2.</span><span>Dimarts passat, l'alumnat de 2n ESO</span>
+        <select class="blank" data-correct="va"><option value="">— tria —</option><option>vaig</option><option>vas</option><option>va</option><option>vam</option><option>vau</option><option>van</option></select>
+        <span>provar per primera vegada Teachable Machine.</span><span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">3.</span><span>El departament</span>
+        <select class="blank" data-correct="vam"><option value="">— tria —</option><option>vaig</option><option>vas</option><option>va</option><option>vam</option><option>vau</option><option>van</option></select>
+        <span>instal·lar el WordPress del lloc web del centre la setmana passada.</span><span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">4.</span><span>Vosaltres</span>
+        <select class="blank" data-correct="vau"><option value="">— tria —</option><option>vaig</option><option>vas</option><option>va</option><option>vam</option><option>vau</option><option>van</option></select>
+        <span>crear una base de dades amb XAMPP en la pràctica de la setmana passada, oi?</span><span class="result-icon"></span>
+      </li>
+      <li><span class="qnum">5.</span><span>Els alumnes de Batxillerat</span>
+        <select class="blank" data-correct="van"><option value="">— tria —</option><option>vaig</option><option>vas</option><option>va</option><option>vam</option><option>vau</option><option>van</option></select>
+        <span>configurar una màquina virtual amb VirtualBox per al projecte de xarxes.</span><span class="result-icon"></span>
+      </li>
+    </ol>
+    <button class="check-btn" data-target="5">Comprova les respostes</button>
+    <p class="section-score" id="score5"></p>
+  </section>
+
+  <button id="showSolutions">Mostra totes les solucions i explicacions</button>
+
+  <section class="card" id="solutionsSection" hidden>
+    <h2>Solucions i explicacions</h2>
+
+    <h3>Activitat 2 · Omple els buits</h3>
+    <ol>
+      <li><b class="ans">cap a</b> — hora aproximada: no es diu l'hora exacta.</li>
+      <li><b class="ans">fins a</b> — data límit d'entrega.</li>
+      <li><b class="ans">a prop de</b> — proximitat a un lloc concret (la consergeria).</li>
+      <li><b class="ans">al voltant de</b> — quantitat aproximada (trenta professors, sense comptar exactament).</li>
+      <li><b class="ans">cap a</b> — direcció del desplaçament, sense èmfasi en el punt final exacte.</li>
+      <li><b class="ans">fins a</b> — límit temporal: el final del trimestre.</li>
+    </ol>
+
+    <h3>Activitat 3 · Tria l'opció correcta</h3>
+    <ol>
+      <li><b class="ans">cap a</b> — l'hora és aproximada («no sé l'hora exacta»).</li>
+      <li><b class="ans">a prop de</b> — situació a prop d'un punt fix (la finestra), no «al seu voltant».</li>
+      <li><b class="ans">al voltant de</b> — xifra aproximada («no tenim el nombre exacte»).</li>
+      <li><b class="ans">fins a</b> — data límit precisa («és la data límit»).</li>
+    </ol>
+
+    <h3>Activitat 4 · Relaciona</h3>
+    <ol>
+      <li>Fins a → <b class="ans">hasta</b></li>
+      <li>Cap a → <b class="ans">hacia</b></li>
+      <li>A prop de → <b class="ans">cerca de</b></li>
+      <li>Al voltant de → <b class="ans">alrededor de</b></li>
+    </ol>
+
+    <h3>Activitat 5 · Mini-diàleg</h3>
+    <ol>
+      <li><b class="ans">cap a</b> — direcció cap a l'aula.</li>
+      <li><b class="ans">fins a</b> — límit horari de l'activitat.</li>
+      <li><b class="ans">cap a</b> — hora aproximada d'arribada del tècnic.</li>
+      <li><b class="ans">a prop de</b> — proximitat a la finestra.</li>
+      <li><b class="ans">al voltant de</b> — reunir-se entorn de la taula.</li>
+    </ol>
+
+    <h3>Repàs breu · Pretèrit perfet perifràstic</h3>
+    <ol>
+      <li><b class="ans">vaig</b> connectar — primera persona del singular (jo).</li>
+      <li><b class="ans">va</b> provar — tercera persona del singular (l'alumnat, subjecte col·lectiu singular).</li>
+      <li><b class="ans">vam</b> instal·lar — primera persona del plural (el departament, nosaltres).</li>
+      <li><b class="ans">vau</b> crear — segona persona del plural (vosaltres).</li>
+      <li><b class="ans">van</b> configurar — tercera persona del plural (els alumnes).</li>
+    </ol>
+  </section>
+
+  <footer class="note">Exercici autocorregible · IES Jorge Juan, Alacant · <a href="../index.html" style="color:inherit">Quadern de valencià</a></footer>
+</div>
+
+<script>
+(function(){
+  var scores = {};
+  var maxes = {};
+  document.querySelectorAll('.activity').forEach(function(sec){
+    var n = sec.getAttribute('data-activity');
+    maxes[n] = parseInt(sec.getAttribute('data-max'), 10) || 0;
+    scores[n] = 0;
+  });
+
+  function norm(s){ return (s||'').trim().toLowerCase(); }
+
+  function updateTotal(){
+    var total = 0;
+    for (var k in scores){ total += scores[k]; }
+    document.getElementById('totalScore').textContent = total;
+  }
+
+  function checkSection(n){
+    var sec = document.querySelector('.activity[data-activity="' + n + '"]');
+    if (!sec) return;
+    var score = 0, count = 0;
+
+    sec.querySelectorAll('select.blank, input.blank').forEach(function(field){
+      count++;
+      var correct = norm(field.getAttribute('data-correct'));
+      var val = norm(field.value);
+      var icon = field.parentElement.querySelector('.result-icon');
+      field.classList.remove('is-correct','is-wrong');
+      if (val && val === correct){
+        field.classList.add('is-correct');
+        if (icon){ icon.textContent = '✓'; icon.className = 'result-icon ok'; }
+        score++;
+      } else {
+        field.classList.add('is-wrong');
+        if (icon){ icon.textContent = '✗ (' + field.getAttribute('data-correct') + ')'; icon.className = 'result-icon no'; }
+      }
+    });
+
+    sec.querySelectorAll('.mcq .q').forEach(function(q){
+      count++;
+      var opts = q.querySelector('.opts');
+      var correct = norm(opts.getAttribute('data-correct'));
+      var checked = q.querySelector('input[type=radio]:checked');
+      q.querySelectorAll('label').forEach(function(l){ l.classList.remove('opt-correct','opt-wrong'); });
+      var ok = checked && norm(checked.value) === correct;
+      if (ok){
+        score++;
+        checked.parentElement.classList.add('opt-correct');
+      } else {
+        q.querySelectorAll('input[type=radio]').forEach(function(r){
+          if (norm(r.value) === correct) r.parentElement.classList.add('opt-correct');
+        });
+        if (checked) checked.parentElement.classList.add('opt-wrong');
+      }
+    });
+
+    scores[n] = score;
+    var out = document.getElementById('score' + n);
+    if (out) out.textContent = 'Puntuació d’esta activitat: ' + score + ' / ' + (maxes[n] || count);
+    updateTotal();
+  }
+
+  document.querySelectorAll('.check-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      checkSection(btn.getAttribute('data-target'));
+    });
+  });
+
+  document.getElementById('showSolutions').addEventListener('click', function(){
+    var sol = document.getElementById('solutionsSection');
+    sol.hidden = !sol.hidden;
+    this.textContent = sol.hidden ? 'Mostra totes les solucions i explicacions' : 'Amaga les solucions';
+    if (!sol.hidden) sol.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  updateTotal();
+})();
+</script>
+
+</body></html>

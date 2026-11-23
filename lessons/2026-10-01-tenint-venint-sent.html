@@ -1,0 +1,812 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Tenint, venint, sent</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout concept: a single "in-progress" ribbon runs down the left edge of
+     each content block, like a loading/continuity indicator — a visual echo
+     of the gerundi's own sense of an action still unfolding. */
+  :root{
+    --bg:#f6f1e7;
+    --surface:#fffdf8;
+    --surface-2:#efe6d3;
+    --ink:#23201a;
+    --ink-soft:#6b6252;
+    --accent:#c0632a;
+    --accent-ink:#fff8ef;
+    --accent-soft:#f5ddc8;
+    --accent-soft-ink:#8a3f14;
+    --teal:#1f5c57;
+    --teal-soft:#dcebe8;
+    --line:#ddd0b0;
+    --good:#2f7d4f;
+    --good-bg:#e1f0e3;
+    --bad:#b93f32;
+    --bad-bg:#fbe4df;
+    --shadow: 0 1px 2px rgba(35,32,26,.06), 0 10px 26px -14px rgba(35,32,26,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17140e;
+      --surface:#1f1b13;
+      --surface-2:#282217;
+      --ink:#efe8d8;
+      --ink-soft:#b3a890;
+      --accent:#e08a4e;
+      --accent-ink:#241206;
+      --accent-soft:#3a2714;
+      --accent-soft-ink:#f0bd8c;
+      --teal:#7fcac2;
+      --teal-soft:#1b332f;
+      --line:#3a3324;
+      --good:#7fd19c;
+      --good-bg:#1c3324;
+      --bad:#e8988a;
+      --bad-bg:#3a241f;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17140e;
+    --surface:#1f1b13;
+    --surface-2:#282217;
+    --ink:#efe8d8;
+    --ink-soft:#b3a890;
+    --accent:#e08a4e;
+    --accent-ink:#241206;
+    --accent-soft:#3a2714;
+    --accent-soft-ink:#f0bd8c;
+    --teal:#7fcac2;
+    --teal-soft:#1b332f;
+    --line:#3a3324;
+    --good:#7fd19c;
+    --good-bg:#1c3324;
+    --bad:#e8988a;
+    --bad-bg:#3a241f;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Public Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-inline:20px;
+    padding-block:22px 64px;
+    max-width:880px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a.back{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  a.back:hover{ filter:brightness(1.05); }
+
+  header.top{
+    background:var(--teal);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(100deg, transparent 0%, transparent 55%, rgba(255,255,255,.07) 55%, rgba(255,255,255,.07) 58%, transparent 58%, transparent 78%, rgba(255,255,255,.05) 78%, rgba(255,255,255,.05) 80%, transparent 80%);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:600; color:#fff; }
+  header.top p{ margin:10px 0 0; max-width:58ch; opacity:.94; font-size:.95rem; }
+  .topic-pill{
+    display:inline-block;
+    margin-top:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.3);
+    padding:5px 12px;
+    border-radius:999px;
+  }
+
+  .scorebar{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 16px;
+    margin-bottom:24px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem;
+  }
+  .scorebar b{ font-family:'Fraunces', serif; font-size:1.1rem; font-weight:600; color:var(--accent); }
+
+  section.block{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 22px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    border-left:4px solid var(--accent);
+  }
+  section.block h2{
+    font-size:1.25rem;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  section.block .step{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+
+  /* theory */
+  .theory p{ margin:0 0 12px; }
+  .theory p:last-child{ margin-bottom:0; }
+  table.conj{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0;
+    font-size:.92rem;
+  }
+  table.conj caption{
+    text-align:left;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    letter-spacing:.03em;
+  }
+  table.conj th, table.conj td{
+    padding:9px 10px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+  }
+  table.conj thead th{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    background:var(--surface-2);
+  }
+  table.conj td.irr{ color:var(--accent); font-weight:600; }
+  .table-scroll{ overflow-x:auto; }
+
+  .pattern-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin:14px 0;
+  }
+  @media (max-width:560px){ .pattern-grid{ grid-template-columns:1fr; } }
+  .pattern{
+    background:var(--surface-2);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:.86rem;
+  }
+  .pattern b{ display:block; font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--teal); margin-bottom:4px; }
+
+  /* exercises */
+  .item{
+    margin-bottom:14px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .item:last-child{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .item .q{ margin:0 0 8px; }
+  .item .q .n{ font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); margin-right:6px; }
+
+  input[type=text]{
+    font:inherit;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.92rem;
+    padding:7px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    width:11em;
+    max-width:100%;
+  }
+  input[type=text]:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+
+  select{
+    font:inherit;
+    font-size:.9rem;
+    padding:6px 9px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    max-width:100%;
+  }
+  select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .choices{ display:flex; flex-direction:column; gap:7px; margin-top:4px; }
+  .choice{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:.92rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    cursor:pointer;
+    background:var(--surface);
+  }
+  .choice:hover{ border-color:var(--accent); }
+  .choice input{ accent-color:var(--accent); }
+
+  .vocab-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:9px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .vocab-row:last-child{ border-bottom:none; }
+  .vocab-row .term{ font-weight:600; flex:1; min-width:11em; }
+  .vocab-row .term .mono{ display:block; font-size:.72rem; color:var(--ink-soft); font-weight:500; }
+
+  .feedback{
+    display:inline-block;
+    margin-left:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem;
+    font-weight:600;
+  }
+  .feedback.ok{ color:var(--good); }
+  .feedback.bad{ color:var(--bad); }
+
+  .check-btn{
+    font:inherit;
+    font-family:'Public Sans', sans-serif;
+    font-weight:600;
+    font-size:.92rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  .check-btn:hover{ filter:brightness(1.07); }
+  .check-btn:active{ transform:translateY(1px); }
+
+  .section-score{
+    margin-top:12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.84rem;
+    color:var(--ink-soft);
+  }
+  .section-score b{ color:var(--ink); }
+
+  .dialogue{
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:14px;
+    font-size:.93rem;
+  }
+  .dialogue .who{ font-family:'IBM Plex Mono', monospace; font-size:.74rem; color:var(--teal); text-transform:uppercase; letter-spacing:.04em; display:block; margin-bottom:2px; }
+  .dialogue p{ margin:0 0 10px; }
+  .dialogue p:last-child{ margin-bottom:0; }
+
+  .solutions{
+    margin-top:8px;
+  }
+  .sol-item{
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+    font-size:.9rem;
+  }
+  .sol-item:last-child{ border-bottom:none; }
+  .sol-item .ans{ color:var(--teal); font-weight:700; font-family:'IBM Plex Mono', monospace; }
+  .sol-item .why{ color:var(--ink-soft); display:block; margin-top:3px; }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:28px;
+  }
+
+  details.sol-wrap > summary{
+    cursor:pointer;
+    font-weight:600;
+    font-family:'Fraunces', serif;
+    font-size:1.1rem;
+    padding:4px 0;
+  }
+  details.sol-wrap{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px 20px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+  }
+</style>
+
+<a class="back" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Alacant · Pràctica oral diària</div>
+    <h1>Tenint, venint, sent</h1>
+    <p>Gerundis irregulars del valencià, amb vocabulari de maquinari i xarxes del bloc de Digitalització (4t ESO), per a parlar amb fluïdesa a classe d'informàtica.</p>
+    <span class="topic-pill">Tema d'avui: Gerundis irregulars</span>
+  </div>
+</header>
+
+<div class="scorebar">
+  <span>Puntuació acumulada</span>
+  <span><b id="globalScore">0</b> / <span id="globalMax">29</span> punts</span>
+</div>
+
+<section class="block theory">
+  <div class="step">1 · Teoria</div>
+  <h2>El gerundi: una acció que encara dura</h2>
+  <p>El gerundi s'usa sobretot en la perífrasi <em>estar + gerundi</em> per a expressar una acció en curs: <span class="mono">«Estic corregint exàmens»</span>, <span class="mono">«Els alumnes estan programant en Scratch»</span>. La formació regular depén de la conjugació del verb:</p>
+
+  <div class="pattern-grid">
+    <div class="pattern"><b>1a conjugació (-ar)</b>-ant → parlar → parl<strong>ant</strong>, programar → programant</div>
+    <div class="pattern"><b>2a conjugació (-er/-re)</b>-ent → perdre → perd<strong>ent</strong>, respondre → responent</div>
+    <div class="pattern"><b>3a conjugació (-ir)</b>-int → dormir → dorm<strong>int</strong>, imprimir → imprimint</div>
+    <div class="pattern"><b>Verbs purament irregulars</b>canvien l'arrel sencera, no sols la terminació</div>
+  </div>
+
+  <p>Però un grapat de verbs molt freqüents trenquen el patró. Es poden agrupar en quatre famílies:</p>
+
+  <div class="table-scroll">
+    <table class="conj">
+      <caption>Quatre famílies de gerundis irregulars</caption>
+      <thead>
+        <tr><th>Família</th><th>Infinitiu</th><th>Gerundi</th><th>Per què canvia</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="2">Arrel en -ndre que perd la -d-</td><td>tindre</td><td class="irr">tenint</td><td rowspan="2">tind- → ten-/ven- (no *tindint)</td></tr>
+        <tr><td>vindre</td><td class="irr">venint</td></tr>
+        <tr><td rowspan="4">Verbs en -eure amb <span class="mono">i</span> de suport</td><td>veure</td><td class="irr">veient</td><td rowspan="4">entre dues vocals cal una <span class="mono">i</span> per a no fer hiat</td></tr>
+        <tr><td>creure</td><td class="irr">creient</td></tr>
+        <tr><td>caure</td><td class="irr">caient</td></tr>
+        <tr><td>traure</td><td class="irr">traient</td></tr>
+        <tr><td rowspan="2">Verbs en -iure amb <span class="mono">v</span> de suport</td><td>escriure</td><td class="irr">escrivint</td><td rowspan="2">entre vocals apareix una <span class="mono">v</span></td></tr>
+        <tr><td>viure</td><td class="irr">vivint</td></tr>
+        <tr><td rowspan="3">Arrels úniques, cal memoritzar-les</td><td>fer</td><td class="irr">fent</td><td rowspan="3">l'arrel no s'assembla a l'infinitiu</td></tr>
+        <tr><td>dir</td><td class="irr">dient</td></tr>
+        <tr><td>ser</td><td class="irr">sent</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Un cas a part és <strong>eixir</strong>, que manté la vocal alternant ja coneguda dels irregulars en present: <span class="mono">eixir → <strong>ixint</strong></span> (com en <span class="mono">isc, ix, ixen</span>).</p>
+</section>
+
+<section class="block" id="sec1">
+  <div class="step">2 · Activitat</div>
+  <h2>Omple els buits amb el gerundi correcte</h2>
+  <p>Escriu el gerundi del verb entre parèntesis. Fixa't en la família a què pertany.</p>
+  <div id="ex1">
+    <div class="item" data-answers="corregint">
+      <p class="q"><span class="n">1.</span>Ara mateix estic <input type="text" class="blank"> (corregir) els exàmens de Scratch de 2n d'ESO.</p>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-answers="fent">
+      <p class="q"><span class="n">2.</span>Els alumnes de PIAR estan <input type="text" class="blank"> (fer) un prototip amb la placa Microbit.</p>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-answers="dient">
+      <p class="q"><span class="n">3.</span><input type="text" class="blank"> (dir) la veritat, aquest codi encara té errors.</p>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-answers="escrivint">
+      <p class="q"><span class="n">4.</span>Estem <input type="text" class="blank"> (escriure) les consultes SQL amb XAMPP al laboratori.</p>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-answers="ixint">
+      <p class="q"><span class="n">5.</span><input type="text" class="blank"> (eixir) de classe, no oblideu tancar la sessió de l'ordinador.</p>
+      <span class="feedback"></span>
+    </div>
+  </div>
+  <button class="check-btn" data-target="ex1">Comprova les respostes</button>
+  <p class="section-score" id="score-ex1"></p>
+</section>
+
+<section class="block" id="sec2">
+  <div class="step">3 · Activitat</div>
+  <h2>Tria l'opció correcta</h2>
+  <div id="ex2">
+    <div class="item" data-correct="veient">
+      <p class="q"><span class="n">1.</span>L'alumnat de Robòtica està ______ com el sensor de distància respon als obstacles.</p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q2-1" value="veent"> veent</label>
+        <label class="choice"><input type="radio" name="q2-1" value="veient"> veient</label>
+        <label class="choice"><input type="radio" name="q2-1" value="vient"> vient</label>
+      </div>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-correct="tenint">
+      <p class="q"><span class="n">2.</span>______ en compte el biaix del model, hem revisat les dades d'entrenament.</p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q2-2" value="tindint"> Tindint</label>
+        <label class="choice"><input type="radio" name="q2-2" value="tenint"> Tenint</label>
+        <label class="choice"><input type="radio" name="q2-2" value="tinguent"> Tinguent</label>
+      </div>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-correct="vivint">
+      <p class="q"><span class="n">3.</span>Estem ______ una actualització important del lloc de WordPress del departament.</p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q2-3" value="vivint"> vivint</label>
+        <label class="choice"><input type="radio" name="q2-3" value="vivent"> vivent</label>
+        <label class="choice"><input type="radio" name="q2-3" value="viuint"> viuint</label>
+      </div>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-correct="sent">
+      <p class="q"><span class="n">4.</span>______ ja les sis, el claustre encara no ha acabat.</p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q2-4" value="essent"> Essent</label>
+        <label class="choice"><input type="radio" name="q2-4" value="sent"> Sent</label>
+        <label class="choice"><input type="radio" name="q2-4" value="siguent"> Siguent</label>
+      </div>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-correct="creient">
+      <p class="q"><span class="n">5.</span>______ que el servidor web estava caigut, he reiniciat la màquina virtual de VirtualBox.</p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q2-5" value="creent"> Creent</label>
+        <label class="choice"><input type="radio" name="q2-5" value="creint"> Creint</label>
+        <label class="choice"><input type="radio" name="q2-5" value="creient"> Creient</label>
+      </div>
+      <span class="feedback"></span>
+    </div>
+  </div>
+  <button class="check-btn" data-target="ex2">Comprova les respostes</button>
+  <p class="section-score" id="score-ex2"></p>
+</section>
+
+<section class="block" id="sec3">
+  <div class="step">4 · Activitat</div>
+  <h2>Completa la taula de gerundis</h2>
+  <p>Escriu el gerundi de cada verb. Repassa les quatre famílies de dalt si cal.</p>
+  <div class="table-scroll">
+    <table class="conj" id="ex3">
+      <thead>
+        <tr><th>Infinitiu</th><th>Gerundi</th></tr>
+      </thead>
+      <tbody>
+        <tr class="item" data-answers="venint"><td>vindre</td><td><input type="text" class="blank"> <span class="feedback"></span></td></tr>
+        <tr class="item" data-answers="caient"><td>caure</td><td><input type="text" class="blank"> <span class="feedback"></span></td></tr>
+        <tr class="item" data-answers="traient"><td>traure</td><td><input type="text" class="blank"> <span class="feedback"></span></td></tr>
+        <tr class="item" data-answers="dient"><td>dir</td><td><input type="text" class="blank"> <span class="feedback"></span></td></tr>
+        <tr class="item" data-answers="fent"><td>fer</td><td><input type="text" class="blank"> <span class="feedback"></span></td></tr>
+        <tr class="item" data-answers="escrivint"><td>escriure</td><td><input type="text" class="blank"> <span class="feedback"></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <button class="check-btn" data-target="ex3">Comprova les respostes</button>
+  <p class="section-score" id="score-ex3"></p>
+</section>
+
+<section class="block" id="sec4">
+  <div class="step">5 · Activitat oral</div>
+  <h2>Mini-diàleg al departament d'informàtica</h2>
+  <p>Omple els buits del diàleg entre el professor i una alumna. Practica llegir-lo en veu alta.</p>
+  <div class="dialogue">
+    <p><span class="who">Alumna</span>Professor, <span class="item-inline" data-idx="1"></span> (no entendre) l'error, no sé com continuar el programa en Python.</p>
+    <p><span class="who">Professor</span>A veure... <span class="item-inline" data-idx="2"></span> (mirar) el teu codi, el problema és en el bucle. Estàs <span class="item-inline" data-idx="3"></span> (repetir) la mateixa condició dos vegades.</p>
+    <p><span class="who">Alumna</span>Ah, és veritat! <span class="item-inline" data-idx="4"></span> (corregir) això ara mateix.</p>
+    <p><span class="who">Professor</span>Molt bé. I quan acabes, entrenem el model amb Teachable Machine, que estem <span class="item-inline" data-idx="5"></span> (preparar) la pràctica per a demà.</p>
+  </div>
+  <div id="ex4">
+    <div class="item" data-answers="no entenent">
+      <p class="q"><span class="n">1.</span><input type="text" class="blank" placeholder="no entendre"></p>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-answers="mirant">
+      <p class="q"><span class="n">2.</span><input type="text" class="blank" placeholder="mirar"></p>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-answers="repetint">
+      <p class="q"><span class="n">3.</span><input type="text" class="blank" placeholder="repetir"></p>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-answers="corregint">
+      <p class="q"><span class="n">4.</span><input type="text" class="blank" placeholder="corregir"></p>
+      <span class="feedback"></span>
+    </div>
+    <div class="item" data-answers="preparant">
+      <p class="q"><span class="n">5.</span><input type="text" class="blank" placeholder="preparar"></p>
+      <span class="feedback"></span>
+    </div>
+  </div>
+  <button class="check-btn" data-target="ex4">Comprova les respostes</button>
+  <p class="section-score" id="score-ex4"></p>
+</section>
+
+<section class="block" id="sec5">
+  <div class="step">6 · Vocabulari · Digitalització (4t ESO)</div>
+  <h2>Relaciona el terme valencià amb la seua traducció</h2>
+  <p>Tria la traducció correcta al castellà per a cada terme.</p>
+  <div id="ex5">
+    <div class="vocab-row item" data-correct="hardware">
+      <span class="term">maquinari<span class="mono">component físic de l'ordinador</span></span>
+      <span>
+        <select>
+          <option value="">— tria —</option>
+          <option value="hardware">hardware</option>
+          <option value="software">software</option>
+          <option value="periférico">periférico</option>
+        </select>
+        <span class="feedback"></span>
+      </span>
+    </div>
+    <div class="vocab-row item" data-correct="software">
+      <span class="term">programari<span class="mono">conjunt d'aplicacions i programes</span></span>
+      <span>
+        <select>
+          <option value="">— tria —</option>
+          <option value="hardware">hardware</option>
+          <option value="componente físico">componente físico</option>
+          <option value="software">software</option>
+        </select>
+        <span class="feedback"></span>
+      </span>
+    </div>
+    <div class="vocab-row item" data-correct="periférico">
+      <span class="term">perifèric<span class="mono">ratolí, teclat, impressora...</span></span>
+      <span>
+        <select>
+          <option value="">— tria —</option>
+          <option value="periférico">periférico</option>
+          <option value="servidor web">servidor web</option>
+          <option value="componente físico">componente físico</option>
+        </select>
+        <span class="feedback"></span>
+      </span>
+    </div>
+    <div class="vocab-row item" data-correct="red inalámbrica">
+      <span class="term">xarxa sense fil<span class="mono">connexió Wi-Fi, per exemple</span></span>
+      <span>
+        <select>
+          <option value="">— tria —</option>
+          <option value="red cableada">red cableada</option>
+          <option value="red inalámbrica">red inalámbrica</option>
+          <option value="internet de las cosas">internet de las cosas</option>
+        </select>
+        <span class="feedback"></span>
+      </span>
+    </div>
+    <div class="vocab-row item" data-correct="internet de las cosas">
+      <span class="term">internet de les coses<span class="mono">objectes quotidians connectats en xarxa</span></span>
+      <span>
+        <select>
+          <option value="">— tria —</option>
+          <option value="realidad aumentada">realidad aumentada</option>
+          <option value="internet de las cosas">internet de las cosas</option>
+          <option value="gestor de contenidos">gestor de contenidos</option>
+        </select>
+        <span class="feedback"></span>
+      </span>
+    </div>
+    <div class="vocab-row item" data-correct="gestor de contenidos">
+      <span class="term">gestor de continguts<span class="mono">com WordPress</span></span>
+      <span>
+        <select>
+          <option value="">— tria —</option>
+          <option value="gestor de contenidos">gestor de contenidos</option>
+          <option value="licencia de software">licencia de software</option>
+          <option value="comercio electrónico">comercio electrónico</option>
+        </select>
+        <span class="feedback"></span>
+      </span>
+    </div>
+    <div class="vocab-row item" data-correct="firma digital">
+      <span class="term">signatura digital<span class="mono">verifica l'autenticitat d'un document</span></span>
+      <span>
+        <select>
+          <option value="">— tria —</option>
+          <option value="certificado digital">certificado digital</option>
+          <option value="firma digital">firma digital</option>
+          <option value="copia de seguridad">copia de seguridad</option>
+        </select>
+        <span class="feedback"></span>
+      </span>
+    </div>
+    <div class="vocab-row item" data-correct="realidad virtual">
+      <span class="term">realitat virtual<span class="mono">entorn digital immersiu amb ulleres especials</span></span>
+      <span>
+        <select>
+          <option value="">— tria —</option>
+          <option value="realidad aumentada">realidad aumentada</option>
+          <option value="realidad virtual">realidad virtual</option>
+          <option value="prototipo">prototipo</option>
+        </select>
+        <span class="feedback"></span>
+      </span>
+    </div>
+  </div>
+  <button class="check-btn" data-target="ex5">Comprova les respostes</button>
+  <p class="section-score" id="score-ex5"></p>
+</section>
+
+<details class="sol-wrap">
+  <summary>Veure totes les solucions i explicacions</summary>
+  <div class="solutions">
+    <div class="sol-item"><span class="ans">1. corregint</span><span class="why">corregir és un verb regular de 3a conjugació: arrel + -int.</span></div>
+    <div class="sol-item"><span class="ans">2. fent</span><span class="why">fer té una arrel pròpia i irregular: fent (no "ferint" ni "faent").</span></div>
+    <div class="sol-item"><span class="ans">3. dient</span><span class="why">dir forma el gerundi amb l'arrel di- + -ent: dient.</span></div>
+    <div class="sol-item"><span class="ans">4. escrivint</span><span class="why">escriure du una -v- de suport entre vocals: escriv-int.</span></div>
+    <div class="sol-item"><span class="ans">5. ixint</span><span class="why">eixir alterna l'arrel com en present (isc, ix): ix-int.</span></div>
+
+    <div class="sol-item"><span class="ans">2.1 veient</span><span class="why">veure porta una -i- epentètica per a evitar l'hiat: ve-i-ent.</span></div>
+    <div class="sol-item"><span class="ans">2.2 Tenint</span><span class="why">tindre pert la -d- i canvia la vocal: tind- → ten-.</span></div>
+    <div class="sol-item"><span class="ans">2.3 vivint</span><span class="why">viure du una -v- de suport: viv-int (no "vivent", que seria d'un altre verb).</span></div>
+    <div class="sol-item"><span class="ans">2.4 Sent</span><span class="why">ser és fortament irregular: l'arrel es redueix a s- + -ent.</span></div>
+    <div class="sol-item"><span class="ans">2.5 Creient</span><span class="why">creure segueix el mateix patró que veure: cre-i-ent.</span></div>
+
+    <div class="sol-item"><span class="ans">3. vindre → venint</span><span class="why">mateixa família que tindre: vind- → ven-.</span></div>
+    <div class="sol-item"><span class="ans">3. caure → caient</span><span class="why">verb en -eure amb -i- epentètica: ca-i-ent.</span></div>
+    <div class="sol-item"><span class="ans">3. traure → traient</span><span class="why">mateix patró: tra-i-ent.</span></div>
+    <div class="sol-item"><span class="ans">3. dir → dient</span><span class="why">arrel pròpia di- + -ent.</span></div>
+    <div class="sol-item"><span class="ans">3. fer → fent</span><span class="why">arrel pròpia f- + -ent.</span></div>
+    <div class="sol-item"><span class="ans">3. escriure → escrivint</span><span class="why">-v- de suport: escriv-int.</span></div>
+
+    <div class="sol-item"><span class="ans">4.1 no entenent</span><span class="why">entendre és regular (2a conjugació): entenent, amb "no" davant per a negar.</span></div>
+    <div class="sol-item"><span class="ans">4.2 mirant</span><span class="why">mirar, 1a conjugació, regular: mir-ant.</span></div>
+    <div class="sol-item"><span class="ans">4.3 repetint</span><span class="why">repetir, 3a conjugació, regular: repet-int.</span></div>
+    <div class="sol-item"><span class="ans">4.4 corregint</span><span class="why">corregir, 3a conjugació, regular: correg-int.</span></div>
+    <div class="sol-item"><span class="ans">4.5 preparant</span><span class="why">preparar, 1a conjugació, regular: prepar-ant.</span></div>
+
+    <div class="sol-item"><span class="ans">5. maquinari = hardware</span><span class="why">el component físic de l'ordinador, per oposició al programari.</span></div>
+    <div class="sol-item"><span class="ans">5. programari = software</span><span class="why">el conjunt de programes i aplicacions que fem servir.</span></div>
+    <div class="sol-item"><span class="ans">5. perifèric = periférico</span><span class="why">dispositiu connectat a l'ordinador: ratolí, teclat, impressora.</span></div>
+    <div class="sol-item"><span class="ans">5. xarxa sense fil = red inalámbrica</span><span class="why">per oposició a la xarxa cablejada, que usa cable de xarxa.</span></div>
+    <div class="sol-item"><span class="ans">5. internet de les coses = internet de las cosas</span><span class="why">objectes quotidians (sensors, electrodomèstics) connectats en xarxa.</span></div>
+    <div class="sol-item"><span class="ans">5. gestor de continguts = gestor de contenidos</span><span class="why">eina com WordPress per a administrar un lloc web.</span></div>
+    <div class="sol-item"><span class="ans">5. signatura digital = firma digital</span><span class="why">mecanisme que verifica l'autenticitat i la integritat d'un document.</span></div>
+    <div class="sol-item"><span class="ans">5. realitat virtual = realidad virtual</span><span class="why">entorn digital immersiu, normalment amb ulleres especials; no s'ha de confondre amb la realitat augmentada.</span></div>
+  </div>
+</details>
+
+<footer class="note">Exercici diari de valencià oral · IES Jorge Juan, Alacant · Departament d'Informàtica</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  function norm(s){
+    return (s || "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .trim()
+      .replace(/\s+/g, " ");
+  }
+
+  var sectionMax = {};
+  var sectionScore = {};
+
+  function updateGlobal(){
+    var total = 0, max = 0;
+    for (var k in sectionMax){ max += sectionMax[k]; total += (sectionScore[k]||0); }
+    document.getElementById("globalScore").textContent = total;
+    document.getElementById("globalMax").textContent = max;
+  }
+
+  function checkSection(id){
+    var root = document.getElementById(id);
+    var items = root.querySelectorAll(".item");
+    var correct = 0, count = items.length;
+
+    items.forEach(function(item){
+      var fb = item.querySelector(".feedback");
+      var isCorrect = false;
+
+      var select = item.querySelector("select");
+      var radios = item.querySelectorAll("input[type=radio]");
+      var text = item.querySelector("input[type=text]");
+
+      if (select){
+        var want = norm(item.getAttribute("data-correct"));
+        isCorrect = select.value !== "" && norm(select.value) === want;
+      } else if (radios.length){
+        var want2 = norm(item.getAttribute("data-correct"));
+        var picked = null;
+        radios.forEach(function(r){ if (r.checked) picked = r.value; });
+        isCorrect = picked !== null && norm(picked) === want2;
+      } else if (text){
+        var answers = (item.getAttribute("data-answers") || "").split("|").map(norm);
+        isCorrect = answers.indexOf(norm(text.value)) !== -1;
+      }
+
+      if (fb){
+        fb.textContent = isCorrect ? "✓ correcte" : "✗ incorrecte";
+        fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      }
+      if (isCorrect) correct++;
+    });
+
+    sectionMax[id] = count;
+    sectionScore[id] = correct;
+    var scoreEl = document.getElementById("score-" + id);
+    if (scoreEl){
+      scoreEl.innerHTML = "Puntuació d'esta activitat: <b>" + correct + " / " + count + "</b>";
+    }
+    updateGlobal();
+  }
+
+  // wire the inline dialogue blanks into their matching ex4 items for display continuity
+  document.querySelectorAll(".item-inline").forEach(function(span){
+    var idx = span.getAttribute("data-idx");
+    span.textContent = "______";
+  });
+
+  document.querySelectorAll(".check-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      checkSection(btn.getAttribute("data-target"));
+    });
+  });
+
+  // initialise max counts for the top bar before any check happens
+  ["ex1","ex2","ex3","ex4","ex5"].forEach(function(id){
+    var root = document.getElementById(id);
+    sectionMax[id] = root.querySelectorAll(".item").length;
+    sectionScore[id] = 0;
+  });
+  updateGlobal();
+})();
+</script>
+
+</body></html>

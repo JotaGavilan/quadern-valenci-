@@ -1,0 +1,605 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>De fusta o de ferro?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    /* palette: honey (de mel) + glass-teal (de vidre), sage-paper ground */
+    --bg:#eef1ea;
+    --surface:#ffffff;
+    --surface-2:#e2e7dd;
+    --ink:#20241f;
+    --ink-soft:#5b6355;
+    --line:#d7ddce;
+    --accent:#b9742f;
+    --accent-ink:#fff8ef;
+    --accent-soft:#f3e2c9;
+    --accent-soft-ink:#7a4a16;
+    --glass:#2f6e68;
+    --glass-soft:#dcebe8;
+    --glass-soft-ink:#1f4f4a;
+    --good:#3f7d54;
+    --good-soft:#dcedd9;
+    --bad:#b6432f;
+    --bad-soft:#f6ddd4;
+    --shadow:0 1px 2px rgba(32,36,31,.06), 0 8px 22px -12px rgba(32,36,31,.20);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171a15;
+      --surface:#1e2219;
+      --surface-2:#262b1f;
+      --ink:#eaeee4;
+      --ink-soft:#a9b29c;
+      --line:#343b2b;
+      --accent:#e0a35c;
+      --accent-ink:#2a1a06;
+      --accent-soft:#3a2c13;
+      --accent-soft-ink:#f1cd98;
+      --glass:#6fc2b8;
+      --glass-soft:#1c3734;
+      --glass-soft-ink:#a9e2d9;
+      --good:#7ed99a;
+      --good-soft:#1e3426;
+      --bad:#e8876f;
+      --bad-soft:#3a2219;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171a15;
+    --surface:#1e2219;
+    --surface-2:#262b1f;
+    --ink:#eaeee4;
+    --ink-soft:#a9b29c;
+    --line:#343b2b;
+    --accent:#e0a35c;
+    --accent-ink:#2a1a06;
+    --accent-soft:#3a2c13;
+    --accent-soft-ink:#f1cd98;
+    --glass:#6fc2b8;
+    --glass-soft:#1c3734;
+    --glass-soft-ink:#a9e2d9;
+    --good:#7ed99a;
+    --good-soft:#1e3426;
+    --bad:#e8876f;
+    --bad-soft:#3a2219;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+    padding-block:22px 64px;
+    max-width:880px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a.backlink{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--glass-soft-ink);
+    background:var(--glass-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  a.backlink:hover{ background:var(--glass); color:#fff; }
+
+  header.top{
+    background:linear-gradient(135deg, var(--accent), var(--glass));
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.9;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.6rem, 4.6vw, 2.2rem); font-weight:600; }
+  header.top p{ margin:10px 0 0; max-width:60ch; opacity:.95; font-size:.95rem; }
+  .today-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .today-tags span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.75rem;
+    background:rgba(255,255,255,.22);
+    padding:4px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  .score-bar{
+    position:sticky; top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+  }
+  .score-bar b{ font-size:1.1rem; font-family:'Fraunces', serif; }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{ font-size:1.25rem; margin-bottom:4px; }
+  section.card .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    display:inline-block;
+    padding:3px 9px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  section.card.verb .kicker{ color:var(--glass-soft-ink); background:var(--glass-soft); }
+
+  table.rules{
+    width:100%; border-collapse:collapse; margin:14px 0;
+    font-size:.92rem;
+  }
+  table.rules th, table.rules td{
+    border:1px solid var(--line);
+    padding:8px 10px;
+    text-align:left;
+  }
+  table.rules th{ background:var(--surface-2); font-family:'IBM Plex Mono', monospace; font-size:.76rem; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); }
+  table.rules td.ex{ font-style:italic; }
+  .tablewrap{ overflow-x:auto; min-width:0; }
+
+  .item{
+    border-top:1px solid var(--line);
+    padding-block:14px;
+  }
+  .item:first-of-type{ border-top:none; padding-top:4px; }
+  .item p.sentence{ margin:0 0 8px; }
+  .item input[type=text]{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.95rem;
+    padding:6px 9px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+    width:7.5em;
+  }
+  .item input[type=text]:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .item.verb input[type=text]:focus{ outline-color:var(--glass); }
+  .choices{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+  .choices label{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.86rem;
+    border:1.5px solid var(--line);
+    border-radius:999px;
+    padding:5px 12px;
+    cursor:pointer;
+    background:var(--bg);
+  }
+  .choices input{ accent-color:var(--accent); }
+  .feedback{
+    display:inline-block;
+    margin-left:8px;
+    font-size:.82rem;
+    font-family:'IBM Plex Mono', monospace;
+    padding:2px 8px;
+    border-radius:999px;
+    vertical-align:middle;
+  }
+  .feedback.ok{ background:var(--good-soft); color:var(--good); }
+  .feedback.bad{ background:var(--bad-soft); color:var(--bad); }
+
+  .dialog-line{ margin:4px 0; }
+  .dialog-line b{ font-family:'IBM Plex Mono', monospace; font-size:.8rem; color:var(--ink-soft); }
+
+  button.check{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.86rem;
+    font-weight:600;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:10px;
+    padding:9px 16px;
+    cursor:pointer;
+    margin-top:12px;
+  }
+  button.check:hover{ opacity:.9; }
+  section.card.verb button.check{ background:var(--glass); color:#fff; }
+
+  .vocab-table-grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:8px;
+    margin:14px 0;
+    min-width:0;
+  }
+  @media (max-width:560px){ .vocab-table-grid{ grid-template-columns:repeat(2,1fr); } }
+  .vocab-table-grid .cell{
+    background:var(--surface-2);
+    border-radius:10px;
+    padding:10px;
+    font-size:.84rem;
+  }
+  .vocab-table-grid .cell .q{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; color:var(--ink-soft); margin-bottom:4px; }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    font-family:'Fraunces', serif;
+    font-size:1.15rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .sol-block{ margin-top:16px; }
+  .sol-block h3{ font-size:1rem; margin-bottom:8px; }
+  .sol-item{ padding:8px 0; border-top:1px solid var(--line); font-size:.9rem; }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item b{ color:var(--good); font-family:'IBM Plex Mono', monospace; }
+  .sol-item .expl{ color:var(--ink-soft); display:block; margin-top:2px; }
+
+  footer.note{
+    text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:26px;
+  }
+</style>
+
+<a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 22 novembre 2026</div>
+  <h1>De fusta o de ferro?</h1>
+  <p>Repàs oral de valencià per a classe: hui mirem com es fa servir <b>de / d'</b> per a descriure de què és fet, de què va o de qui és una cosa, amb exemples del dia a dia del departament. A continuació, un repàs breu dels temps imperfets dels verbs irregulars.</p>
+  <div class="today-tags">
+    <span>Tema del dia: De / d' en complements del nom</span>
+    <span>Repàs verbal: Imperfet d'indicatiu i de subjuntiu</span>
+  </div>
+</header>
+
+<div class="score-bar">
+  <span>Puntuació global</span>
+  <span><b id="globalScore">0</b> / <span id="globalMax">27</span></span>
+</div>
+
+<section class="card">
+  <span class="kicker">Teoria</span>
+  <h2>De / d' en complements del nom</h2>
+  <p>La preposició <b>de</b> unix dos noms quan el segon explica de quin material és el primer, què conté, per a què servix o de qui és. Quan no hi ha article darrere, <b>de</b> es converteix en <b>d'</b> davant de vocal o h muda: <i>una sala d'ordinadors</i>, <i>un cable d'alimentació</i>, <i>un got d'aigua</i>. Davant de consonant, es manté <i>de</i>: <i>una taula de fusta</i>, <i>un cable de xarxa</i>.</p>
+  <p>Quan sí que hi ha article, <b>de</b> es contrau amb <i>el</i> i <i>els</i>, però no amb <i>la</i> ni amb <i>les</i>, i tampoc es contrau davant de <i>l'</i>:</p>
+  <div class="tablewrap">
+  <table class="rules">
+    <tr><th>Preposició + article</th><th>Resultat</th><th>Exemple</th></tr>
+    <tr><td>de + el</td><td class="mono">del</td><td class="ex">L'ordinador del professor no arranca.</td></tr>
+    <tr><td>de + la</td><td class="mono">de la</td><td class="ex">La contrasenya de la xarxa ha canviat.</td></tr>
+    <tr><td>de + els</td><td class="mono">dels</td><td class="ex">Les notes dels alumnes ja estan a Aules.</td></tr>
+    <tr><td>de + les</td><td class="mono">de les</td><td class="ex">El manteniment de les aules d'informàtica és dimarts.</td></tr>
+    <tr><td>de + l' (davant de vocal/h)</td><td class="mono">de l'</td><td class="ex">El cable de l'altaveu s'ha espatllat.</td></tr>
+  </table>
+  </div>
+  <p>La diferència clau és esta: sense article, <b>de/d'</b> indica un tipus, un material o un contingut en general (<i>una sala d'ordinadors</i>, un tipus de sala; <i>un llibre de text</i>, un tipus de llibre). Amb article (<b>del/de la/dels/de les</b>), parlem d'una cosa concreta i ja identificada (<i>la sala dels ordinadors nous</i>, eixa sala en concret; <i>el llibre del professor</i>, eixe llibre en concret).</p>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 1 · Omple els buits</span>
+  <h2>De, d', del, de la, dels o de les?</h2>
+  <p>Escriu la forma correcta a cada buit.</p>
+
+  <div id="act1">
+    <div class="item" data-idx="1">
+      <p class="sentence">1. Hui farem la classe a la sala <input type="text" id="a1_1"> ordinadors. <span class="feedback" id="fb1_1"></span></p>
+    </div>
+    <div class="item" data-idx="2">
+      <p class="sentence">2. On he deixat el cable <input type="text" id="a1_2"> xarxa? <span class="feedback" id="fb1_2"></span></p>
+    </div>
+    <div class="item" data-idx="3">
+      <p class="sentence">3. La clau <input type="text" id="a1_3"> accés al servidor és nova. <span class="feedback" id="fb1_3"></span></p>
+    </div>
+    <div class="item" data-idx="4">
+      <p class="sentence">4. Les notes <input type="text" id="a1_4"> alumnes de 4t ja estan corregides. <span class="feedback" id="fb1_4"></span></p>
+    </div>
+    <div class="item" data-idx="5">
+      <p class="sentence">5. El projector <input type="text" id="a1_5"> l'aula d'informàtica fa un soroll estrany. <span class="feedback" id="fb1_5"></span></p>
+    </div>
+    <div class="item" data-idx="6">
+      <p class="sentence">6. El manteniment <input type="text" id="a1_6"> xarxa del centre es fa els dijous. <span class="feedback" id="fb1_6"></span></p>
+    </div>
+  </div>
+  <button class="check" onclick="checkAct1()">Comprova les respostes</button>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 2 · Tria la forma correcta</span>
+  <h2>Al claustre i al departament</h2>
+  <p>Marca l'opció correcta en cada frase.</p>
+
+  <div id="act2">
+    <div class="item" data-idx="1">
+      <p class="sentence">1. Al claustre hem parlat <span class="mono">___</span> nou horari d'informàtica.</p>
+      <div class="choices">
+        <label><input type="radio" name="a2_1" value="del"> del</label>
+        <label><input type="radio" name="a2_1" value="de la"> de la</label>
+        <label><input type="radio" name="a2_1" value="de"> de</label>
+      </div>
+      <span class="feedback" id="fb2_1"></span>
+    </div>
+    <div class="item" data-idx="2">
+      <p class="sentence">2. Al laboratori hi ha una taula <span class="mono">___</span> treball per a cada grup.</p>
+      <div class="choices">
+        <label><input type="radio" name="a2_2" value="de"> de</label>
+        <label><input type="radio" name="a2_2" value="del"> del</label>
+        <label><input type="radio" name="a2_2" value="dels"> dels</label>
+      </div>
+      <span class="feedback" id="fb2_2"></span>
+    </div>
+    <div class="item" data-idx="3">
+      <p class="sentence">3. La bateria <span class="mono">___</span> ratolí sense fil s'ha gastat.</p>
+      <div class="choices">
+        <label><input type="radio" name="a2_3" value="de"> de</label>
+        <label><input type="radio" name="a2_3" value="del"> del</label>
+        <label><input type="radio" name="a2_3" value="d'"> d'</label>
+      </div>
+      <span class="feedback" id="fb2_3"></span>
+    </div>
+    <div class="item" data-idx="4">
+      <p class="sentence">4. Necessitem un grup <span class="mono">___</span> alumnes voluntaris per a provar l'aplicació.</p>
+      <div class="choices">
+        <label><input type="radio" name="a2_4" value="dels"> dels</label>
+        <label><input type="radio" name="a2_4" value="d'"> d'</label>
+        <label><input type="radio" name="a2_4" value="del"> del</label>
+      </div>
+      <span class="feedback" id="fb2_4"></span>
+    </div>
+    <div class="item" data-idx="5">
+      <p class="sentence">5. S'ha penjat el pressupost <span class="mono">___</span> material informàtic d'enguany.</p>
+      <div class="choices">
+        <label><input type="radio" name="a2_5" value="del"> del</label>
+        <label><input type="radio" name="a2_5" value="de"> de</label>
+        <label><input type="radio" name="a2_5" value="de la"> de la</label>
+      </div>
+      <span class="feedback" id="fb2_5"></span>
+    </div>
+  </div>
+  <button class="check" onclick="checkAct2()">Comprova les respostes</button>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 3 · Completa la taula</span>
+  <h2>De + article</h2>
+  <p>Omple cada casella amb el resultat de la combinació.</p>
+  <div class="vocab-table-grid" id="act3">
+    <div class="cell"><div class="q">de + el</div><input type="text" id="a3_1" style="width:100%"><span class="feedback" id="fb3_1"></span></div>
+    <div class="cell"><div class="q">de + la</div><input type="text" id="a3_2" style="width:100%"><span class="feedback" id="fb3_2"></span></div>
+    <div class="cell"><div class="q">de + els</div><input type="text" id="a3_3" style="width:100%"><span class="feedback" id="fb3_3"></span></div>
+    <div class="cell"><div class="q">de + les</div><input type="text" id="a3_4" style="width:100%"><span class="feedback" id="fb3_4"></span></div>
+    <div class="cell"><div class="q">de + informàtica (sense article)</div><input type="text" id="a3_5" style="width:100%"><span class="feedback" id="fb3_5"></span></div>
+  </div>
+  <button class="check" onclick="checkAct3()">Comprova les respostes</button>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 4 · Mini-diàleg</span>
+  <h2>A l'aula d'informàtica</h2>
+  <p>Completa el diàleg entre la professora i l'alumnat abans de començar la pràctica.</p>
+  <div id="act4">
+    <p class="dialog-line"><b>Professora:</b> Bon dia! Hui anem a la sala <input type="text" id="a4_1"> ordinadors a fer la pràctica <span class="feedback" id="fb4_1"></span>.</p>
+    <p class="dialog-line"><b>Alumne:</b> Val. Hem de portar el llibre <input type="text" id="a4_2"> text? <span class="feedback" id="fb4_2"></span></p>
+    <p class="dialog-line"><b>Professora:</b> No fa falta hui. Però no oblideu la clau <input type="text" id="a4_3"> accés al servidor <span class="feedback" id="fb4_3"></span>.</p>
+    <p class="dialog-line"><b>Alumna:</b> I si falla el cable <input type="text" id="a4_4"> l'ordinador número tres? <span class="feedback" id="fb4_4"></span></p>
+    <p class="dialog-line"><b>Professora:</b> Aviseu-me i mirem la configuració <input type="text" id="a4_5"> xarxa junts <span class="feedback" id="fb4_5"></span>.</p>
+  </div>
+  <button class="check" onclick="checkAct4()">Comprova les respostes</button>
+</section>
+
+<section class="card verb">
+  <span class="kicker">Repàs verbal breu</span>
+  <h2>Imperfet d'indicatiu i de subjuntiu</h2>
+  <p>Recordatori ràpid: l'<b>imperfet d'indicatiu</b> és regular en la majoria de verbs (-ar → -ava; -er/-re/-ir → -ia), excepte <i>ser</i> (<i>era</i>). L'<b>imperfet de subjuntiu</b> es forma amb l'arrel irregular del verb més les terminacions <i>-ara/-ares/-ara/-àrem/-àreu/-aren</i> o <i>-era/-eres/-era/-érem/-éreu/-eren</i>: <i>fer → fera</i>, <i>dir → diguera</i>, <i>voler → volguera</i>, <i>poder → poguera</i>, <i>tindre → tinguera</i>, <i>saber → sabera</i>.</p>
+  <div id="actV">
+    <div class="item verb" data-idx="1">
+      <p class="sentence">1. Quan jo <input type="text" id="av_1"> (ser, imperfet indicatiu) estudiant, no hi havia ordinadors a cada aula. <span class="feedback" id="fbv_1"></span></p>
+    </div>
+    <div class="item verb" data-idx="2">
+      <p class="sentence">2. Si jo <input type="text" id="av_2"> (tindre, imperfet subjuntiu) més temps, actualitzaria tot el programari. <span class="feedback" id="fbv_2"></span></p>
+    </div>
+    <div class="item verb" data-idx="3">
+      <p class="sentence">3. Abans, els alumnes <input type="text" id="av_3"> (fer, imperfet indicatiu) els treballs a mà. <span class="feedback" id="fbv_3"></span></p>
+    </div>
+    <div class="item verb" data-idx="4">
+      <p class="sentence">4. M'agradaria que l'alumnat <input type="text" id="av_4"> (saber, imperfet subjuntiu) més de ciberseguretat. <span class="feedback" id="fbv_4"></span></p>
+    </div>
+    <div class="item verb" data-idx="5">
+      <p class="sentence">5. Quan ell <input type="text" id="av_5"> (voler, imperfet indicatiu) connectar-se, sempre fallava la xarxa. <span class="feedback" id="fbv_5"></span></p>
+    </div>
+    <div class="item verb" data-idx="6">
+      <p class="sentence">6. Tant de bo tots <input type="text" id="av_6"> (poder, imperfet subjuntiu) accedir al servidor sense problemes. <span class="feedback" id="fbv_6"></span></p>
+    </div>
+  </div>
+  <button class="check" onclick="checkActV()">Comprova les respostes</button>
+</section>
+
+<details class="solutions">
+  <summary>Solucionari complet i explicacions</summary>
+
+  <div class="sol-block">
+    <h3>Activitat 1</h3>
+    <div class="sol-item"><b>1. d'</b><span class="expl">"ordinadors" sense article: material/tipus de sala → d' davant de vocal.</span></div>
+    <div class="sol-item"><b>2. de</b><span class="expl">"xarxa" sense article i davant de consonant → de.</span></div>
+    <div class="sol-item"><b>3. d'</b><span class="expl">"accés" sense article, davant de vocal → d'.</span></div>
+    <div class="sol-item"><b>4. dels</b><span class="expl">Ací sí hi ha article: ELS alumnes de 4t (uns alumnes concrets) → de + els = dels.</span></div>
+    <div class="sol-item"><b>5. de</b><span class="expl">Ja hi ha l'article darrere (l'aula), així que davant només cal de, sense contraure (de l'aula).</span></div>
+    <div class="sol-item"><b>6. de</b><span class="expl">"xarxa" sense article i davant de consonant → de.</span></div>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 2</h3>
+    <div class="sol-item"><b>1. del</b><span class="expl">EL nou horari (un horari concret, ja identificat) → de + el = del.</span></div>
+    <div class="sol-item"><b>2. de</b><span class="expl">"treball" sense article: tipus de taula → de.</span></div>
+    <div class="sol-item"><b>3. del</b><span class="expl">EL ratolí sense fil (un ratolí concret) → de + el = del.</span></div>
+    <div class="sol-item"><b>4. d'</b><span class="expl">"alumnes" sense article, davant de vocal: un grup qualsevol → d'.</span></div>
+    <div class="sol-item"><b>5. del</b><span class="expl">EL material informàtic d'enguany (un material concret, identificat) → del.</span></div>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 3</h3>
+    <div class="sol-item"><b>1. del</b><span class="expl">de + el = del.</span></div>
+    <div class="sol-item"><b>2. de la</b><span class="expl">de + la no es contrau: de la.</span></div>
+    <div class="sol-item"><b>3. dels</b><span class="expl">de + els = dels.</span></div>
+    <div class="sol-item"><b>4. de les</b><span class="expl">de + les no es contrau: de les.</span></div>
+    <div class="sol-item"><b>5. d'informàtica</b><span class="expl">sense article, "de" davant de vocal passa a d'.</span></div>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 4</h3>
+    <div class="sol-item"><b>1. d'</b><span class="expl">"ordinadors" sense article, davant de vocal → d'.</span></div>
+    <div class="sol-item"><b>2. de</b><span class="expl">"text" sense article, davant de consonant → de.</span></div>
+    <div class="sol-item"><b>3. d'</b><span class="expl">"accés" sense article, davant de vocal → d'.</span></div>
+    <div class="sol-item"><b>4. de</b><span class="expl">Ja hi ha l'article darrere (l'ordinador), així que davant només cal de.</span></div>
+    <div class="sol-item"><b>5. de</b><span class="expl">"xarxa" sense article, davant de consonant → de.</span></div>
+  </div>
+
+  <div class="sol-block">
+    <h3>Repàs verbal · Imperfet d'indicatiu i de subjuntiu</h3>
+    <div class="sol-item"><b>1. era</b><span class="expl">Imperfet d'indicatiu irregular de ser.</span></div>
+    <div class="sol-item"><b>2. tinguera</b><span class="expl">Imperfet de subjuntiu de tindre: arrel irregular tingu- + -era.</span></div>
+    <div class="sol-item"><b>3. feien</b><span class="expl">Imperfet d'indicatiu de fer (regular en -ien).</span></div>
+    <div class="sol-item"><b>4. sabera</b><span class="expl">Imperfet de subjuntiu de saber: arrel sabe- + -era.</span></div>
+    <div class="sol-item"><b>5. volia</b><span class="expl">Imperfet d'indicatiu de voler (regular en -ia).</span></div>
+    <div class="sol-item"><b>6. pogueren</b><span class="expl">Imperfet de subjuntiu de poder: arrel pogu- + -eren.</span></div>
+  </div>
+</details>
+
+<footer class="note">IES Jorge Juan, Alacant · Exercici autogenerat de valencià oral per a l'àmbit educatiu-informàtic</footer>
+
+<script>
+  var scores = {act1:0, act2:0, act3:0, act4:0, actV:0};
+  var maxScores = {act1:6, act2:5, act3:5, act4:5, actV:6};
+
+  function norm(s){
+    return (s||'').trim().toLowerCase().replace(/\s+/g,' ').replace(/['’]/g,"'");
+  }
+  function setFeedback(id, ok){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    el.className = 'feedback ' + (ok ? 'ok' : 'bad');
+  }
+  function updateGlobal(){
+    var total = 0;
+    for(var k in scores){ total += scores[k]; }
+    document.getElementById('globalScore').textContent = total;
+  }
+
+  function checkAct1(){
+    var answers = {1:['d\''],2:['de'],3:['d\''],4:['dels'],5:['de'],6:['de']};
+    var correct = 0;
+    for(var i=1;i<=6;i++){
+      var v = norm(document.getElementById('a1_'+i).value);
+      var ok = answers[i].indexOf(v) !== -1;
+      setFeedback('fb1_'+i, ok);
+      if(ok) correct++;
+    }
+    scores.act1 = correct;
+    updateGlobal();
+  }
+
+  function checkAct2(){
+    var answers = {1:'del',2:'de',3:'del',4:'d\'',5:'del'};
+    var correct = 0;
+    for(var i=1;i<=5;i++){
+      var radios = document.getElementsByName('a2_'+i);
+      var val = '';
+      for(var r=0;r<radios.length;r++){ if(radios[r].checked) val = radios[r].value; }
+      var ok = val === answers[i];
+      setFeedback('fb2_'+i, ok);
+      if(ok) correct++;
+    }
+    scores.act2 = correct;
+    updateGlobal();
+  }
+
+  function checkAct3(){
+    var answers = {1:['del'],2:['de la'],3:['dels'],4:['de les'],5:['d\'informàtica','d informatica','d\'informatica']};
+    var correct = 0;
+    for(var i=1;i<=5;i++){
+      var v = norm(document.getElementById('a3_'+i).value).replace(/[àá]/g,'a').replace(/[òó]/g,'o');
+      var rawv = norm(document.getElementById('a3_'+i).value);
+      var ok = answers[i].indexOf(rawv) !== -1 || answers[i].map(function(x){return x.replace(/[àá]/g,'a').replace(/[òó]/g,'o');}).indexOf(v) !== -1;
+      setFeedback('fb3_'+i, ok);
+      if(ok) correct++;
+    }
+    scores.act3 = correct;
+    updateGlobal();
+  }
+
+  function checkAct4(){
+    var answers = {1:['d\''],2:['de'],3:['d\''],4:['de'],5:['de']};
+    var correct = 0;
+    for(var i=1;i<=5;i++){
+      var v = norm(document.getElementById('a4_'+i).value);
+      var ok = answers[i].indexOf(v) !== -1;
+      setFeedback('fb4_'+i, ok);
+      if(ok) correct++;
+    }
+    scores.act4 = correct;
+    updateGlobal();
+  }
+
+  function checkActV(){
+    var answers = {1:['era'],2:['tinguera'],3:['feien'],4:['sabera','sapiera'],5:['volia'],6:['pogueren']};
+    var correct = 0;
+    for(var i=1;i<=6;i++){
+      var v = norm(document.getElementById('av_'+i).value);
+      var ok = answers[i].indexOf(v) !== -1;
+      setFeedback('fbv_'+i, ok);
+      if(ok) correct++;
+    }
+    scores.actV = correct;
+    updateGlobal();
+  }
+</script>
+
+</body></html>

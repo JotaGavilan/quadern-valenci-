@@ -1,0 +1,590 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>A peu o en bici?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Disseny: fitxa de quadern amb dos colors de ressaltat fixos -- terracota
+     per a "A" (lloc físic, temps puntual) i indi per a "EN" (mitjans de
+     transport, contingut/interior, durada) */
+  :root{
+    --bg:#f5f1e8;
+    --surface:#ffffff;
+    --surface-2:#ebe4d4;
+    --ink:#20241f;
+    --ink-soft:#5b6358;
+    --accent:#3c6e4f;
+    --accent-ink:#f5faf3;
+    --accent-soft:#dfeade;
+    --accent-soft-ink:#1f4a30;
+    --line:#ddd4bd;
+    --good:#2f7d54;
+    --good-bg:#dcf0e4;
+    --bad:#a23b3b;
+    --bad-bg:#f6e3e1;
+    --aform:#b5572e;
+    --aform-bg:#f5e1d2;
+    --enform:#355c8a;
+    --enform-bg:#dde6f2;
+    --shadow:0 1px 2px rgba(32,36,31,.07), 0 10px 26px -14px rgba(32,36,31,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14170f; --surface:#1a1e14; --surface-2:#21261a;
+      --ink:#eaeee2; --ink-soft:#a7b0a0;
+      --accent:#86c79e; --accent-ink:#0f2317; --accent-soft:#1f3a28; --accent-soft-ink:#bfe6cf;
+      --line:#2b3123;
+      --good:#86d6a8; --good-bg:#1b3225;
+      --bad:#e79e97; --bad-bg:#3a2320;
+      --aform:#e4a07c; --aform-bg:#3a2516;
+      --enform:#9ab6dc; --enform-bg:#1f2e42;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14170f; --surface:#1a1e14; --surface-2:#21261a;
+    --ink:#eaeee2; --ink-soft:#a7b0a0;
+    --accent:#86c79e; --accent-ink:#0f2317; --accent-soft:#1f3a28; --accent-soft-ink:#bfe6cf;
+    --line:#2b3123;
+    --good:#86d6a8; --good-bg:#1b3225;
+    --bad:#e79e97; --bad-bg:#3a2320;
+    --aform:#e4a07c; --aform-bg:#3a2516;
+    --enform:#9ab6dc; --enform-bg:#1f2e42;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Karla', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:22px;
+    padding-bottom:70px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+  }
+  .wrap{ max-width:760px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a.backlink{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid var(--accent-soft);
+    margin-bottom:14px;
+  }
+  a.backlink:hover{ border-bottom-color:var(--accent); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:22px 22px 20px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 2px, transparent 2px 22px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.55rem,5vw,2.1rem); font-weight:600; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .tag-row .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    white-space:nowrap;
+  }
+
+  .scorebar{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+  }
+  .scorebar b{ font-family:'Fraunces', serif; font-size:1.15rem; font-weight:600; color:var(--accent); }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{
+    font-size:1.2rem;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:4px;
+    flex-wrap:wrap;
+  }
+  section.card h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    border:1px solid var(--accent-soft);
+    background:var(--accent-soft);
+    border-radius:999px;
+    padding:3px 9px;
+    flex:none;
+  }
+  section.card > p.lead{ color:var(--ink-soft); margin:8px 0 16px; font-size:.92rem; }
+
+  .theory-table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:14px 0; }
+  table.theory{ border-collapse:collapse; width:100%; min-width:600px; font-size:.87rem; }
+  table.theory th{
+    background:var(--surface-2); text-align:left; padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase;
+    letter-spacing:.03em; color:var(--ink-soft); border-bottom:1px solid var(--line);
+  }
+  table.theory td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; min-width:0; }
+  table.theory tr:last-child td{ border-bottom:none; }
+  table.theory .ex{ font-family:'IBM Plex Mono', monospace; font-size:.83rem; }
+  .chip{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:.82rem; padding:2px 8px; border-radius:7px; white-space:nowrap; }
+  .chip.a{ color:var(--aform); background:var(--aform-bg); }
+  .chip.b{ color:var(--enform); background:var(--enform-bg); }
+  .chip.x{ color:var(--bad); background:var(--bad-bg); text-decoration:line-through; }
+
+  .rule-box{
+    background:var(--accent-soft);
+    border:1px solid var(--accent);
+    border-radius:12px;
+    padding:14px 16px;
+    margin:14px 0 4px;
+    font-size:.9rem;
+    color:var(--accent-soft-ink);
+  }
+  .rule-box b{ color:var(--accent); }
+
+  .item{ border-top:1px solid var(--line); padding:14px 0; }
+  .item:first-child{ border-top:none; padding-top:0; }
+  .item p.sentence{ margin:0 0 10px; font-size:.97rem; }
+  .item .hint{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; color:var(--ink-soft); }
+  input.blank{
+    font:inherit; font-family:'IBM Plex Mono', monospace;
+    width:7.5em; max-width:60vw;
+    padding:6px 9px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+  }
+  input.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  .feedback{ display:inline-flex; align-items:center; gap:6px; margin-left:8px; font-size:.84rem; font-family:'IBM Plex Mono', monospace; }
+  .feedback.ok{ color:var(--good); }
+  .feedback.ko{ color:var(--bad); }
+
+  .mc-opts{ display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+  .mc-opt{ display:flex; align-items:baseline; gap:9px; padding:8px 11px; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; font-size:.93rem; }
+  .mc-opt:hover{ background:var(--surface-2); }
+  .mc-opt input{ margin:0; flex:none; }
+  .mc-opt.right-ans{ border-color:var(--good); background:var(--good-bg); }
+  .mc-opt.wrong-ans{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin-top:6px; }
+  table.fillgrid{ border-collapse:collapse; width:100%; min-width:460px; font-size:.9rem; }
+  table.fillgrid th{ background:var(--surface-2); text-align:left; padding:9px 12px; font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase; color:var(--ink-soft); border-bottom:1px solid var(--line); }
+  table.fillgrid td{ padding:9px 12px; border-bottom:1px solid var(--line); min-width:0; }
+  table.fillgrid tr:last-child td{ border-bottom:none; }
+  table.fillgrid .given{ font-family:'IBM Plex Mono', monospace; }
+
+  .dialogue .turn{ display:flex; gap:10px; margin-bottom:12px; align-items:baseline; flex-wrap:wrap; }
+  .dialogue .who{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; font-weight:600; color:var(--accent); flex:none; width:7.6em; }
+  .dialogue .say{ flex:1 1 220px; min-width:0; font-size:.95rem; }
+
+  button.check{
+    font:inherit; font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:.84rem;
+    background:var(--accent); color:var(--accent-ink);
+    border:none; border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check:hover{ opacity:.9; }
+  button.check:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+  .section-score{ font-family:'IBM Plex Mono', monospace; font-size:.84rem; margin-top:10px; color:var(--ink-soft); }
+  .section-score.show b{ color:var(--accent); }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px 20px;
+    margin-top:26px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{ font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem; cursor:pointer; }
+  .sol-block{ margin-top:16px; }
+  .sol-block h3{ font-size:.95rem; font-family:'IBM Plex Mono', monospace; color:var(--accent); text-transform:uppercase; letter-spacing:.03em; margin-bottom:8px; }
+  .sol-item{ font-size:.9rem; padding:8px 0; border-top:1px solid var(--line); }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item .ans{ color:var(--good); font-family:'IBM Plex Mono', monospace; font-weight:600; }
+  .sol-item .expl{ color:var(--ink-soft); display:block; margin-top:2px; }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:26px; }
+
+  @media (max-width:480px){
+    header.top{ padding:18px 16px; }
+    .dialogue .who{ width:100%; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none!important; } }
+</style>
+
+<div class="wrap">
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 17 novembre 2026</div>
+      <h1>A peu o en bici?</h1>
+      <div class="tag-row">
+        <span class="pill">Tema del dia: A / en (lloc, temps, mitjà)</span>
+        <span class="pill">Repàs verbal: Imperatiu dels irregulars</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="scorebar" id="scorebar">
+    <span>Puntuació global</span>
+    <span><b id="globalScore">0</b> / <span id="globalTotal">0</span></span>
+  </div>
+
+  <section class="card">
+    <h2><span class="num">Teoria</span> On "a" i on "en"</h2>
+    <p class="lead">Les preposicions <span class="chip a">a</span> i <span class="chip b">en</span> es confonen sovint perquè el castellà en fa un ús molt més ampli. En valencià, el lloc físic (on és o on va algú) s'expressa quasi sempre amb <span class="chip a">a</span>; <span class="chip b">en</span> queda reservada per als mitjans de transport, el contingut o interior d'alguna cosa, la durada d'una acció i unes quantes expressions fixes de lloc indeterminat.</p>
+
+    <div class="theory-table-wrap">
+      <table class="theory">
+        <thead><tr><th>Categoria</th><th>Preposició</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td>Lloc físic (ciutats, edificis, espais)</td><td><span class="chip a">a</span></td><td class="ex">Treballem <b>a</b> l'institut; <b>a</b> Alacant fa sol quasi tot l'any.</td></tr>
+          <tr><td>Lloc indefinit (expressions fixes)</td><td><span class="chip b">en</span></td><td class="ex">No ho he deixat <b>en</b> cap lloc; busca-ho <b>en</b> qualsevol carpeta del disc.</td></tr>
+          <tr><td>Mitjà de transport (excepte a peu / a cavall)</td><td><span class="chip b">en</span></td><td class="ex">Anem <b>en</b> bici fins al laboratori; tu véns <b>en</b> autobús.</td></tr>
+          <tr><td>Temps: durada (quant es tarda)</td><td><span class="chip b">en</span></td><td class="ex">Hem instal·lat el sistema operatiu <b>en</b> deu minuts.</td></tr>
+          <tr><td>Temps: moment puntual (hora exacta)</td><td><span class="chip a">a</span></td><td class="ex">La reunió de claustre és <b>a</b> les quatre de la vesprada.</td></tr>
+          <tr><td>Contingut / interior (carpetes, documents, bases de dades)</td><td><span class="chip b">en</span></td><td class="ex">Guardem els apunts <b>en</b> una carpeta compartida.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <b>El calc més habitual.</b> El castellà diu "en Alicante" o "en el laboratorio", i d'ahí ve l'error <span class="chip x">en Alacant</span>, <span class="chip x">en el laboratori</span>. En valencià, el lloc físic sempre porta <span class="chip a">a</span>: <b>a Alacant</b>, <b>al laboratori</b>, <b>a classe</b>. En canvi, als mitjans de transport passa justament el contrari del que molts esperen: s'usa <span class="chip b">en</span> (<b>en cotxe</b>, <b>en tren</b>, <b>en avió</b>), excepte en dos casos que van sempre amb <span class="chip a">a</span>: <b>a peu</b> i <b>a cavall</b>.
+    </div>
+  </section>
+
+  <section class="card" id="act1">
+    <h2><span class="num">Activitat 1</span> Omple els buits</h2>
+    <p class="lead">Escriu <span class="mono">a</span> o <span class="mono">en</span> segons la categoria de cada frase.</p>
+
+    <div class="item" data-ans="en">
+      <p class="sentence">1. Anem <input type="text" class="blank" id="a1-1" aria-label="resposta 1"> bici fins al laboratori d'informàtica.<span class="feedback" id="fb-a1-1"></span></p>
+    </div>
+    <div class="item" data-ans="en">
+      <p class="sentence">2. Guarda l'arxiu <input type="text" class="blank" id="a1-2" aria-label="resposta 2"> la carpeta de l'assignatura.<span class="feedback" id="fb-a1-2"></span></p>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">3. Ens trobem <input type="text" class="blank" id="a1-3" aria-label="resposta 3"> classe a les vuit en punt.<span class="feedback" id="fb-a1-3"></span></p>
+    </div>
+    <div class="item" data-ans="en">
+      <p class="sentence">4. No ho deixes <input type="text" class="blank" id="a1-4" aria-label="resposta 4"> qualsevol lloc; guarda-ho bé.<span class="feedback" id="fb-a1-4"></span></p>
+    </div>
+    <div class="item" data-ans="en">
+      <p class="sentence">5. El tècnic ha resolt la incidència de la xarxa <input type="text" class="blank" id="a1-5" aria-label="resposta 5"> deu minuts.<span class="feedback" id="fb-a1-5"></span></p>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">6. La reunió del departament és <input type="text" class="blank" id="a1-6" aria-label="resposta 6"> les cinc de la vesprada.<span class="feedback" id="fb-a1-6"></span></p>
+    </div>
+
+    <button class="check" onclick="checkActivity('act1')">Comprova les respostes</button>
+    <div class="section-score" id="score-act1"></div>
+  </section>
+
+  <section class="card" id="act2">
+    <h2><span class="num">Activitat 2</span> Selecciona l'opció correcta</h2>
+    <p class="lead">Marca la preposició ben triada per a cada frase.</p>
+
+    <div class="item" data-ans="a">
+      <p class="sentence">1. Visc <span class="hint">[a / en]</span> Alacant des de fa deu anys.</p>
+      <div class="mc-opts" data-q="1">
+        <label class="mc-opt"><input type="radio" name="a2-1" value="a"> a</label>
+        <label class="mc-opt"><input type="radio" name="a2-1" value="b"> en</label>
+      </div>
+    </div>
+    <div class="item" data-ans="b">
+      <p class="sentence">2. L'alumnat de Batxillerat ve a classe <span class="hint">[a / en]</span> autobús.</p>
+      <div class="mc-opts" data-q="2">
+        <label class="mc-opt"><input type="radio" name="a2-2" value="a"> a</label>
+        <label class="mc-opt"><input type="radio" name="a2-2" value="b"> en</label>
+      </div>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">3. De l'aula al laboratori hi anem <span class="hint">[a / en]</span> peu, és molt a prop.</p>
+      <div class="mc-opts" data-q="3">
+        <label class="mc-opt"><input type="radio" name="a2-3" value="a"> a</label>
+        <label class="mc-opt"><input type="radio" name="a2-3" value="b"> en</label>
+      </div>
+    </div>
+    <div class="item" data-ans="b">
+      <p class="sentence">4. Guardem les contrasenyes xifrades <span class="hint">[a / en]</span> un gestor de contrasenyes.</p>
+      <div class="mc-opts" data-q="4">
+        <label class="mc-opt"><input type="radio" name="a2-4" value="a"> a</label>
+        <label class="mc-opt"><input type="radio" name="a2-4" value="b"> en</label>
+      </div>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">5. La xarrada sobre ciberseguretat comença <span class="hint">[a / en]</span> les deu en punt.</p>
+      <div class="mc-opts" data-q="5">
+        <label class="mc-opt"><input type="radio" name="a2-5" value="a"> a</label>
+        <label class="mc-opt"><input type="radio" name="a2-5" value="b"> en</label>
+      </div>
+    </div>
+
+    <button class="check" onclick="checkActivity('act2')">Comprova les respostes</button>
+    <div class="section-score" id="score-act2"></div>
+  </section>
+
+  <section class="card" id="act3">
+    <h2><span class="num">Activitat 3</span> Classifica cada complement</h2>
+    <p class="lead">Escriu <span class="mono">a</span> o <span class="mono">en</span> davant de cada complement, segons la indicació entre parèntesis.</p>
+
+    <div class="table-wrap">
+      <table class="fillgrid">
+        <thead><tr><th>Complement (indicació)</th><th>A / En</th></tr></thead>
+        <tbody>
+          <tr><td class="given">___ cavall (mitjà, excepció)</td><td><input type="text" class="blank" id="a3-1" aria-label="resposta taula 1" data-ans="a"> <span class="feedback" id="fb-a3-1"></span></td></tr>
+          <tr><td class="given">___ poc temps, canviarem tot el maquinari del laboratori (durada)</td><td><input type="text" class="blank" id="a3-2" aria-label="resposta taula 2" data-ans="en"> <span class="feedback" id="fb-a3-2"></span></td></tr>
+          <tr><td class="given">___ la base de dades guardem les contrasenyes xifrades (contingut)</td><td><input type="text" class="blank" id="a3-3" aria-label="resposta taula 3" data-ans="en"> <span class="feedback" id="fb-a3-3"></span></td></tr>
+          <tr><td class="given">___ l'institut hi ha wifi en totes les aules (lloc físic)</td><td><input type="text" class="blank" id="a3-4" aria-label="resposta taula 4" data-ans="a"> <span class="feedback" id="fb-a3-4"></span></td></tr>
+          <tr><td class="given">___ qualsevol moment pot fallar la connexió (indefinit)</td><td><input type="text" class="blank" id="a3-5" aria-label="resposta taula 5" data-ans="en"> <span class="feedback" id="fb-a3-5"></span></td></tr>
+          <tr><td class="given">___ mitjanit s'actualitza el servidor automàticament (temps puntual)</td><td><input type="text" class="blank" id="a3-6" aria-label="resposta taula 6" data-ans="a"> <span class="feedback" id="fb-a3-6"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button class="check" onclick="checkActivity('act3')">Comprova les respostes</button>
+    <div class="section-score" id="score-act3"></div>
+  </section>
+
+  <section class="card" id="act4">
+    <h2><span class="num">Activitat 4</span> Claustre del departament d'informàtica</h2>
+    <p class="lead">Completa els buits del mini-diàleg amb <span class="mono">a</span> o <span class="mono">en</span>.</p>
+
+    <div class="dialogue">
+      <div class="turn"><span class="who">Cap de dept.:</span><span class="say">La reunió de claustre és <input type="text" class="blank" id="a4-1" aria-label="resposta dialeg 1" data-ans="a"> les quatre de la vesprada.<span class="feedback" id="fb-a4-1"></span></span></div>
+      <div class="turn"><span class="who">Professor 1:</span><span class="say">I és <input type="text" class="blank" id="a4-2" aria-label="resposta dialeg 2" data-ans="a"> el Saló d'Actes, oi?<span class="feedback" id="fb-a4-2"></span></span></div>
+      <div class="turn"><span class="who">Professor 2:</span><span class="say">Jo hui vinc <input type="text" class="blank" id="a4-3" aria-label="resposta dialeg 3" data-ans="en"> cotxe perquè porte els portàtils nous.<span class="feedback" id="fb-a4-3"></span></span></div>
+      <div class="turn"><span class="who">Cap de dept.:</span><span class="say">Recordeu guardar la presentació <input type="text" class="blank" id="a4-4" aria-label="resposta dialeg 4" data-ans="en"> la carpeta compartida del departament.<span class="feedback" id="fb-a4-4"></span></span></div>
+      <div class="turn"><span class="who">Professor 1:</span><span class="say">D'acord, ho faré <input type="text" class="blank" id="a4-5" aria-label="resposta dialeg 5" data-ans="en"> un moment, abans d'eixir cap a classe.<span class="feedback" id="fb-a4-5"></span></span></div>
+    </div>
+
+    <button class="check" onclick="checkActivity('act4')">Comprova les respostes</button>
+    <div class="section-score" id="score-act4"></div>
+  </section>
+
+  <section class="card" id="act5">
+    <h2><span class="num">Repàs verbal</span> Imperatiu dels irregulars</h2>
+    <p class="lead">Escriu la forma correcta de l'imperatiu (segona persona del singular, "tu") del verb entre parèntesis.</p>
+
+    <div class="item" data-ans="fes">
+      <p class="sentence">1. <input type="text" class="blank" id="a5-1" aria-label="resposta verb 1"> (fer) clic en l'enllaç del Classroom per a baixar l'exercici d'avui.<span class="feedback" id="fb-a5-1"></span></p>
+    </div>
+    <div class="item" data-ans="digues">
+      <p class="sentence">2. <input type="text" class="blank" id="a5-2" aria-label="resposta verb 2"> (dir) quin missatge d'error ix en pantalla quan el programa no arranca.<span class="feedback" id="fb-a5-2"></span></p>
+    </div>
+    <div class="item" data-ans="ix">
+      <p class="sentence">3. <input type="text" class="blank" id="a5-3" aria-label="resposta verb 3"> (eixir) de l'aplicació abans d'actualitzar el sistema operatiu.<span class="feedback" id="fb-a5-3"></span></p>
+    </div>
+    <div class="item" data-ans="vine">
+      <p class="sentence">4. <input type="text" class="blank" id="a5-4" aria-label="resposta verb 4"> (vindre) un moment ací i ajuda'm a connectar el projector.<span class="feedback" id="fb-a5-4"></span></p>
+    </div>
+
+    <button class="check" onclick="checkActivity('act5')">Comprova les respostes</button>
+    <div class="section-score" id="score-act5"></div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-block">
+      <h3>Activitat 1 — Omple els buits</h3>
+      <div class="sol-item"><span class="ans">1. en</span><span class="expl">Mitjà de transport ("bici").</span></div>
+      <div class="sol-item"><span class="ans">2. en</span><span class="expl">Contingut/interior: guardar dins d'una carpeta.</span></div>
+      <div class="sol-item"><span class="ans">3. a</span><span class="expl">Lloc físic ("classe").</span></div>
+      <div class="sol-item"><span class="ans">4. en</span><span class="expl">Lloc indefinit: expressió fixa "en qualsevol lloc".</span></div>
+      <div class="sol-item"><span class="ans">5. en</span><span class="expl">Durada: quant de temps s'ha tardat a resoldre-ho.</span></div>
+      <div class="sol-item"><span class="ans">6. a</span><span class="expl">Moment puntual, hora exacta.</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 2 — Selecció</h3>
+      <div class="sol-item"><span class="ans">1. a</span><span class="expl">Lloc físic: "a Alacant", mai "en Alacant".</span></div>
+      <div class="sol-item"><span class="ans">2. en</span><span class="expl">Mitjà de transport: "en autobús".</span></div>
+      <div class="sol-item"><span class="ans">3. a</span><span class="expl">Excepció dels mitjans de transport: "a peu" porta sempre "a".</span></div>
+      <div class="sol-item"><span class="ans">4. en</span><span class="expl">Contingut/interior: "en un gestor de contrasenyes".</span></div>
+      <div class="sol-item"><span class="ans">5. a</span><span class="expl">Moment puntual, hora exacta.</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 3 — Classificació</h3>
+      <div class="sol-item"><span class="ans">1. a</span><span class="expl">"A cavall" és, junt amb "a peu", l'excepció als mitjans de transport.</span></div>
+      <div class="sol-item"><span class="ans">2. en</span><span class="expl">Durada: "en poc temps".</span></div>
+      <div class="sol-item"><span class="ans">3. en</span><span class="expl">Contingut/interior: dins de la base de dades.</span></div>
+      <div class="sol-item"><span class="ans">4. a</span><span class="expl">Lloc físic: "a l'institut".</span></div>
+      <div class="sol-item"><span class="ans">5. en</span><span class="expl">Lloc indefinit: "en qualsevol moment".</span></div>
+      <div class="sol-item"><span class="ans">6. a</span><span class="expl">Moment puntual: "a mitjanit".</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 4 — Claustre de departament</h3>
+      <div class="sol-item"><span class="ans">1. a</span><span class="expl">Moment puntual, hora exacta.</span></div>
+      <div class="sol-item"><span class="ans">2. a</span><span class="expl">Lloc físic: "al Saló d'Actes".</span></div>
+      <div class="sol-item"><span class="ans">3. en</span><span class="expl">Mitjà de transport: "en cotxe".</span></div>
+      <div class="sol-item"><span class="ans">4. en</span><span class="expl">Contingut/interior: dins d'una carpeta.</span></div>
+      <div class="sol-item"><span class="ans">5. en</span><span class="expl">Durada: "en un moment".</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Repàs verbal — Imperatiu dels irregulars</h3>
+      <div class="sol-item"><span class="ans">1. fes</span><span class="expl">Imperatiu irregular de "fer": fes (tu), feu (vosaltres).</span></div>
+      <div class="sol-item"><span class="ans">2. digues</span><span class="expl">Imperatiu irregular de "dir": digues (tu), digueu (vosaltres).</span></div>
+      <div class="sol-item"><span class="ans">3. ix</span><span class="expl">Imperatiu irregular de "eixir": ix (tu), eixiu/ixiu (vosaltres).</span></div>
+      <div class="sol-item"><span class="ans">4. vine</span><span class="expl">Imperatiu irregular de "vindre": vine (tu), veniu (vosaltres).</span></div>
+    </div>
+  </details>
+
+  <footer class="note">IES Jorge Juan, Alacant · Exercici diari de valencià oral per a l'àmbit educatiu-informàtic</footer>
+</div>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'')
+      .toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/['’]/g,"'")
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  var sectionScores = {};
+
+  function setFeedback(el, ok){
+    if(!el) return;
+    el.textContent = ok ? '✓ correcte' : '✗ revisa-ho';
+    el.className = 'feedback ' + (ok ? 'ok' : 'ko');
+  }
+
+  function checkTextItems(container){
+    var correct = 0, total = 0;
+    container.querySelectorAll('.item[data-ans]').forEach(function(item){
+      var input = item.querySelector('input.blank');
+      if(!input) return;
+      total++;
+      var ok = norm(input.value) === norm(item.getAttribute('data-ans'));
+      if(ok) correct++;
+      var fb = item.querySelector('.feedback');
+      setFeedback(fb, ok);
+    });
+    container.querySelectorAll('input.blank[data-ans]').forEach(function(input){
+      total++;
+      var ok = norm(input.value) === norm(input.getAttribute('data-ans'));
+      if(ok) correct++;
+      var fb = document.getElementById('fb-' + input.id);
+      setFeedback(fb, ok);
+    });
+    return {correct: correct, total: total};
+  }
+
+  function checkMcItems(container){
+    var correct = 0, total = 0;
+    container.querySelectorAll('.item[data-ans]').forEach(function(item){
+      var opts = item.querySelectorAll('.mc-opt');
+      if(!opts.length) return;
+      var expected = item.getAttribute('data-ans');
+      var checkedInput = item.querySelector('input[type=radio]:checked');
+      total++;
+      var ok = checkedInput && checkedInput.value === expected;
+      if(ok) correct++;
+      opts.forEach(function(opt){
+        opt.classList.remove('right-ans','wrong-ans');
+        var inp = opt.querySelector('input');
+        if(inp.value === expected){ opt.classList.add('right-ans'); }
+        else if(checkedInput && inp.value === checkedInput.value){ opt.classList.add('wrong-ans'); }
+      });
+    });
+    return {correct: correct, total: total};
+  }
+
+  window.checkActivity = function(sectionId){
+    var section = document.getElementById(sectionId);
+    if(!section) return;
+    var result;
+    if(section.querySelector('.mc-opts')){
+      result = checkMcItems(section);
+    } else {
+      result = checkTextItems(section);
+    }
+    sectionScores[sectionId] = result;
+    var scoreEl = document.getElementById('score-' + sectionId);
+    if(scoreEl){
+      scoreEl.classList.add('show');
+      scoreEl.innerHTML = 'Resultat: <b>' + result.correct + ' / ' + result.total + '</b>';
+    }
+    updateGlobal();
+  };
+
+  function updateGlobal(){
+    var correct = 0, total = 0;
+    Object.keys(sectionScores).forEach(function(k){
+      correct += sectionScores[k].correct;
+      total += sectionScores[k].total;
+    });
+    document.getElementById('globalScore').textContent = correct;
+    document.getElementById('globalTotal').textContent = total;
+  }
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,598 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>A mi, per a tu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout: mateix sistema de quadern que la resta de la col·lecció (capçalera-targeta,
+     targetes d'activitat, caixa de solucions); l'accent d'avui és un granat càlid —
+     el color d'una correcció feta a mà en roig sobre el paper — amb un fil verd oliva
+     per al "mi/jo", el parell que canvia de forma darrere de preposició */
+  :root{
+    --bg:#f3ece4;
+    --surface:#ffffff;
+    --surface-2:#ecdfd2;
+    --ink:#271d18;
+    --ink-soft:#6e5a4c;
+    --accent:#8a2f3f;
+    --accent-ink:#fdf2ee;
+    --accent-soft:#f1dcd9;
+    --accent-soft-ink:#5c1f29;
+    --line:#dfccb8;
+    --good:#2f7d56;
+    --good-bg:#e1efe4;
+    --bad:#a23b3b;
+    --bad-bg:#f6e3e1;
+    --mi:#6b7d2f;
+    --mi-bg:#e6ecd4;
+    --shadow:0 1px 2px rgba(35,27,24,.07), 0 10px 26px -14px rgba(35,27,24,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#19120f; --surface:#221812; --surface-2:#2d211a;
+      --ink:#f2e6db; --ink-soft:#c2a996;
+      --accent:#e38b97; --accent-ink:#330d14; --accent-soft:#3c1e20; --accent-soft-ink:#f3c9cd;
+      --line:#402d1f;
+      --good:#82d6a6; --good-bg:#1c3328;
+      --bad:#e49a93; --bad-bg:#3a2320;
+      --mi:#c3d194; --mi-bg:#2a331a;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#19120f; --surface:#221812; --surface-2:#2d211a;
+    --ink:#f2e6db; --ink-soft:#c2a996;
+    --accent:#e38b97; --accent-ink:#330d14; --accent-soft:#3c1e20; --accent-soft-ink:#f3c9cd;
+    --line:#402d1f;
+    --good:#82d6a6; --good-bg:#1c3328;
+    --bad:#e49a93; --bad-bg:#3a2320;
+    --mi:#c3d194; --mi-bg:#2a331a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:22px;
+    padding-bottom:70px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+  }
+  .wrap{ max-width:760px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a.backlink{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid var(--accent-soft);
+    margin-bottom:14px;
+  }
+  a.backlink:hover{ border-bottom-color:var(--accent); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:22px 22px 20px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.09) 1px, transparent 1px) 0 0/28px 100%,
+      linear-gradient(0deg, rgba(255,255,255,.07) 1px, transparent 1px) 0 0/100% 28px;
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.55rem,5vw,2.1rem); font-weight:600; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .tag-row .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    white-space:nowrap;
+  }
+
+  .scorebar{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+  }
+  .scorebar b{ font-family:'Fraunces', serif; font-size:1.15rem; font-weight:600; color:var(--accent); }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{
+    font-size:1.2rem;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:4px;
+  }
+  section.card h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    border:1px solid var(--accent-soft);
+    background:var(--accent-soft);
+    border-radius:999px;
+    padding:3px 9px;
+    flex:none;
+  }
+  section.card > p.lead{ color:var(--ink-soft); margin:8px 0 16px; font-size:.92rem; }
+
+  .theory-table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:14px 0; }
+  table.theory{ border-collapse:collapse; width:100%; min-width:520px; font-size:.88rem; }
+  table.theory th{
+    background:var(--surface-2); text-align:left; padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase;
+    letter-spacing:.03em; color:var(--ink-soft); border-bottom:1px solid var(--line);
+  }
+  table.theory td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.theory tr:last-child td{ border-bottom:none; }
+  table.theory .ex{ font-family:'IBM Plex Mono', monospace; font-size:.85rem; }
+  .fort{ color:var(--mi); font-weight:600; }
+
+  .rule-box{
+    background:var(--mi-bg);
+    border:1px solid var(--mi);
+    border-radius:12px;
+    padding:14px 16px;
+    margin:14px 0 4px;
+    font-size:.9rem;
+  }
+  .rule-box b{ color:var(--mi); }
+
+  .item{ border-top:1px solid var(--line); padding:14px 0; }
+  .item:first-child{ border-top:none; padding-top:0; }
+  .item p.sentence{ margin:0 0 10px; font-size:.97rem; }
+  .item .hint{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; color:var(--ink-soft); }
+  input.blank{
+    font:inherit; font-family:'IBM Plex Mono', monospace;
+    width:11em; max-width:60vw;
+    padding:6px 9px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+  }
+  input.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  .feedback{ display:inline-flex; align-items:center; gap:6px; margin-left:8px; font-size:.84rem; font-family:'IBM Plex Mono', monospace; }
+  .feedback.ok{ color:var(--good); }
+  .feedback.ko{ color:var(--bad); }
+
+  .mc-opts{ display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+  .mc-opt{ display:flex; align-items:baseline; gap:9px; padding:8px 11px; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; font-size:.93rem; }
+  .mc-opt:hover{ background:var(--surface-2); }
+  .mc-opt input{ margin:0; flex:none; }
+  .mc-opt.right-ans{ border-color:var(--good); background:var(--good-bg); }
+  .mc-opt.wrong-ans{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin-top:6px; }
+  table.fillgrid{ border-collapse:collapse; width:100%; min-width:460px; font-size:.9rem; }
+  table.fillgrid th{ background:var(--surface-2); text-align:left; padding:9px 12px; font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase; color:var(--ink-soft); border-bottom:1px solid var(--line); }
+  table.fillgrid td{ padding:9px 12px; border-bottom:1px solid var(--line); }
+  table.fillgrid tr:last-child td{ border-bottom:none; }
+  table.fillgrid .given{ font-family:'IBM Plex Mono', monospace; }
+
+  .dialogue .turn{ display:flex; gap:10px; margin-bottom:12px; align-items:baseline; flex-wrap:wrap; }
+  .dialogue .who{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; font-weight:600; color:var(--accent); flex:none; width:6.4em; }
+  .dialogue .say{ flex:1 1 220px; min-width:0; font-size:.95rem; }
+
+  select.sel{
+    font:inherit; font-family:'IBM Plex Mono', monospace; font-size:.85rem;
+    padding:6px 9px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+  }
+  select.sel:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+
+  button.check{
+    font:inherit; font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:.84rem;
+    background:var(--accent); color:var(--accent-ink);
+    border:none; border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check:hover{ opacity:.9; }
+  button.check:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+  .section-score{ font-family:'IBM Plex Mono', monospace; font-size:.84rem; margin-top:10px; color:var(--ink-soft); }
+  .section-score.show b{ color:var(--accent); }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px 20px;
+    margin-top:26px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{ font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem; cursor:pointer; }
+  .sol-block{ margin-top:16px; }
+  .sol-block h3{ font-size:.95rem; font-family:'IBM Plex Mono', monospace; color:var(--accent); text-transform:uppercase; letter-spacing:.03em; margin-bottom:8px; }
+  .sol-item{ font-size:.9rem; padding:8px 0; border-top:1px solid var(--line); }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item .ans{ color:var(--good); font-family:'IBM Plex Mono', monospace; font-weight:600; }
+  .sol-item .expl{ color:var(--ink-soft); display:block; margin-top:2px; }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:26px; }
+
+  @media (max-width:480px){
+    header.top{ padding:18px 16px; }
+    .dialogue .who{ width:100%; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none!important; } }
+</style>
+
+<div class="wrap">
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 13 novembre 2026</div>
+      <h1>A mi, per a tu</h1>
+      <div class="tag-row">
+        <span class="pill">Tema del dia: Pronoms forts: mi, tu, ell, nosaltres, vosaltres, vostè, vós</span>
+        <span class="pill">Repàs verbal: Imperfet d'indicatiu i de subjuntiu</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="scorebar" id="scorebar">
+    <span>Puntuació global</span>
+    <span><b id="globalScore">0</b> / <span id="globalTotal">0</span></span>
+  </div>
+
+  <section class="card">
+    <h2><span class="num">Teoria</span> Un pronom que canvia de pell darrere d'una preposició</h2>
+    <p class="lead">Els pronoms forts (o tònics) poden fer de subjecte amb èmfasi ("Ho he fet <i>jo</i>") o anar darrere d'una preposició ("Això és per a <i>mi</i>"). Quasi tots conserven la mateixa forma en els dos usos. Només n'hi ha un que no: "jo".</p>
+
+    <div class="theory-table-wrap">
+      <table class="theory">
+        <thead><tr><th>Persona</th><th>Com a subjecte, amb èmfasi</th><th>Darrere de preposició</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td>1a singular</td><td><b>jo</b></td><td class="fort">mi</td><td class="ex">Jo ho configure. / Açò és per a mi.</td></tr>
+          <tr><td>2a singular</td><td><b>tu</b></td><td class="fort">tu</td><td class="ex">Tu ho revises. / Açò és per a tu.</td></tr>
+          <tr><td>3a singular</td><td><b>ell / ella</b></td><td class="fort">ell / ella</td><td class="ex">Ella ho ha instal·lat. / Vaig amb ell.</td></tr>
+          <tr><td>1a plural</td><td><b>nosaltres</b></td><td class="fort">nosaltres</td><td class="ex">Nosaltres ho provarem. / Veniu amb nosaltres.</td></tr>
+          <tr><td>2a plural</td><td><b>vosaltres</b></td><td class="fort">vosaltres</td><td class="ex">Vosaltres ho acabareu. / Açò és per a vosaltres.</td></tr>
+          <tr><td>3a plural</td><td><b>ells / elles</b></td><td class="fort">ells / elles</td><td class="ex">Ells ho han dit. / Parle d'elles.</td></tr>
+          <tr><td>formal (singular)</td><td><b>vostè</b></td><td class="fort">vostè</td><td class="ex">Vostè decidirà. / Açò és per a vostè.</td></tr>
+          <tr><td>formal (cerimoniós)</td><td><b>vós</b></td><td class="fort">vós</td><td class="ex">Vós mateix ho triareu.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <b>"Jo" és l'única excepció.</b> Darrere de qualsevol preposició (per a, de, amb, sense, cap a, entre...), "jo" es converteix en <span class="fort mono">mi</span>: diem <i>per a mi</i>, <i>de mi</i>, <i>sense mi</i>, mai "per a jo". Tots els altres pronoms forts (tu, ell, nosaltres, vosaltres, vós, vostè, ells) mantenen exactament la mateixa forma davant o darrere de preposició. I compte amb un calc freqüent: "mi" mai és un possessiu en valencià — "el meu ordinador" no és "mi ordinador".
+    </div>
+  </section>
+
+  <section class="card" id="act1">
+    <h2><span class="num">Activitat 1</span> Omple els buits</h2>
+    <p class="lead">Escriu la forma correcta del pronom fort indicat entre parèntesis, segons si fa de subjecte o va darrere de preposició.</p>
+
+    <div class="item" data-ans="mi">
+      <p class="sentence">1. Esta clau USB amb les presentacions és només per a <input type="text" class="blank" id="a1-1" aria-label="resposta 1"> (jo), no la deixes per ahí.<span class="feedback" id="fb-a1-1"></span></p>
+    </div>
+    <div class="item" data-ans="Jo">
+      <p class="sentence">2. <input type="text" class="blank" id="a1-2" aria-label="resposta 2"> (jo) vaig configurar el servidor de correu ahir a la nit, no la tècnica.<span class="feedback" id="fb-a1-2"></span></p>
+    </div>
+    <div class="item" data-ans="tu">
+      <p class="sentence">3. Aquest dubte sobre WordPress és per a <input type="text" class="blank" id="a1-3" aria-label="resposta 3"> (tu), que ets qui porta el lloc web del departament.<span class="feedback" id="fb-a1-3"></span></p>
+    </div>
+    <div class="item" data-ans="ell">
+      <p class="sentence">4. La contrasenya del router només la sap el cap d'estudis i, entre <input type="text" class="blank" id="a1-4" aria-label="resposta 4"> (ell) i jo, encara no l'hem canviada.<span class="feedback" id="fb-a1-4"></span></p>
+    </div>
+    <div class="item" data-ans="nosaltres">
+      <p class="sentence">5. Entre <input type="text" class="blank" id="a1-5" aria-label="resposta 5"> (nosaltres), el projecte de robòtica va una setmana endarrerit.<span class="feedback" id="fb-a1-5"></span></p>
+    </div>
+    <div class="item" data-ans="mi">
+      <p class="sentence">6. Sense <input type="text" class="blank" id="a1-6" aria-label="resposta 6"> (jo), l'aula d'informàtica no tindria cap ordinador actualitzat enguany.<span class="feedback" id="fb-a1-6"></span></p>
+    </div>
+
+    <button class="check" onclick="checkActivity('act1')">Comprova les respostes</button>
+    <div class="section-score" id="score-act1"></div>
+  </section>
+
+  <section class="card" id="act2">
+    <h2><span class="num">Activitat 2</span> Selecciona l'opció correcta</h2>
+    <p class="lead">Marca la forma ben triada per a cada frase.</p>
+
+    <div class="item" data-ans="a">
+      <p class="sentence">1. Aquest portàtil amb Python instal·lat és per a <span class="hint">[mi / jo]</span>.</p>
+      <div class="mc-opts" data-q="1">
+        <label class="mc-opt"><input type="radio" name="a2-1" value="a"> mi</label>
+        <label class="mc-opt"><input type="radio" name="a2-1" value="b"> jo</label>
+      </div>
+    </div>
+    <div class="item" data-ans="b">
+      <p class="sentence">2. <span class="hint">[Mi / Jo]</span> faré la primera prova amb Teachable Machine, i després tu.</p>
+      <div class="mc-opts" data-q="2">
+        <label class="mc-opt"><input type="radio" name="a2-2" value="a"> Mi</label>
+        <label class="mc-opt"><input type="radio" name="a2-2" value="b"> Jo</label>
+      </div>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">3. No s'ha queixat mai de <span class="hint">[mi / jo]</span>, tot al contrari.</p>
+      <div class="mc-opts" data-q="3">
+        <label class="mc-opt"><input type="radio" name="a2-3" value="a"> mi</label>
+        <label class="mc-opt"><input type="radio" name="a2-3" value="b"> jo</label>
+      </div>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">4. Aniràs tu amb <span class="hint">[ell / li]</span> al laboratori de xarxes, o amb la cap de departament?</p>
+      <div class="mc-opts" data-q="4">
+        <label class="mc-opt"><input type="radio" name="a2-4" value="a"> ell</label>
+        <label class="mc-opt"><input type="radio" name="a2-4" value="b"> li</label>
+      </div>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">5. La convocatòria del claustre ha arribat fins a <span class="hint">[tu / te]</span>, encara no a la resta del departament.</p>
+      <div class="mc-opts" data-q="5">
+        <label class="mc-opt"><input type="radio" name="a2-5" value="a"> tu</label>
+        <label class="mc-opt"><input type="radio" name="a2-5" value="b"> te</label>
+      </div>
+    </div>
+
+    <button class="check" onclick="checkActivity('act2')">Comprova les respostes</button>
+    <div class="section-score" id="score-act2"></div>
+  </section>
+
+  <section class="card" id="act3">
+    <h2><span class="num">Activitat 3</span> Subjecte → darrere de preposició</h2>
+    <p class="lead">Completa amb la forma que pren cada pronom quan va darrere d'una preposició (per a ___, de ___, amb ___...).</p>
+
+    <div class="table-wrap">
+      <table class="fillgrid">
+        <thead><tr><th>Pronom subjecte</th><th>Darrere de preposició</th></tr></thead>
+        <tbody>
+          <tr><td class="given">jo</td><td><input type="text" class="blank" id="a3-1" aria-label="resposta taula 1" data-ans="mi"> <span class="feedback" id="fb-a3-1"></span></td></tr>
+          <tr><td class="given">tu</td><td><input type="text" class="blank" id="a3-2" aria-label="resposta taula 2" data-ans="tu"> <span class="feedback" id="fb-a3-2"></span></td></tr>
+          <tr><td class="given">ella</td><td><input type="text" class="blank" id="a3-3" aria-label="resposta taula 3" data-ans="ella"> <span class="feedback" id="fb-a3-3"></span></td></tr>
+          <tr><td class="given">nosaltres</td><td><input type="text" class="blank" id="a3-4" aria-label="resposta taula 4" data-ans="nosaltres"> <span class="feedback" id="fb-a3-4"></span></td></tr>
+          <tr><td class="given">vosaltres</td><td><input type="text" class="blank" id="a3-5" aria-label="resposta taula 5" data-ans="vosaltres"> <span class="feedback" id="fb-a3-5"></span></td></tr>
+          <tr><td class="given">elles</td><td><input type="text" class="blank" id="a3-6" aria-label="resposta taula 6" data-ans="elles"> <span class="feedback" id="fb-a3-6"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button class="check" onclick="checkActivity('act3')">Comprova les respostes</button>
+    <div class="section-score" id="score-act3"></div>
+  </section>
+
+  <section class="card" id="act4">
+    <h2><span class="num">Activitat 4</span> Al departament d'informàtica</h2>
+    <p class="lead">Mini-diàleg preparant les pràctiques de la setmana. Completa els buits amb el pronom fort adequat.</p>
+
+    <div class="dialogue">
+      <div class="turn"><span class="who">Professor:</span><span class="say">Bon dia. Esta setmana, la formació sobre bases de dades amb SQL és per a <input type="text" class="blank" id="a4-1" aria-label="resposta dialeg 1" data-ans="tu">, que encara no l'has feta.<span class="feedback" id="fb-a4-1"></span></span></div>
+      <div class="turn"><span class="who">Alumne:</span><span class="say">Val, professor. I la pràctica de màquines virtuals amb VirtualBox, és per a <input type="text" class="blank" id="a4-2" aria-label="resposta dialeg 2" data-ans="mi"> també?<span class="feedback" id="fb-a4-2"></span></span></div>
+      <div class="turn"><span class="who">Professor:</span><span class="say">Sí, és per a tu i també per a <input type="text" class="blank" id="a4-3" aria-label="resposta dialeg 3" data-ans="ell">, el teu company de taula.<span class="feedback" id="fb-a4-3"></span></span></div>
+      <div class="turn"><span class="who">Cap de dept.:</span><span class="say"><input type="text" class="blank" id="a4-4" aria-label="resposta dialeg 4" data-ans="jo"> revisaré la instal·lació de XAMPP mentre vosaltres treballeu amb Scratch.<span class="feedback" id="fb-a4-4"></span></span></div>
+      <div class="turn"><span class="who">Alumna:</span><span class="say">Perfecte. I l'actualització del lloc de WordPress del departament, la faré <input type="text" class="blank" id="a4-5" aria-label="resposta dialeg 5" data-ans="jo"> sola o necessitaré ajuda?<span class="feedback" id="fb-a4-5"></span></span></div>
+    </div>
+
+    <button class="check" onclick="checkActivity('act4')">Comprova les respostes</button>
+    <div class="section-score" id="score-act4"></div>
+  </section>
+
+  <section class="card" id="act5">
+    <h2><span class="num">Repàs verbal</span> Imperfet d'indicatiu i de subjuntiu</h2>
+    <p class="lead">Un parell de frases per no perdre la mà amb estos dos temps, que sovint es confonen en parlar.</p>
+
+    <div class="item" data-ans="tenia">
+      <p class="sentence">1. Fa deu anys, quan vaig començar a fer classe, encara no <input type="text" class="blank" id="a5-1" aria-label="resposta verb 1"> (tindre, imperfet indicatiu, jo) ordinadors nous al laboratori.<span class="feedback" id="fb-a5-1"></span></p>
+    </div>
+    <div class="item" data-ans="sabera">
+      <p class="sentence">2. Si jo <input type="text" class="blank" id="a5-2" aria-label="resposta verb 2"> (saber, imperfet subjuntiu) programar millor en Python, ajudaria més als alumnes.<span class="feedback" id="fb-a5-2"></span></p>
+    </div>
+    <div class="item" data-ans="jugàvem">
+      <p class="sentence">3. Quan érem menuts, nosaltres <input type="text" class="blank" id="a5-3" aria-label="resposta verb 3"> (jugar, imperfet indicatiu) amb Scratch als ordinadors de l'aula.<span class="feedback" id="fb-a5-3"></span></p>
+    </div>
+    <div class="item" data-ans="feres">
+      <p class="sentence">4. M'agradaria que tu <input type="text" class="blank" id="a5-4" aria-label="resposta verb 4"> (fer, imperfet subjuntiu) la pràctica de XAMPP abans de divendres.<span class="feedback" id="fb-a5-4"></span></p>
+    </div>
+
+    <button class="check" onclick="checkActivity('act5')">Comprova les respostes</button>
+    <div class="section-score" id="score-act5"></div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-block">
+      <h3>Activitat 1 — Omple els buits</h3>
+      <div class="sol-item"><span class="ans">1. mi</span><span class="expl">Darrere de "per a", "jo" es converteix en "mi".</span></div>
+      <div class="sol-item"><span class="ans">2. Jo</span><span class="expl">Subjecte amb èmfasi, sense preposició: la forma és "jo".</span></div>
+      <div class="sol-item"><span class="ans">3. tu</span><span class="expl">"Tu" no canvia mai de forma, ni com a subjecte ni darrere de preposició.</span></div>
+      <div class="sol-item"><span class="ans">4. ell</span><span class="expl">"Ell" tampoc canvia darrere de "entre".</span></div>
+      <div class="sol-item"><span class="ans">5. nosaltres</span><span class="expl">"Nosaltres" manté la mateixa forma darrere de "entre".</span></div>
+      <div class="sol-item"><span class="ans">6. mi</span><span class="expl">Darrere de "sense", "jo" torna a ser "mi".</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 2 — Selecció</h3>
+      <div class="sol-item"><span class="ans">1. mi</span><span class="expl">Darrere de "per a".</span></div>
+      <div class="sol-item"><span class="ans">2. Jo</span><span class="expl">Subjecte, sense preposició.</span></div>
+      <div class="sol-item"><span class="ans">3. mi</span><span class="expl">Darrere de "de".</span></div>
+      <div class="sol-item"><span class="ans">4. ell</span><span class="expl">"Li" és un pronom feble de complement indirecte, no un pronom fort; ací cal "amb ell".</span></div>
+      <div class="sol-item"><span class="ans">5. tu</span><span class="expl">Darrere de preposició ("fins a") sempre va un pronom fort (tu), mai un pronom feble (te).</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 3 — Subjecte → preposició</h3>
+      <div class="sol-item"><span class="ans">1. mi</span><span class="expl">L'única forma que canvia.</span></div>
+      <div class="sol-item"><span class="ans">2. tu</span><span class="expl">No canvia.</span></div>
+      <div class="sol-item"><span class="ans">3. ella</span><span class="expl">No canvia.</span></div>
+      <div class="sol-item"><span class="ans">4. nosaltres</span><span class="expl">No canvia.</span></div>
+      <div class="sol-item"><span class="ans">5. vosaltres</span><span class="expl">No canvia.</span></div>
+      <div class="sol-item"><span class="ans">6. elles</span><span class="expl">No canvia.</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 4 — Diàleg</h3>
+      <div class="sol-item"><span class="ans">1. tu</span><span class="expl">Darrere de "per a", sense ser "jo".</span></div>
+      <div class="sol-item"><span class="ans">2. mi</span><span class="expl">Darrere de "per a" i referit a "jo".</span></div>
+      <div class="sol-item"><span class="ans">3. ell</span><span class="expl">Darrere de "per a", no canvia.</span></div>
+      <div class="sol-item"><span class="ans">4. Jo</span><span class="expl">Subjecte amb èmfasi.</span></div>
+      <div class="sol-item"><span class="ans">5. jo</span><span class="expl">Subjecte darrere del verb, sense preposició: es manté "jo".</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Repàs verbal — Imperfet d'indicatiu i de subjuntiu</h3>
+      <div class="sol-item"><span class="ans">1. tenia</span><span class="expl">"Tindre" imperfet d'indicatiu, 1a persona singular.</span></div>
+      <div class="sol-item"><span class="ans">2. sabera</span><span class="expl">"Saber" imperfet de subjuntiu, 1a persona singular (forma en -ra).</span></div>
+      <div class="sol-item"><span class="ans">3. jugàvem</span><span class="expl">"Jugar" imperfet d'indicatiu, 1a persona plural.</span></div>
+      <div class="sol-item"><span class="ans">4. feres</span><span class="expl">"Fer" imperfet de subjuntiu, 2a persona singular (forma en -ra).</span></div>
+    </div>
+  </details>
+
+  <footer class="note">IES Jorge Juan, Alacant · Exercici diari de valencià oral per a l'àmbit educatiu-informàtic</footer>
+</div>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'')
+      .toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/['’]/g,"'")
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  var sectionScores = {};
+
+  function setFeedback(el, ok){
+    if(!el) return;
+    el.textContent = ok ? '✓ correcte' : '✗ revisa-ho';
+    el.className = 'feedback ' + (ok ? 'ok' : 'ko');
+  }
+
+  function checkTextItems(container){
+    var correct = 0, total = 0;
+    container.querySelectorAll('.item[data-ans]').forEach(function(item){
+      var input = item.querySelector('input.blank');
+      var sel = item.querySelector('select.sel');
+      var field = input || sel;
+      if(!field) return;
+      total++;
+      var ok = norm(field.value) === norm(item.getAttribute('data-ans'));
+      if(ok) correct++;
+      var fb = item.querySelector('.feedback');
+      setFeedback(fb, ok);
+    });
+    container.querySelectorAll('input.blank[data-ans]').forEach(function(input){
+      total++;
+      var ok = norm(input.value) === norm(input.getAttribute('data-ans'));
+      if(ok) correct++;
+      var fb = document.getElementById('fb-' + input.id);
+      setFeedback(fb, ok);
+    });
+    return {correct: correct, total: total};
+  }
+
+  function checkMcItems(container){
+    var correct = 0, total = 0;
+    container.querySelectorAll('.item[data-ans]').forEach(function(item){
+      var opts = item.querySelectorAll('.mc-opt');
+      if(!opts.length) return;
+      var expected = item.getAttribute('data-ans');
+      var checkedInput = item.querySelector('input[type=radio]:checked');
+      total++;
+      var ok = checkedInput && checkedInput.value === expected;
+      if(ok) correct++;
+      opts.forEach(function(opt){
+        opt.classList.remove('right-ans','wrong-ans');
+        var inp = opt.querySelector('input');
+        if(inp.value === expected){ opt.classList.add('right-ans'); }
+        else if(checkedInput && inp.value === checkedInput.value){ opt.classList.add('wrong-ans'); }
+      });
+    });
+    return {correct: correct, total: total};
+  }
+
+  window.checkActivity = function(sectionId){
+    var section = document.getElementById(sectionId);
+    if(!section) return;
+    var result;
+    if(section.querySelector('.mc-opts')){
+      result = checkMcItems(section);
+    } else {
+      result = checkTextItems(section);
+    }
+    sectionScores[sectionId] = result;
+    var scoreEl = document.getElementById('score-' + sectionId);
+    if(scoreEl){
+      scoreEl.classList.add('show');
+      scoreEl.innerHTML = 'Resultat: <b>' + result.correct + ' / ' + result.total + '</b>';
+    }
+    updateGlobal();
+  };
+
+  function updateGlobal(){
+    var correct = 0, total = 0;
+    Object.keys(sectionScores).forEach(function(k){
+      correct += sectionScores[k].correct;
+      total += sectionScores[k].total;
+    });
+    document.getElementById('globalScore').textContent = correct;
+    document.getElementById('globalTotal').textContent = total;
+  }
+})();
+</script>
+
+</body></html>

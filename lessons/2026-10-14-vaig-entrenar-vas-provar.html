@@ -1,0 +1,706 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Vaig entrenar, vas provar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout: a circuit-board rhythm — a top banner "board", stacked "component" cards for each activity, copper/green palette evoking the robotics & AI vocabulary of the day */
+  :root{
+    --bg:#eef1ea;
+    --surface:#ffffff;
+    --surface-2:#e2e8da;
+    --ink:#1b2a1f;
+    --ink-soft:#52624f;
+    --accent:#3c6e4f;
+    --accent-ink:#ffffff;
+    --accent-soft:#d9e8da;
+    --accent-soft-ink:#234a30;
+    --led:#b8701e;
+    --good:#2f8f5b;
+    --good-bg:#dff1e6;
+    --bad:#b3402c;
+    --bad-bg:#f8e2db;
+    --line:#d3dcc9;
+    --shadow:0 1px 2px rgba(27,42,31,.07), 0 10px 26px -14px rgba(27,42,31,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121a14; --surface:#182018; --surface-2:#1f2a1f;
+      --ink:#e8efe2; --ink-soft:#a8b89f;
+      --accent:#7fd9a3; --accent-ink:#0d1f13; --accent-soft:#203a28; --accent-soft-ink:#bdeccf;
+      --led:#e3a455;
+      --good:#7fd9a3; --good-bg:#1c3326;
+      --bad:#ef8a76; --bad-bg:#3a2420;
+      --line:#2a3a2a;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121a14; --surface:#182018; --surface-2:#1f2a1f;
+    --ink:#e8efe2; --ink-soft:#a8b89f;
+    --accent:#7fd9a3; --accent-ink:#0d1f13; --accent-soft:#203a28; --accent-soft-ink:#bdeccf;
+    --led:#e3a455;
+    --good:#7fd9a3; --good-bg:#1c3326;
+    --bad:#ef8a76; --bad-bg:#3a2420;
+    --line:#2a3a2a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.56;
+    padding-top:26px;
+    padding-bottom:60px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+  }
+  .wrap{ max-width:880px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a.back{
+    display:inline-block;
+    font-size:.82rem;
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:16px;
+    border:1px solid var(--line);
+  }
+  a.back:hover{ background:var(--accent); color:var(--accent-ink); }
+
+  header.banner{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:26px 24px 24px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+    margin-bottom:22px;
+  }
+  header.banner::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      radial-gradient(circle at 18px 18px, rgba(255,255,255,.14) 2px, transparent 2.6px),
+      radial-gradient(circle at 54px 42px, rgba(255,255,255,.1) 2px, transparent 2.6px);
+    background-size:72px 60px;
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.88;
+    margin-bottom:8px;
+  }
+  header.banner h1{ font-size:clamp(1.7rem,5vw,2.3rem); font-weight:600; position:relative; z-index:1; }
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin-top:14px; position:relative; z-index:1;
+  }
+  .meta-row span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.76rem;
+    background:rgba(255,255,255,.16);
+    padding:5px 11px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 22px 24px;
+    box-shadow:var(--shadow);
+    margin-bottom:20px;
+  }
+  section.card h2{
+    font-size:1.2rem;
+    display:flex; align-items:baseline; gap:10px;
+    margin-bottom:10px;
+  }
+  section.card h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:3px 9px;
+    border-radius:999px;
+    flex:none;
+  }
+  section.card p{ margin:0 0 10px; max-width:66ch; }
+  section.card p.hint{ color:var(--ink-soft); font-size:.88rem; }
+
+  table.rules{
+    width:100%; border-collapse:collapse; margin:14px 0 6px;
+    font-size:.92rem;
+    min-width:480px;
+  }
+  .rules-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+  table.rules th, table.rules td{
+    padding:10px 12px; text-align:left; border-bottom:1px solid var(--line);
+  }
+  table.rules thead th{
+    background:var(--surface-2);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft);
+  }
+  table.rules tbody tr:last-child td{ border-bottom:none; }
+  table.rules td.form{ font-family:'IBM Plex Mono', monospace; color:var(--accent-soft-ink); font-weight:600; }
+
+  .item{
+    padding:12px 0;
+    border-top:1px solid var(--line);
+  }
+  .item:first-of-type{ border-top:none; padding-top:4px; }
+  .item .sentence{ margin-bottom:8px; }
+  .item input[type=text]{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.95rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+    width:220px;
+    max-width:100%;
+  }
+  .item input[type=text]:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .item select{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:.92rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+    max-width:100%;
+  }
+  .choices{ display:flex; flex-direction:column; gap:6px; margin-top:6px; }
+  .choices label{ display:flex; align-items:center; gap:8px; font-size:.94rem; cursor:pointer; }
+  .choices input[type=radio]{ accent-color:var(--accent); width:16px; height:16px; flex:none; }
+
+  .mark{
+    display:inline-flex; align-items:center; gap:4px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem; font-weight:600;
+    margin-left:8px; padding:2px 8px; border-radius:999px;
+  }
+  .mark.ok{ background:var(--good-bg); color:var(--good); }
+  .mark.ko{ background:var(--bad-bg); color:var(--bad); }
+
+  .conj-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:10px 18px;
+    margin:14px 0 4px;
+  }
+  @media (max-width:520px){ .conj-grid{ grid-template-columns:1fr; } }
+  .conj-row{
+    display:flex; align-items:center; justify-between; gap:8px;
+    border:1px solid var(--line); border-radius:10px;
+    padding:9px 12px; background:var(--surface-2);
+  }
+  .conj-row .pron{ font-size:.86rem; color:var(--ink-soft); flex:1; min-width:0; }
+  .conj-row .inf{ font-family:'IBM Plex Mono', monospace; font-size:.86rem; color:var(--ink-soft); }
+
+  button.check{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.86rem; font-weight:600;
+    background:var(--accent); color:var(--accent-ink);
+    border:none; border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:12px;
+  }
+  button.check:hover{ filter:brightness(1.08); }
+  button.check:focus-visible{ outline:2px solid var(--led); outline-offset:2px; }
+
+  .section-score{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.84rem; color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  .score-bar{
+    position:relative;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px; flex-wrap:wrap;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 18px;
+    margin-bottom:22px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .score-bar .label{ font-size:.82rem; color:var(--ink-soft); }
+  .score-bar .score{ font-size:1.3rem; font-weight:600; color:var(--accent-soft-ink); }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px 20px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    font-family:'Fraunces', serif;
+    font-size:1.15rem; font-weight:600;
+    cursor:pointer;
+    padding:4px 0;
+  }
+  .sol-block{ margin-top:14px; }
+  .sol-block h3{
+    font-size:.92rem; font-family:'IBM Plex Mono', monospace;
+    color:var(--accent-soft-ink); text-transform:uppercase; letter-spacing:.03em;
+    margin-bottom:8px;
+  }
+  .sol-list{ display:flex; flex-direction:column; gap:7px; }
+  .sol-list .sol-item{ font-size:.9rem; }
+  .sol-list .sol-item b{ color:var(--accent-soft-ink); }
+  .sol-list .sol-item .expl{ color:var(--ink-soft); }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:24px; }
+
+  @media (max-width:480px){
+    header.banner{ padding:20px 18px; }
+    section.card{ padding:18px 16px 20px; }
+    .item input[type=text]{ width:100%; }
+  }
+</style>
+
+<div class="wrap">
+
+  <a class="back" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="banner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · valencià oral</div>
+    <h1>Vaig entrenar, vas provar</h1>
+    <div class="meta-row">
+      <span>📘 Tema d'avui: Pretèrit perfet perifràstic</span>
+      <span>🤖 Vocabulari: Robòtica i IA · ampliació (4t ESO)</span>
+    </div>
+  </header>
+
+  <div class="score-bar">
+    <span class="label">Puntuació acumulada (es va actualitzant en comprovar cada activitat)</span>
+    <span class="score"><span id="globalScore">0</span> / <span id="globalTotal">31</span></span>
+  </div>
+
+  <section class="card">
+    <h2><span class="num">Teoria</span> El pretèrit perfet perifràstic</h2>
+    <p>En valencià, la manera més natural i habitual de parlar d'accions passades acabades <strong>no és la forma simple</strong> (<span class="mono">parlí, parlares...</span>), sinó una perífrasi: el present del verb <strong>anar</strong> (amb valor de passat) + el <strong>infinitiu</strong> del verb que conjuguem. És la forma que faràs servir cada dia a classe per a explicar què vau fer ahir, la setmana passada o en la sessió anterior.</p>
+    <div class="rules-wrap">
+      <table class="rules">
+        <thead><tr><th>Pronom</th><th>Anar (valor de passat)</th><th>+ infinitiu</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td>jo</td><td class="form">vaig</td><td>parlar</td><td><span class="mono">vaig parlar</span> (= <em>hablé</em>)</td></tr>
+          <tr><td>tu</td><td class="form">vas</td><td>parlar</td><td><span class="mono">vas parlar</span></td></tr>
+          <tr><td>ell / ella</td><td class="form">va</td><td>parlar</td><td><span class="mono">va parlar</span></td></tr>
+          <tr><td>nosaltres</td><td class="form">vam <span class="mono" style="font-weight:400">(vàrem)</span></td><td>parlar</td><td><span class="mono">vam parlar</span></td></tr>
+          <tr><td>vosaltres</td><td class="form">vau <span class="mono" style="font-weight:400">(vàreu)</span></td><td>parlar</td><td><span class="mono">vau parlar</span></td></tr>
+          <tr><td>ells / elles</td><td class="form">van <span class="mono" style="font-weight:400">(varen)</span></td><td>parlar</td><td><span class="mono">van parlar</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">Curiositat útil per a l'aula: el mateix verb <em>anar</em> també pot ser el verb conjugat, no sols l'auxiliar. "Com <strong>va anar</strong> la sessió d'ahir?" fa servir <em>anar</em> dues vegades: com a auxiliar i com a infinitiu amb el significat de "succeir/transcórrer". En negatiu, <span class="mono">no</span> va davant de l'auxiliar: <span class="mono">no vaig acabar la configuració</span>.</p>
+  </section>
+
+  <section class="card" id="secA">
+    <h2><span class="num">Activitat 1</span> Omple els buits</h2>
+    <p class="hint">Escriu l'auxiliar + l'infinitiu complet (per exemple: <span class="mono">vaig explicar</span>).</p>
+
+    <div class="item" data-sec="A" data-id="a1" data-ans="vaig explicar">
+      <div class="sentence">1. Ahir <input type="text" id="a1"> (jo / explicar) als alumnes com funciona un bucle en Scratch. <span class="mark" id="a1-mark"></span></div>
+    </div>
+    <div class="item" data-sec="A" data-id="a2" data-ans="vas entrenar">
+      <div class="sentence">2. Tu <input type="text" id="a2"> (entrenar) el model amb Teachable Machine abans de la classe, no? <span class="mark" id="a2-mark"></span></div>
+    </div>
+    <div class="item" data-sec="A" data-id="a3" data-ans="va actualitzar">
+      <div class="sentence">3. El coordinador TIC <input type="text" id="a3"> (actualitzar) el lloc de WordPress del departament dilluns passat. <span class="mark" id="a3-mark"></span></div>
+    </div>
+    <div class="item" data-sec="A" data-id="a4" data-ans="vam fer">
+      <div class="sentence">4. Nosaltres <input type="text" id="a4"> (fer) una prova d'usuari amb el prototip de la placa Microbit. <span class="mark" id="a4-mark"></span></div>
+    </div>
+    <div class="item" data-sec="A" data-id="a5" data-ans="vau programar">
+      <div class="sentence">5. Vosaltres <input type="text" id="a5"> (programar) l'estructura de control en Python amb l'alumnat de Batxillerat. <span class="mark" id="a5-mark"></span></div>
+    </div>
+    <div class="item" data-sec="A" data-id="a6" data-ans="van dissenyar">
+      <div class="sentence">6. Les alumnes de 4t <input type="text" id="a6"> (dissenyar) un prototip iteratiu per al projecte de robòtica. <span class="mark" id="a6-mark"></span></div>
+    </div>
+
+    <button class="check" onclick="checkSection('A')">Comprova les respostes</button>
+    <div class="section-score" id="A-score"></div>
+  </section>
+
+  <section class="card" id="secB">
+    <h2><span class="num">Activitat 2</span> Tria l'opció correcta</h2>
+
+    <div class="item" data-sec="B" data-id="b1" data-ans="vaig">
+      <div class="sentence">1. "Jo <span class="mono">___</span> revisar el codi del robot abans d'entregar-lo."</div>
+      <div class="choices">
+        <label><input type="radio" name="b1" value="vaig"> vaig</label>
+        <label><input type="radio" name="b1" value="vas"> vas</label>
+        <label><input type="radio" name="b1" value="va"> va</label>
+        <label><input type="radio" name="b1" value="vam"> vam</label>
+      </div>
+      <span class="mark" id="b1-mark"></span>
+    </div>
+
+    <div class="item" data-sec="B" data-id="b2" data-ans="van">
+      <div class="sentence">2. "Els alumnes de PRSI <span class="mono">___</span> crear una base de dades relacional per al projecte."</div>
+      <div class="choices">
+        <label><input type="radio" name="b2" value="vam"> vam</label>
+        <label><input type="radio" name="b2" value="van"> van</label>
+        <label><input type="radio" name="b2" value="vau"> vau</label>
+        <label><input type="radio" name="b2" value="va"> va</label>
+      </div>
+      <span class="mark" id="b2-mark"></span>
+    </div>
+
+    <div class="item" data-sec="B" data-id="b3" data-ans="vas">
+      <div class="sentence">3. "Tu, ahir, <span class="mono">___</span> entrenar la xarxa neuronal amb noves imatges, oi?"</div>
+      <div class="choices">
+        <label><input type="radio" name="b3" value="vas"> vas</label>
+        <label><input type="radio" name="b3" value="va"> va</label>
+        <label><input type="radio" name="b3" value="vau"> vau</label>
+        <label><input type="radio" name="b3" value="van"> van</label>
+      </div>
+      <span class="mark" id="b3-mark"></span>
+    </div>
+
+    <div class="item" data-sec="B" data-id="b4" data-ans="vam">
+      <div class="sentence">4. "Nosaltres <span class="mono">___</span> fer una còpia de seguretat del servidor abans del canvi."</div>
+      <div class="choices">
+        <label><input type="radio" name="b4" value="vam"> vam</label>
+        <label><input type="radio" name="b4" value="van"> van</label>
+        <label><input type="radio" name="b4" value="vau"> vau</label>
+        <label><input type="radio" name="b4" value="va"> va</label>
+      </div>
+      <span class="mark" id="b4-mark"></span>
+    </div>
+
+    <div class="item" data-sec="B" data-id="b5" data-ans="vau">
+      <div class="sentence">5. "Vosaltres <span class="mono">___</span> provar el prototip amb l'alumnat de 4t?"</div>
+      <div class="choices">
+        <label><input type="radio" name="b5" value="vau"> vau</label>
+        <label><input type="radio" name="b5" value="van"> van</label>
+        <label><input type="radio" name="b5" value="vam"> vam</label>
+        <label><input type="radio" name="b5" value="vas"> vas</label>
+      </div>
+      <span class="mark" id="b5-mark"></span>
+    </div>
+
+    <button class="check" onclick="checkSection('B')">Comprova les respostes</button>
+    <div class="section-score" id="B-score"></div>
+  </section>
+
+  <section class="card" id="secC">
+    <h2><span class="num">Activitat 3</span> Completa la conjugació</h2>
+    <p class="hint">Escriu només la forma de l'auxiliar <em>anar</em> (infinitiu: <span class="mono">revisar</span>).</p>
+
+    <div class="conj-grid">
+      <div class="conj-row"><span class="pron">jo</span><input type="text" id="c1" style="width:90px"><span class="inf">revisar</span> <span class="mark" id="c1-mark"></span></div>
+      <div class="conj-row"><span class="pron">tu</span><input type="text" id="c2" style="width:90px"><span class="inf">revisar</span> <span class="mark" id="c2-mark"></span></div>
+      <div class="conj-row"><span class="pron">ell / ella</span><input type="text" id="c3" style="width:90px"><span class="inf">revisar</span> <span class="mark" id="c3-mark"></span></div>
+      <div class="conj-row"><span class="pron">nosaltres</span><input type="text" id="c4" style="width:90px"><span class="inf">revisar</span> <span class="mark" id="c4-mark"></span></div>
+      <div class="conj-row"><span class="pron">vosaltres</span><input type="text" id="c5" style="width:90px"><span class="inf">revisar</span> <span class="mark" id="c5-mark"></span></div>
+      <div class="conj-row"><span class="pron">ells / elles</span><input type="text" id="c6" style="width:90px"><span class="inf">revisar</span> <span class="mark" id="c6-mark"></span></div>
+    </div>
+
+    <button class="check" onclick="checkSection('C')">Comprova les respostes</button>
+    <div class="section-score" id="C-score"></div>
+  </section>
+
+  <section class="card" id="secD">
+    <h2><span class="num">Activitat 4</span> Mini-diàleg: al claustre</h2>
+    <p class="hint">El director i un professor parlen de la sessió d'ahir al departament d'informàtica. Omple els buits amb la forma correcta.</p>
+
+    <div class="item" data-sec="D" data-id="d1" data-ans="va anar">
+      <p class="sentence"><strong>Director:</strong> Com <input type="text" id="d1" style="width:130px"> (anar) la sessió d'ahir amb els de 2n, amb el Scratch? <span class="mark" id="d1-mark"></span></p>
+    </div>
+    <div class="item" data-sec="D" data-id="d2" data-ans="van crear">
+      <p class="sentence"><strong>Professor:</strong> Molt bé! Els alumnes <input type="text" id="d2" style="width:150px"> (crear) un joc amb diversos personatges i esdeveniments. <span class="mark" id="d2-mark"></span></p>
+    </div>
+    <div class="item" data-sec="D" data-id="d3" data-ans="vau provar">
+      <p class="sentence"><strong>Director:</strong> I la placa Microbit? <input type="text" id="d3" style="width:150px"> (vosaltres / provar) els sensors de distància? <span class="mark" id="d3-mark"></span></p>
+    </div>
+    <div class="item" data-sec="D" data-id="d4" data-ans="vam connectar">
+      <p class="sentence"><strong>Professor:</strong> Sí, <input type="text" id="d4" style="width:150px"> (nosaltres / connectar) un servomotor i vam fer proves amb tot el grup. <span class="mark" id="d4-mark"></span></p>
+    </div>
+    <div class="item" data-sec="D" data-id="d5" data-ans="vas parlar">
+      <p class="sentence"><strong>Director:</strong> I tu, <input type="text" id="d5" style="width:150px"> (parlar) amb el departament de les noves llicències de programari? <span class="mark" id="d5-mark"></span></p>
+    </div>
+    <div class="item" data-sec="D" data-id="d6" data-ans="vaig enviar">
+      <p class="sentence"><strong>Professor:</strong> Encara no, però <input type="text" id="d6" style="width:150px"> (jo / enviar) un correu esta vesprada. <span class="mark" id="d6-mark"></span></p>
+    </div>
+
+    <button class="check" onclick="checkSection('D')">Comprova les respostes</button>
+    <div class="section-score" id="D-score"></div>
+  </section>
+
+  <section class="card" id="secE">
+    <h2><span class="num">Activitat 5 · Vocabulari</span> Robòtica i IA · ampliació</h2>
+    <p class="hint">Tria la traducció correcta al castellà de cada terme valencià.</p>
+
+    <div class="item" data-sec="E" data-id="e1" data-ans="prototipo">
+      <div class="sentence">1. <strong>prototip</strong>
+        <select id="e1">
+          <option value="">— tria —</option>
+          <option value="prototipo">prototipo</option>
+          <option value="producto">producto</option>
+          <option value="borrador">borrador</option>
+        </select>
+        <span class="mark" id="e1-mark"></span>
+      </div>
+    </div>
+    <div class="item" data-sec="E" data-id="e2" data-ans="bucle">
+      <div class="sentence">2. <strong>bucle</strong>
+        <select id="e2">
+          <option value="">— tria —</option>
+          <option value="nudo">nudo</option>
+          <option value="bucle">bucle</option>
+          <option value="rizo">rizo</option>
+        </select>
+        <span class="mark" id="e2-mark"></span>
+      </div>
+    </div>
+    <div class="item" data-sec="E" data-id="e3" data-ans="condicional">
+      <div class="sentence">3. <strong>condicional</strong>
+        <select id="e3">
+          <option value="">— tria —</option>
+          <option value="condición">condición</option>
+          <option value="condicional">condicional</option>
+          <option value="opcional">opcional</option>
+        </select>
+        <span class="mark" id="e3-mark"></span>
+      </div>
+    </div>
+    <div class="item" data-sec="E" data-id="e4" data-ans="reconocimiento de patrones">
+      <div class="sentence">4. <strong>reconeixement de patrons</strong>
+        <select id="e4">
+          <option value="">— tria —</option>
+          <option value="reconocimiento facial">reconocimiento facial</option>
+          <option value="reconocimiento de patrones">reconocimiento de patrones</option>
+          <option value="reconocimiento de voz">reconocimiento de voz</option>
+        </select>
+        <span class="mark" id="e4-mark"></span>
+      </div>
+    </div>
+    <div class="item" data-sec="E" data-id="e5" data-ans="modelo entrenado">
+      <div class="sentence">5. <strong>model entrenat</strong>
+        <select id="e5">
+          <option value="">— tria —</option>
+          <option value="modelo de datos">modelo de datos</option>
+          <option value="modelo entrenado">modelo entrenado</option>
+          <option value="modelo 3d">modelo 3D</option>
+        </select>
+        <span class="mark" id="e5-mark"></span>
+      </div>
+    </div>
+    <div class="item" data-sec="E" data-id="e6" data-ans="instrucción/prompt">
+      <div class="sentence">6. <strong>indicació (prompt)</strong>
+        <select id="e6">
+          <option value="">— tria —</option>
+          <option value="instrucción/prompt">instrucción / prompt</option>
+          <option value="indicador">indicador</option>
+          <option value="aviso">aviso</option>
+        </select>
+        <span class="mark" id="e6-mark"></span>
+      </div>
+    </div>
+    <div class="item" data-sec="E" data-id="e7" data-ans="prueba de usuario">
+      <div class="sentence">7. <strong>prova d'usuari</strong>
+        <select id="e7">
+          <option value="">— tria —</option>
+          <option value="prueba de usuario">prueba de usuario</option>
+          <option value="prueba de carga">prueba de carga</option>
+          <option value="prueba de software">prueba de software</option>
+        </select>
+        <span class="mark" id="e7-mark"></span>
+      </div>
+    </div>
+    <div class="item" data-sec="E" data-id="e8" data-ans="coevaluación">
+      <div class="sentence">8. <strong>coavaluació</strong>
+        <select id="e8">
+          <option value="">— tria —</option>
+          <option value="autoevaluación">autoevaluación</option>
+          <option value="coevaluación">coevaluación</option>
+          <option value="calificación">calificación</option>
+        </select>
+        <span class="mark" id="e8-mark"></span>
+      </div>
+    </div>
+
+    <button class="check" onclick="checkSection('E')">Comprova les respostes</button>
+    <div class="section-score" id="E-score"></div>
+  </section>
+
+  <details class="solutions">
+    <summary>📖 Solucions i explicacions completes</summary>
+
+    <div class="sol-block">
+      <h3>Activitat 1 — Omple els buits</h3>
+      <div class="sol-list">
+        <div class="sol-item"><b>1. vaig explicar</b> — <span class="expl">1a persona singular: vaig + infinitiu.</span></div>
+        <div class="sol-item"><b>2. vas entrenar</b> — <span class="expl">2a persona singular: vas + infinitiu.</span></div>
+        <div class="sol-item"><b>3. va actualitzar</b> — <span class="expl">3a persona singular: va + infinitiu.</span></div>
+        <div class="sol-item"><b>4. vam fer</b> — <span class="expl">1a persona plural: vam (o vàrem) + infinitiu.</span></div>
+        <div class="sol-item"><b>5. vau programar</b> — <span class="expl">2a persona plural: vau (o vàreu) + infinitiu.</span></div>
+        <div class="sol-item"><b>6. van dissenyar</b> — <span class="expl">3a persona plural: van (o varen) + infinitiu.</span></div>
+      </div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 2 — Tria l'opció correcta</h3>
+      <div class="sol-list">
+        <div class="sol-item"><b>1. vaig</b> — <span class="expl">subjecte "jo".</span></div>
+        <div class="sol-item"><b>2. van</b> — <span class="expl">subjecte "els alumnes" (3a plural).</span></div>
+        <div class="sol-item"><b>3. vas</b> — <span class="expl">subjecte "tu".</span></div>
+        <div class="sol-item"><b>4. vam</b> — <span class="expl">subjecte "nosaltres".</span></div>
+        <div class="sol-item"><b>5. vau</b> — <span class="expl">subjecte "vosaltres".</span></div>
+      </div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 3 — Conjugació de "revisar"</h3>
+      <div class="sol-list">
+        <div class="sol-item"><b>vaig / vas / va / vam (vàrem) / vau (vàreu) / van (varen)</b> — <span class="expl">la sèrie completa de l'auxiliar en present amb valor de passat.</span></div>
+      </div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 4 — Mini-diàleg</h3>
+      <div class="sol-list">
+        <div class="sol-item"><b>1. va anar</b> — <span class="expl">"anar" com a verb lèxic (succeir) + "anar" com a auxiliar: com va anar = cómo fue.</span></div>
+        <div class="sol-item"><b>2. van crear</b> — <span class="expl">subjecte "els alumnes".</span></div>
+        <div class="sol-item"><b>3. vau provar</b> — <span class="expl">subjecte "vosaltres", marcat explícitament entre parèntesis.</span></div>
+        <div class="sol-item"><b>4. vam connectar</b> — <span class="expl">subjecte "nosaltres".</span></div>
+        <div class="sol-item"><b>5. vas parlar</b> — <span class="expl">subjecte "tu".</span></div>
+        <div class="sol-item"><b>6. vaig enviar</b> — <span class="expl">subjecte "jo".</span></div>
+      </div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 5 — Vocabulari: Robòtica i IA · ampliació</h3>
+      <div class="sol-list">
+        <div class="sol-item"><b>prototip → prototipo</b></div>
+        <div class="sol-item"><b>bucle → bucle</b> — <span class="expl">estructura de repetició en programació.</span></div>
+        <div class="sol-item"><b>condicional → condicional</b> — <span class="expl">estructura de decisió (si... llavors...).</span></div>
+        <div class="sol-item"><b>reconeixement de patrons → reconocimiento de patrones</b></div>
+        <div class="sol-item"><b>model entrenat → modelo entrenado</b> — <span class="expl">resultat d'entrenar un sistema d'IA amb dades.</span></div>
+        <div class="sol-item"><b>indicació (prompt) → instrucción / prompt</b></div>
+        <div class="sol-item"><b>prova d'usuari → prueba de usuario</b></div>
+        <div class="sol-item"><b>coavaluació → coevaluación</b> — <span class="expl">avaluació feta conjuntament entre companys o grups.</span></div>
+      </div>
+    </div>
+  </details>
+
+  <footer class="note">IES Jorge Juan, Alacant · Quadern de valencià oral per al professorat d'informàtica</footer>
+</div>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/\s+/g,' ');
+  }
+  var ALT = {
+    'a4':['vam fer','varem fer'],
+    'a5':['vau programar','vareu programar'],
+    'a6':['van dissenyar','varen dissenyar'],
+    'd4':['vam connectar','varem connectar'],
+    'c4':['vam','varem'],
+    'c5':['vau','vareu'],
+    'c6':['van','varen']
+  };
+  function accepted(id, defAns){
+    var list = ALT[id] ? ALT[id].slice() : [];
+    list.push(defAns);
+    return list.map(norm);
+  }
+
+  var sections = {
+    A: ['a1','a2','a3','a4','a5','a6'],
+    B: ['b1','b2','b3','b4','b5'],
+    C: ['c1','c2','c3','c4','c5','c6'],
+    D: ['d1','d2','d3','d4','d5','d6'],
+    E: ['e1','e2','e3','e4','e5','e6','e7','e8']
+  };
+  var defAns = {};
+  document.querySelectorAll('.item[data-ans]').forEach(function(el){
+    defAns[el.getAttribute('data-id')] = el.getAttribute('data-ans');
+  });
+
+  function getValue(id){
+    var radios = document.getElementsByName(id);
+    if (radios && radios.length){
+      for (var i=0;i<radios.length;i++){ if (radios[i].checked) return radios[i].value; }
+      return '';
+    }
+    var el = document.getElementById(id);
+    return el ? el.value : '';
+  }
+
+  function isCorrect(id){
+    var val = getValue(id);
+    if (!val) return false;
+    var ok = accepted(id, defAns[id]);
+    return ok.indexOf(norm(val)) !== -1;
+  }
+
+  window.checkSection = function(sec){
+    var ids = sections[sec];
+    var correct = 0;
+    ids.forEach(function(id){
+      var mark = document.getElementById(id+'-mark');
+      var ok = isCorrect(id);
+      if (ok) correct++;
+      if (mark){
+        mark.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+        mark.className = 'mark ' + (ok ? 'ok':'ko');
+      }
+    });
+    var scoreEl = document.getElementById(sec+'-score');
+    if (scoreEl) scoreEl.textContent = 'Puntuació d\'esta activitat: ' + correct + ' / ' + ids.length;
+    updateGlobalScore();
+  };
+
+  function updateGlobalScore(){
+    var total = 0, correct = 0;
+    Object.keys(sections).forEach(function(sec){
+      sections[sec].forEach(function(id){
+        total++;
+        if (isCorrect(id)) correct++;
+      });
+    });
+    document.getElementById('globalScore').textContent = correct;
+    document.getElementById('globalTotal').textContent = total;
+  }
+
+  updateGlobalScore();
+})();
+</script>
+
+</body></html>

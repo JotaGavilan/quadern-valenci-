@@ -1,0 +1,737 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>He fet, he dit, he vist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+  :root{
+    --bg:#eef1f3;
+    --surface:#ffffff;
+    --surface-2:#e3e9ec;
+    --ink:#1b2530;
+    --ink-soft:#5c6b78;
+    --accent:#c1622a;
+    --accent-ink:#ffffff;
+    --accent-soft:#f1ddc8;
+    --accent-soft-ink:#7a3d14;
+    --line:#d3dde1;
+    --good:#2f7a52;
+    --good-bg:#dcefe2;
+    --bad:#b23b3b;
+    --bad-bg:#f7dede;
+    --shadow: 0 1px 2px rgba(20,25,30,.06), 0 10px 26px -14px rgba(20,25,30,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12181d;
+      --surface:#1a232a;
+      --surface-2:#212c33;
+      --ink:#e8edf0;
+      --ink-soft:#9fb0ba;
+      --accent:#e08a4f;
+      --accent-ink:#1b120a;
+      --accent-soft:#3a2717;
+      --accent-soft-ink:#f0c9a3;
+      --line:#2c3941;
+      --good:#5fce93;
+      --good-bg:#173324;
+      --bad:#ef7a7a;
+      --bad-bg:#3a1f1f;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12181d;
+    --surface:#1a232a;
+    --surface-2:#212c33;
+    --ink:#e8edf0;
+    --ink-soft:#9fb0ba;
+    --accent:#e08a4f;
+    --accent-ink:#1b120a;
+    --accent-soft:#3a2717;
+    --accent-soft-ink:#f0c9a3;
+    --line:#2c3941;
+    --good:#5fce93;
+    --good-bg:#173324;
+    --bad:#ef7a7a;
+    --bad-bg:#3a1f1f;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-inline:20px;
+    padding-block:22px 70px;
+    max-width:780px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+  a.backlink{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  a.backlink:hover{ filter:brightness(0.96); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(115deg, rgba(255,255,255,.06) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.9;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:700; }
+  header.top p{ margin:10px 0 0; max-width:56ch; opacity:.94; font-size:.95rem; }
+  .topic-pill{
+    display:inline-block;
+    margin-top:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.76rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.3);
+  }
+
+  .scorebar{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:5;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .scorebar .label{ font-size:.84rem; color:var(--ink-soft); }
+  .scorebar .value{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--accent);
+  }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 20px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{
+    font-size:1.25rem;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  section.card .sub{
+    color:var(--ink-soft);
+    font-size:.88rem;
+    margin:0 0 14px;
+  }
+  .step-num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:26px; height:26px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent-soft-ink);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    font-weight:700;
+    margin-right:8px;
+    flex:none;
+  }
+
+  table{ border-collapse:collapse; width:100%; font-size:.92rem; }
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:12px 0; }
+  .table-wrap table{ min-width:460px; }
+  thead th{
+    background:var(--surface-2);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody td{ padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+
+  .chip-grid{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin:12px 0 4px;
+  }
+  .chip{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem;
+    padding:6px 11px;
+    border-radius:10px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .chip b{ color:var(--accent); font-weight:700; }
+
+  .note{
+    background:var(--accent-soft);
+    color:var(--accent-soft-ink);
+    border-radius:12px;
+    padding:12px 14px;
+    font-size:.88rem;
+    margin-top:12px;
+  }
+
+  .q{
+    padding-block:12px;
+    border-top:1px solid var(--line);
+  }
+  .q:first-of-type{ border-top:none; padding-top:0; }
+  .q .prompt{ margin-bottom:8px; }
+  .q .prompt .n{ color:var(--ink-soft); font-family:'JetBrains Mono', monospace; font-size:.82rem; margin-right:4px; }
+  .q .hint{ color:var(--ink-soft); font-size:.8rem; font-style:italic; }
+
+  input[type="text"], select{
+    font: 600 .95rem 'JetBrains Mono', monospace;
+    padding:7px 10px;
+    border-radius:9px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    min-width:150px;
+  }
+  input[type="text"]:focus, select:focus{
+    outline:2px solid var(--accent);
+    outline-offset:1px;
+    border-color:var(--accent);
+  }
+  input.correct, select.correct{ border-color:var(--good); background:var(--good-bg); }
+  input.incorrect, select.incorrect{ border-color:var(--bad); background:var(--bad-bg); }
+  .feedback{
+    display:inline-block;
+    margin-left:8px;
+    font-size:.85rem;
+    font-weight:600;
+  }
+  .feedback.ok{ color:var(--good); }
+  .feedback.no{ color:var(--bad); }
+
+  .table-wrap.quiz td input[type="text"]{ width:100%; min-width:120px; }
+
+  .dialogue p{ margin:0 0 10px; }
+  .dialogue .who{ font-family:'JetBrains Mono', monospace; font-size:.78rem; color:var(--ink-soft); display:block; margin-bottom:2px; }
+
+  button.check{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:.88rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border:none;
+    padding:9px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:8px;
+  }
+  button.check:hover{ filter:brightness(1.05); }
+  button.check:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+  .section-score{
+    margin-left:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.84rem;
+    color:var(--ink-soft);
+  }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 20px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.1rem;
+    list-style:none;
+  }
+  details.solutions summary::-webkit-details-marker{ display:none; }
+  details.solutions summary::before{ content:"▸ "; color:var(--accent); }
+  details.solutions[open] summary::before{ content:"▾ "; }
+  .sol-block{ margin-top:16px; }
+  .sol-block h3{ font-size:.95rem; font-weight:600; margin-bottom:8px; }
+  .sol-block ol{ margin:0; padding-left:1.2em; }
+  .sol-block li{ margin-bottom:6px; font-size:.88rem; }
+  .sol-block li b{ color:var(--accent); font-family:'JetBrains Mono', monospace; }
+
+  footer.note2{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:28px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:20px 18px 20px; }
+    section.card{ padding:16px 16px 18px; }
+    input[type="text"], select{ min-width:120px; }
+  }
+</style>
+
+<a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Alacant · valencià oral per al professorat d'informàtica</div>
+    <h1>He fet, he dit, he vist</h1>
+    <p>Exercici diari per a millorar la fluïdesa oral en valencià a l'aula d'informàtica: hui repassem els participis irregulars i els temps compostos.</p>
+    <span class="topic-pill">📘 Tema gramatical: Participis irregulars i temps compostos</span>
+  </div>
+</header>
+
+<div class="scorebar">
+  <span class="label">Puntuació acumulada de tot l'exercici</span>
+  <span class="value" id="totalScore">0 / 32 punts</span>
+</div>
+
+<section class="card">
+  <h2><span class="step-num">1</span>Teoria: el participi i els temps compostos</h2>
+  <p class="sub">La base per a formar el pretèrit perfet compost, el plusquamperfet, el futur compost i el condicional compost.</p>
+
+  <p>El <b>participi passat</b> és la forma verbal invariable que s'usa darrere de l'auxiliar <span class="mono">haver</span> per a construir els temps compostos. En valencià, a diferència d'altres llengües, el participi NO concorda en gènere ni nombre quan forma un temps compost: <span class="mono">ella ha fet</span>, no <em>ella ha feta</em>.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Conjugació</th><th>Terminació</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">-AR</td><td class="mono">-at</td><td>connectar → <b>connectat</b></td></tr>
+        <tr><td class="mono">-ER</td><td class="mono">-ut</td><td>témer → <b>temut</b></td></tr>
+        <tr><td class="mono">-RE</td><td class="mono">-ut</td><td>vendre → <b>venut</b></td></tr>
+        <tr><td class="mono">-IR</td><td class="mono">-it</td><td>compartir → <b>compartit</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Igual que en programació hi ha <em>excepcions</em> que el compilador ha de tindre memoritzades a banda de la regla general, el valencià té un grup de verbs molt freqüents amb participi irregular:</p>
+
+  <div class="chip-grid">
+    <span class="chip">fer → <b>fet</b></span>
+    <span class="chip">dir → <b>dit</b></span>
+    <span class="chip">veure → <b>vist</b></span>
+    <span class="chip">escriure → <b>escrit</b></span>
+    <span class="chip">obrir → <b>obert</b></span>
+    <span class="chip">cobrir → <b>cobert</b></span>
+    <span class="chip">morir → <b>mort</b></span>
+    <span class="chip">resoldre → <b>resolt</b></span>
+    <span class="chip">respondre → <b>respost</b></span>
+    <span class="chip">imprimir → <b>imprés</b></span>
+  </div>
+
+  <p style="margin-top:14px">Amb el participi ja format, només cal triar la forma de <span class="mono">haver</span> que done el temps que vols:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Temps</th><th>Haver (exemple: jo)</th><th>+ participi</th></tr></thead>
+      <tbody>
+        <tr><td>Pretèrit perfet compost</td><td class="mono">he</td><td class="mono">fet</td></tr>
+        <tr><td>Plusquamperfet</td><td class="mono">havia</td><td class="mono">fet</td></tr>
+        <tr><td>Futur compost</td><td class="mono">hauré</td><td class="mono">fet</td></tr>
+        <tr><td>Condicional compost</td><td class="mono">hauria</td><td class="mono">fet</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">💡 Truc per a l'oral: si dubtes entre "he fet" i el castellanisme <em>"he *fecho*"</em> o entre "he obert" i <em>"he *obrit*"</em>, pensa primer en el participi sol (fet, obert) i després hi afegeixes l'auxiliar.</div>
+</section>
+
+<section class="card" id="act1">
+  <h2><span class="step-num">2</span>Activitat 1 · Omplir buits</h2>
+  <p class="sub">Escriu la forma completa (auxiliar + participi) que falta en cada frase.</p>
+
+  <div class="q">
+    <div class="prompt"><span class="n">1.</span> Enguany <input type="text" id="a1-1" placeholder="jo / fer"> una programació didàctica nova per a l'assignatura de Robòtica i IA.</div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">2.</span> Els alumnes ja <input type="text" id="a1-2" placeholder="ells / escriure"> el codi en Python per al projecte amb Teachable Machine.</div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">3.</span> Quan he arribat a l'aula, el tècnic ja <input type="text" id="a1-3" placeholder="ell / obrir"> totes les màquines virtuals amb VirtualBox.</div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">4.</span> Si demà tot va bé, els alumnes <input type="text" id="a1-4" placeholder="ells / resoldre"> tots els exercicis de SQL amb XAMPP.</div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">5.</span> Amb més temps, <input type="text" id="a1-5" placeholder="jo / cobrir"> totes les incidències de la xarxa sense fil del centre.</div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">6.</span> Encara no <input type="text" id="a1-6" placeholder="vosaltres / respondre"> al correu sobre l'actualització del lloc de WordPress del departament.</div>
+  </div>
+
+  <button class="check" onclick="checkAct1()">Comprova aquesta activitat</button>
+  <span class="section-score" id="a1-score"></span>
+</section>
+
+<section class="card" id="act2">
+  <h2><span class="step-num">3</span>Activitat 2 · Tria la forma correcta</h2>
+  <p class="sub">Selecciona el participi que completa correctament cada frase.</p>
+
+  <div class="q">
+    <div class="prompt"><span class="n">1.</span> Enguany he
+      <select id="a2-1"><option value="">— tria —</option><option value="fes">fes</option><option value="fac">fac</option><option value="fet">fet</option><option value="faig">faig</option></select>
+      dues formacions sobre intel·ligència artificial per al claustre.
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">2.</span> Els companys del departament han
+      <select id="a2-2"><option value="">— tria —</option><option value="dit">dit</option><option value="dic">dic</option><option value="diuen">diuen</option><option value="deia">deia</option></select>
+      que cal actualitzar el servidor web del centre.
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">3.</span> Encara no havíem
+      <select id="a2-3"><option value="">— tria —</option><option value="veut">veut</option><option value="vegut">vegut</option><option value="vist">vist</option><option value="veient">veient</option></select>
+      els resultats de la coavaluació quan va sonar el timbre.
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">4.</span> Per a la pròxima reunió, hauré
+      <select id="a2-4"><option value="">— tria —</option><option value="escrigut">escrigut</option><option value="escrit">escrit</option><option value="escrivit">escrivit</option><option value="escriut">escriut</option></select>
+      l'informe sobre l'ús de Scratch a 2n d'ESO.
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">5.</span> Si tinguérem més pressupost, hauríem
+      <select id="a2-5"><option value="">— tria —</option><option value="cobrit">cobrit</option><option value="cobrat">cobrat</option><option value="cobert">cobert</option><option value="cubert">cubert</option></select>
+      totes les places de tècnic informàtic del departament.
+    </div>
+  </div>
+
+  <button class="check" onclick="checkAct2()">Comprova aquesta activitat</button>
+  <span class="section-score" id="a2-score"></span>
+</section>
+
+<section class="card" id="act3">
+  <h2><span class="step-num">4</span>Activitat 3 · Completa la taula</h2>
+  <p class="sub">Escriu el participi de cada infinitiu (regulars i irregulars barrejats).</p>
+
+  <div class="table-wrap quiz">
+    <table>
+      <thead><tr><th>Infinitiu</th><th>Participi</th></tr></thead>
+      <tbody>
+        <tr><td>connectar</td><td><input type="text" id="a3-1" placeholder="participi"></td></tr>
+        <tr><td>témer</td><td><input type="text" id="a3-2" placeholder="participi"></td></tr>
+        <tr><td>compartir</td><td><input type="text" id="a3-3" placeholder="participi"></td></tr>
+        <tr><td>fer</td><td><input type="text" id="a3-4" placeholder="participi"></td></tr>
+        <tr><td>dir</td><td><input type="text" id="a3-5" placeholder="participi"></td></tr>
+        <tr><td>veure</td><td><input type="text" id="a3-6" placeholder="participi"></td></tr>
+        <tr><td>obrir</td><td><input type="text" id="a3-7" placeholder="participi"></td></tr>
+        <tr><td>resoldre</td><td><input type="text" id="a3-8" placeholder="participi"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="check" onclick="checkAct3()">Comprova aquesta activitat</button>
+  <span class="section-score" id="a3-score"></span>
+</section>
+
+<section class="card" id="act4">
+  <h2><span class="step-num">5</span>Activitat 4 · Mini-diàleg al departament</h2>
+  <p class="sub">Completa el participi que falta en esta conversa entre dos professors del departament d'informàtica.</p>
+
+  <div class="dialogue">
+    <p><span class="who">Prof. A</span>Bon dia! Ja has <input type="text" id="a4-1" placeholder="obrir"> l'aula d'informàtica per a la classe de PRSI?</p>
+    <p><span class="who">Prof. B</span>Sí, i també he <input type="text" id="a4-2" placeholder="dir"> als alumnes que porten l'ordinador portàtil carregat per a la sessió amb MakeCode i la Microbit.</p>
+    <p><span class="who">Prof. A</span>Perfecte. I el cap de departament, ja ha <input type="text" id="a4-3" placeholder="escriure"> l'acta de la reunió de claustre d'ahir?</p>
+    <p><span class="who">Prof. B</span>Encara no, diu que l'haurà <input type="text" id="a4-4" placeholder="fer"> abans de la pròxima reunió. Tampoc no ha <input type="text" id="a4-5" placeholder="respondre"> encara al correu sobre el pressupost per a noves plaques Microbit.</p>
+  </div>
+
+  <button class="check" onclick="checkAct4()">Comprova aquesta activitat</button>
+  <span class="section-score" id="a4-score"></span>
+</section>
+
+<section class="card" id="act5">
+  <h2><span class="step-num">6</span>Activitat 5 · Vocabulari: Digitalització (maquinari i xarxes)</h2>
+  <p class="sub">Relaciona cada terme valencià amb la seua traducció correcta al castellà.</p>
+
+  <div class="q">
+    <div class="prompt"><span class="n">1.</span> <b>maquinari</b> →
+      <select id="a5-1"><option value="">— tria —</option><option value="hardware">hardware</option><option value="software">software</option><option value="periférico">periférico</option><option value="componente físico">componente físico</option></select>
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">2.</span> <b>programari</b> →
+      <select id="a5-2"><option value="">— tria —</option><option value="hardware">hardware</option><option value="licencia de software">licencia de software</option><option value="software">software</option><option value="firma digital">firma digital</option></select>
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">3.</span> <b>perifèric</b> →
+      <select id="a5-3"><option value="">— tria —</option><option value="componente físico">componente físico</option><option value="periférico">periférico</option><option value="servidor web">servidor web</option><option value="red cableada">red cableada</option></select>
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">4.</span> <b>xarxa sense fil</b> →
+      <select id="a5-4"><option value="">— tria —</option><option value="red cableada">red cableada</option><option value="red inalámbrica">red inalámbrica</option><option value="internet de las cosas">internet de las cosas</option><option value="protocolo de comunicación">protocolo de comunicación</option></select>
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">5.</span> <b>internet de les coses</b> →
+      <select id="a5-5"><option value="">— tria —</option><option value="gestor de contenidos">gestor de contenidos</option><option value="internet de las cosas">internet de las cosas</option><option value="realidad aumentada">realidad aumentada</option><option value="comercio electrónico">comercio electrónico</option></select>
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">6.</span> <b>gestor de continguts</b> →
+      <select id="a5-6"><option value="">— tria —</option><option value="gestor de contenidos">gestor de contenidos</option><option value="servidor web">servidor web</option><option value="licencia de software">licencia de software</option><option value="firma digital">firma digital</option></select>
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">7.</span> <b>realitat augmentada</b> →
+      <select id="a5-7"><option value="">— tria —</option><option value="realidad virtual">realidad virtual</option><option value="realidad aumentada">realidad aumentada</option><option value="componente físico">componente físico</option><option value="red cableada">red cableada</option></select>
+    </div>
+  </div>
+  <div class="q">
+    <div class="prompt"><span class="n">8.</span> <b>signatura digital</b> →
+      <select id="a5-8"><option value="">— tria —</option><option value="firma digital">firma digital</option><option value="certificado digital">certificado digital</option><option value="comercio electrónico">comercio electrónico</option><option value="licencia de software">licencia de software</option></select>
+    </div>
+  </div>
+
+  <button class="check" onclick="checkAct5()">Comprova aquesta activitat</button>
+  <span class="section-score" id="a5-score"></span>
+</section>
+
+<details class="solutions">
+  <summary>Vore totes les solucions i explicacions</summary>
+
+  <div class="sol-block">
+    <h3>Activitat 1 — Omplir buits</h3>
+    <ol>
+      <li><b>he fet</b> — pretèrit perfet compost (present de haver + participi de fer). "Fer" té participi irregular: fet.</li>
+      <li><b>han escrit</b> — perfet compost, 3a persona plural. "Escriure" → escrit.</li>
+      <li><b>havia obert</b> — plusquamperfet: acció anterior a un altre moment del passat ("quan he arribat"). "Obrir" → obert.</li>
+      <li><b>hauran resolt</b> — futur compost: acció que estarà acabada en un moment futur. "Resoldre" → resolt.</li>
+      <li><b>hauria cobert</b> — condicional compost: acció hipotètica no realitzada. "Cobrir" → cobert.</li>
+      <li><b>heu respost</b> — perfet compost, 2a persona plural. "Respondre" → respost.</li>
+    </ol>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 2 — Tria la forma correcta</h3>
+    <ol>
+      <li><b>fet</b> — l'única forma vàlida de participi per a "fer"; "fes", "fac" i "faig" són formes personals, no participis.</li>
+      <li><b>dit</b> — participi de "dir"; les altres opcions són present ("dic", "diuen") o imperfet ("deia").</li>
+      <li><b>vist</b> — participi de "veure"; no *veut ni *vegut.</li>
+      <li><b>escrit</b> — participi de "escriure"; les formes amb -gut/-vit/-ut no existeixen.</li>
+      <li><b>cobert</b> — participi de "cobrir"; "cobrat" ve de "cobrar" (un altre verb, cobrar diners).</li>
+    </ol>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 3 — Taula de conjugació</h3>
+    <ol>
+      <li>connectar → <b>connectat</b> (regular, -ar → -at)</li>
+      <li>témer → <b>temut</b> (regular, -er → -ut)</li>
+      <li>compartir → <b>compartit</b> (regular, -ir → -it)</li>
+      <li>fer → <b>fet</b> (irregular)</li>
+      <li>dir → <b>dit</b> (irregular)</li>
+      <li>veure → <b>vist</b> (irregular)</li>
+      <li>obrir → <b>obert</b> (irregular)</li>
+      <li>resoldre → <b>resolt</b> (irregular)</li>
+    </ol>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 4 — Mini-diàleg</h3>
+    <ol>
+      <li><b>obert</b> — "has obert" (perfet compost, 2a persona).</li>
+      <li><b>dit</b> — "he dit" (perfet compost, 1a persona).</li>
+      <li><b>escrit</b> — "ha escrit" (perfet compost, 3a persona).</li>
+      <li><b>fet</b> — "l'haurà fet" (futur compost, acció acabada abans d'un moment futur).</li>
+      <li><b>respost</b> — "ha respost" (perfet compost, negatiu: "no ha respost").</li>
+    </ol>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 5 — Vocabulari (Digitalització · maquinari i xarxes)</h3>
+    <ol>
+      <li>maquinari → <b>hardware</b></li>
+      <li>programari → <b>software</b></li>
+      <li>perifèric → <b>periférico</b></li>
+      <li>xarxa sense fil → <b>red inalámbrica</b></li>
+      <li>internet de les coses → <b>internet de las cosas</b></li>
+      <li>gestor de continguts → <b>gestor de contenidos</b></li>
+      <li>realitat augmentada → <b>realidad aumentada</b></li>
+      <li>signatura digital → <b>firma digital</b></li>
+    </ol>
+  </div>
+</details>
+
+<footer class="note2">IES Jorge Juan, Alacant · Quadern de valencià oral per al professorat d'informàtica</footer>
+
+<script>
+function norm(s){
+  return (s||'').toString().trim().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/\s+/g,' ');
+}
+
+var sectionScores = {};
+var sectionMax = { a1:6, a2:5, a3:8, a4:5, a5:8 };
+
+function updateTotal(){
+  var sum = 0;
+  for(var k in sectionMax){ sum += (sectionScores[k]||0); }
+  var totalMax = 0;
+  for(var k in sectionMax){ totalMax += sectionMax[k]; }
+  var el = document.getElementById('totalScore');
+  if(el) el.textContent = sum + ' / ' + totalMax + ' punts';
+}
+
+function gradeInput(id, answers){
+  var el = document.getElementById(id);
+  if(!el) return false;
+  var val = norm(el.value);
+  var ok = answers.some(function(a){ return norm(a) === val; });
+  el.classList.remove('correct','incorrect');
+  el.classList.add(ok ? 'correct' : 'incorrect');
+  return ok;
+}
+
+function checkAct1(){
+  var items = [
+    ['a1-1', ['he fet']],
+    ['a1-2', ['han escrit']],
+    ['a1-3', ['havia obert']],
+    ['a1-4', ['hauran resolt']],
+    ['a1-5', ['hauria cobert']],
+    ['a1-6', ['heu respost']]
+  ];
+  var score = 0;
+  items.forEach(function(it){ if(gradeInput(it[0], it[1])) score++; });
+  sectionScores.a1 = score;
+  document.getElementById('a1-score').textContent = score + ' / ' + sectionMax.a1 + ' punts';
+  updateTotal();
+}
+
+function checkAct2(){
+  var items = [
+    ['a2-1','fet'], ['a2-2','dit'], ['a2-3','vist'], ['a2-4','escrit'], ['a2-5','cobert']
+  ];
+  var score = 0;
+  items.forEach(function(it){
+    var el = document.getElementById(it[0]);
+    var ok = el.value === it[1];
+    el.classList.remove('correct','incorrect');
+    el.classList.add(ok ? 'correct' : 'incorrect');
+    if(ok) score++;
+  });
+  sectionScores.a2 = score;
+  document.getElementById('a2-score').textContent = score + ' / ' + sectionMax.a2 + ' punts';
+  updateTotal();
+}
+
+function checkAct3(){
+  var items = [
+    ['a3-1', ['connectat']],
+    ['a3-2', ['temut']],
+    ['a3-3', ['compartit']],
+    ['a3-4', ['fet']],
+    ['a3-5', ['dit']],
+    ['a3-6', ['vist']],
+    ['a3-7', ['obert']],
+    ['a3-8', ['resolt']]
+  ];
+  var score = 0;
+  items.forEach(function(it){ if(gradeInput(it[0], it[1])) score++; });
+  sectionScores.a3 = score;
+  document.getElementById('a3-score').textContent = score + ' / ' + sectionMax.a3 + ' punts';
+  updateTotal();
+}
+
+function checkAct4(){
+  var items = [
+    ['a4-1', ['obert']],
+    ['a4-2', ['dit']],
+    ['a4-3', ['escrit']],
+    ['a4-4', ['fet']],
+    ['a4-5', ['respost']]
+  ];
+  var score = 0;
+  items.forEach(function(it){ if(gradeInput(it[0], it[1])) score++; });
+  sectionScores.a4 = score;
+  document.getElementById('a4-score').textContent = score + ' / ' + sectionMax.a4 + ' punts';
+  updateTotal();
+}
+
+function checkAct5(){
+  var items = [
+    ['a5-1','hardware'], ['a5-2','software'], ['a5-3','periférico'],
+    ['a5-4','red inalámbrica'], ['a5-5','internet de las cosas'],
+    ['a5-6','gestor de contenidos'], ['a5-7','realidad aumentada'], ['a5-8','firma digital']
+  ];
+  var score = 0;
+  items.forEach(function(it){
+    var el = document.getElementById(it[0]);
+    var ok = el.value === it[1];
+    el.classList.remove('correct','incorrect');
+    el.classList.add(ok ? 'correct' : 'incorrect');
+    if(ok) score++;
+  });
+  sectionScores.a5 = score;
+  document.getElementById('a5-score').textContent = score + ' / ' + sectionMax.a5 + ' punts';
+  updateTotal();
+}
+
+updateTotal();
+</script>
+
+</body></html>

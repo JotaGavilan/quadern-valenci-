@@ -1,0 +1,895 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Quadern de valencià</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    --bg:#f4f0e6;
+    --surface:#ffffff;
+    --surface-2:#eae2cd;
+    --ink:#221f17;
+    --ink-soft:#5c5643;
+    --accent:#2d5f6b;
+    --accent-ink:#ffffff;
+    --accent-soft:#dde9e9;
+    --accent-soft-ink:#204750;
+    --line:#ddd2b3;
+    --tag1:#8a5a2e; --tag1-bg:#f3e3cf;
+    --tag2:#5d6b2d; --tag2-bg:#e6ecd2;
+    --tag3:#6b3d63; --tag3-bg:#ecdcea;
+    --tag4:#2d5f6b; --tag4-bg:#d9e6e8;
+    --tag5:#8a3a2e; --tag5-bg:#f3ddd4;
+    --verb-tag:#3d5a80; --verb-tag-bg:#dde6ee;
+    --good:#3f7d54;
+    --shadow: 0 1px 2px rgba(34,31,23,.06), 0 8px 22px -12px rgba(34,31,23,.20);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#191510;
+      --surface:#211c15;
+      --surface-2:#2a231a;
+      --ink:#efe9db;
+      --ink-soft:#b9ae96;
+      --accent:#7fbcc9;
+      --accent-ink:#0d2226;
+      --accent-soft:#1e343a;
+      --accent-soft-ink:#bfe6ec;
+      --tag1:#e0b57e; --tag1-bg:#3a2a15;
+      --tag2:#c3d194; --tag2-bg:#2c331a;
+      --tag3:#dcaed4; --tag3-bg:#38293a;
+      --tag4:#8fd0dc; --tag4-bg:#1c3538;
+      --tag5:#e3a596; --tag5-bg:#3a241d;
+      --verb-tag:#9db8d4; --verb-tag-bg:#243447;
+      --good:#7ed99a;
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 8px 22px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#191510;
+    --surface:#211c15;
+    --surface-2:#2a231a;
+    --ink:#efe9db;
+    --ink-soft:#b9ae96;
+    --accent:#7fbcc9;
+    --accent-ink:#0d2226;
+    --accent-soft:#1e343a;
+    --accent-soft-ink:#bfe6ec;
+    --tag1:#e0b57e; --tag1-bg:#3a2a15;
+    --tag2:#c3d194; --tag2-bg:#2c331a;
+    --tag3:#dcaed4; --tag3-bg:#38293a;
+    --tag4:#8fd0dc; --tag4-bg:#1c3538;
+    --tag5:#e3a596; --tag5-bg:#3a241d;
+    --verb-tag:#9db8d4; --verb-tag-bg:#243447;
+    --good:#7ed99a;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 8px 22px -12px rgba(0,0,0,.5);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.55;
+    padding-inline:20px;
+    padding-block:26px 60px;
+    max-width:920px;
+    margin:0 auto;
+  }
+  h1,h2{ font-family:'Source Serif 4', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 2px, transparent 2px 24px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.6rem, 4.5vw, 2.15rem); font-weight:600; }
+  header.top p{ margin:10px 0 0; max-width:56ch; opacity:.92; font-size:.95rem; }
+  .stat-row{
+    display:flex; gap:18px; flex-wrap:wrap;
+    margin-top:16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem;
+  }
+  .stat-row .stat b{ font-size:1.1rem; display:block; font-family:'Source Serif 4', serif; font-weight:600; }
+
+  .legend{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-bottom:18px;
+  }
+  .legend .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:4px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  .table-wrap{
+    overflow-x:auto;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:var(--surface);
+    box-shadow:var(--shadow);
+  }
+  table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:680px;
+    font-size:.92rem;
+  }
+  thead th{
+    background:var(--surface-2);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody td{
+    padding:13px 14px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--surface-2); }
+  td.date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  td.lesson a{
+    color:var(--accent);
+    font-weight:600;
+    text-decoration:none;
+    border-bottom:1.5px solid var(--accent-soft);
+  }
+  td.lesson a:hover{ border-bottom-color:var(--accent); }
+  td.topic{ color:var(--ink); }
+  .vocab-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:24px;
+  }
+
+  .progress-section{ margin-top:28px; }
+  .progress-section > h2{
+    font-size:1.05rem;
+    margin-bottom:4px;
+  }
+  .progress-section > p.sub{
+    margin:0 0 14px;
+    color:var(--ink-soft);
+    font-size:.86rem;
+  }
+  .progress-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:640px){
+    .progress-grid{ grid-template-columns:1fr; }
+  }
+  .progress-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 18px 18px;
+    box-shadow:var(--shadow);
+  }
+  .progress-card.wide{ grid-column:1 / -1; }
+  .progress-card .note{
+    margin:0 0 10px;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+  .progress-subhead{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--accent);
+    margin-top:14px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+  }
+  .progress-list .progress-subhead:first-child{ margin-top:0; padding-top:0; border-top:none; }
+  .verb-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+    background:var(--verb-tag-bg);
+    color:var(--verb-tag);
+  }
+  .progress-card h3{
+    font-family:'Source Serif 4', Georgia, serif;
+    font-size:1rem;
+    font-weight:600;
+    margin:0 0 4px;
+  }
+  .progress-card .count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.76rem;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+    display:block;
+  }
+  .progress-list{ display:flex; flex-direction:column; }
+  .progress-item{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    font-size:.88rem;
+    padding-block:8px;
+    border-top:1px solid var(--line);
+  }
+  .progress-item:first-child{ border-top:none; padding-top:0; }
+  .progress-item .status{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    flex:none;
+    width:1.3em;
+  }
+  .progress-item.done .status{ color:var(--good); }
+  .progress-item.pending .status{ color:var(--ink-soft); }
+  .progress-item .label{ flex:1; }
+  .progress-item.pending .label{ color:var(--ink-soft); font-style:italic; }
+  .progress-item .mini-link{
+    font-size:.78rem;
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid var(--accent-soft);
+    white-space:nowrap;
+    flex:none;
+  }
+  .progress-item .mini-link:hover{ border-bottom-color:var(--accent); }
+
+  @media (max-width:480px){
+    header.top{ padding:20px 18px 20px; }
+  }
+</style>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica</div>
+    <h1>Quadern de valencià</h1>
+    <p>Índex de totes les lliçons orals diàries de valencià generades per a l'àmbit educatiu-informàtic. Cada fila obri l'exercici interactiu original — teoria i activitats autocorregibles. Des del 6 de novembre de 2026, l'eix principal de cada lliçó és un punt de llengua general (pronoms, preposicions, articles, nombre i gènere, adverbis, ortografia o lèxic) i s'hi afig un sol exercici breu de repàs de verbs; el vocabulari tècnic del departament ja no es treballa cada dia.</p>
+    <div class="stat-row">
+      <span class="stat"><b id="statCount">72</b>lliçons publicades</span>
+      <span class="stat"><b id="statLatest">23 nov 2026</b>última actualització</span>
+      <span class="stat"><b>9 / 9</b>temes verbals fets</span>
+      <span class="stat"><b id="generalCount2">14 / 52</b>punts generals fets</span>
+      <span class="stat"><b>5 / 5</b>blocs de vocabulari (historial)</span>
+    </div>
+  </div>
+</header>
+
+<div id="installBar" hidden style="margin:0 0 16px;padding:12px 16px;border-radius:12px;background:var(--accent-soft);color:var(--accent-soft-ink);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:.9rem">
+<span>Instal·la el quadern al mòbil i usa'l sense connexió.</span>
+<button id="installBtn" style="font:inherit;font-weight:600;padding:8px 16px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);cursor:pointer">Instal·la</button></div>
+<script>
+(function(){var bar=document.getElementById('installBar'),btn=document.getElementById('installBtn'),ev=null;
+if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){return;}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();ev=e;bar.hidden=false;});
+btn.addEventListener('click',function(){if(!ev)return;ev.prompt();ev.userChoice.then(function(){bar.hidden=true;ev=null;});});
+var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+if(ios){bar.hidden=false;bar.querySelector('span').textContent="A l'iPhone: botó Compartir → «Afig a la pantalla d'inici».";btn.style.display='none';}
+})();
+</script>
+<div class="legend">
+  <span class="tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR · 1r ESO</span>
+  <span class="tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I · 2n-3r ESO</span>
+  <span class="tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització · 4t ESO</span>
+  <span class="tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II · Batxillerat</span>
+  <span class="tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA · ampliació (4t ESO)</span>
+  <span class="tag" style="background:var(--verb-tag-bg);color:var(--verb-tag)">Verb del dia (repàs)</span>
+</div>
+<p style="margin:-6px 0 18px;color:var(--ink-soft);font-size:.8rem">Els 5 primers colors de la llegenda són el vocabulari tècnic (historial, fins al 5 de novembre de 2026). El sext color, blau, és el nou "verb del dia" que apareix a la columna Complement des del 6 de novembre de 2026.</p>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Lliçó</th>
+        <th>Tema gramatical</th>
+        <th>Complement</th>
+      </tr>
+    </thead>
+    <tbody id="lessonRows">
+      <tr>
+        <td class="date">23 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-23-veig-laura-no-a-laura.html">Veig Laura, no a Laura</a></td>
+        <td class="topic">Absència de la "a" personal davant de complement directe</td>
+        <td><span class="verb-tag">Participis irregulars i temps compostos</span></td>
+      </tr>
+      <tr>
+        <td class="date">22 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-22-de-fusta-o-de-ferro.html">De fusta o de ferro?</a></td>
+        <td class="topic">De / d' en complements del nom</td>
+        <td><span class="verb-tag">Imperfet d'indicatiu i de subjuntiu</span></td>
+      </tr>
+      <tr>
+        <td class="date">21 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-21-sere-o-seria.html">Seré... o seria?</a></td>
+        <td class="topic">Ser / estar / haver / anar en diversos temps</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">20 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-20-vindre-o-vendre.html">Vindré o vendré?</a></td>
+        <td class="topic">Futur i condicional dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">19 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-19-cap-a-on-fins-quan.html">Cap a on, fins quan?</a></td>
+        <td class="topic">Fins a / cap a / a prop de / al voltant de: locucions prepositives de direcció, límit i proximitat</td>
+        <td><span class="verb-tag">Pretèrit perfet perifràstic</span></td>
+      </tr>
+      <tr>
+        <td class="date">18 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-18-vulga-o-no-vulga.html">Vulga o no vulga</a></td>
+        <td class="topic">Present de subjuntiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">17 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-17-a-peu-o-en-bici.html">A peu o en bici?</a></td>
+        <td class="topic">A / en: preposicions de lloc, temps i mitjà de transport</td>
+        <td><span class="verb-tag">Imperatiu dels irregulars</span></td>
+      </tr>
+      <tr>
+        <td class="date">16 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-16-des-de-o-des-que.html">Des de, o des que?</a></td>
+        <td class="topic">Des de / des que: preposició de punt d'origen davant de nom, pronom i infinitiu, enfront de la conjunció temporal davant de clàusula</td>
+        <td><span class="verb-tag">Present d'indicatiu dels irregulars</span></td>
+      </tr>
+      <tr>
+        <td class="date">15 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-15-per-tu-o-per-a-tu.html">Per tu o per a tu?</a></td>
+        <td class="topic">Per a / per: finalitat, destinatari i termini davant de causa, mitjà i lloc</td>
+        <td><span class="verb-tag">Gerundis irregulars</span></td>
+      </tr>
+      <tr>
+        <td class="date">14 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-14-el-llibre-el-tinc.html">El llibre, el tinc</a></td>
+        <td class="topic">Duplicació de complements: dislocació i repressa pronominal (el llibre, el tinc; a Joan, li ho he dit)</td>
+        <td><span class="verb-tag">Participis irregulars i temps compostos</span></td>
+      </tr>
+      <tr>
+        <td class="date">13 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-13-a-mi-per-a-tu.html">A mi, per a tu</a></td>
+        <td class="topic">Pronoms forts: mi, tu, ell, nosaltres, vosaltres, vostè, vós</td>
+        <td><span class="verb-tag">Imperfet d'indicatiu i de subjuntiu</span></td>
+      </tr>
+      <tr>
+        <td class="date">12 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-12-que-quin-quant.html">Què, quin, quant?</a></td>
+        <td class="topic">Pronoms interrogatius: què, qui, quin/quina, quant/quanta</td>
+        <td><span class="verb-tag">Ser / estar / haver / anar en diversos temps</span></td>
+      </tr>
+      <tr>
+        <td class="date">11 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-11-que-qui-on-el-qual.html">Que, qui, on, el qual</a></td>
+        <td class="topic">Pronoms relatius: que, qui, on, el qual, i preposició davant (la persona amb qui, la casa on)</td>
+        <td><span class="verb-tag">Futur i condicional dels irregulars</span></td>
+      </tr>
+      <tr>
+        <td class="date">10 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-10-fes-m-ho-no-m-ho-faces.html">Fes-m'ho, no m'ho faces</a></td>
+        <td class="topic">Ordre dels pronoms febles abans i després del verb (proclisi/enclisi) i ús del guionet</td>
+        <td><span class="verb-tag">Pretèrit perfet perifràstic</span></td>
+      </tr>
+      <tr>
+        <td class="date">9 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-09-ves-hi-n-hi-ha-ho-se.html">Vés-hi, n'hi ha, ho sé</a></td>
+        <td class="topic">Pronoms hi, en i ho: usos sense equivalent exacte en castellà</td>
+        <td><span class="verb-tag">Present de subjuntiu dels irregulars</span></td>
+      </tr>
+      <tr>
+        <td class="date">8 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-08-se-n-va-li-ho-dic.html">Se'n va, li ho dic</a></td>
+        <td class="topic">Combinacions de pronoms febles: el hi, li ho, se'n, me'l, els en...</td>
+        <td><span class="verb-tag">Imperatiu dels irregulars</span></td>
+      </tr>
+      <tr>
+        <td class="date">7 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-07-em-dic-m-agrada-porta-m.html">Em dic, m'agrada, porta'm</a></td>
+        <td class="topic">Pronoms febles: formes plenes, reforçades i reduïdes (em, me, 'm, m')</td>
+        <td><span class="verb-tag">Present d'indicatiu dels irregulars</span></td>
+      </tr>
+      <tr>
+        <td class="date">6 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-06-ixent-corrent-prenent.html">Ixent, corrent, prenent</a></td>
+        <td class="topic">Gerundis irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">5 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-05-cobert-o-descobert.html">Cobert o descobert?</a></td>
+        <td class="topic">Participis irregulars i temps compostos</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">4 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-04-deia-o-diguera.html">Deia o diguera?</a></td>
+        <td class="topic">Imperfet d'indicatiu i de subjuntiu</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">3 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-03-son-estan-han-van.html">Són, estan, han, van</a></td>
+        <td class="topic">Ser / estar / haver / anar en diversos temps</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">2 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-02-sabre-o-sabria.html">Sabré o sabria?</a></td>
+        <td class="topic">Futur i condicional dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">1 nov 2026</td>
+        <td class="lesson"><a href="lessons/2026-11-01-vam-connectar-vau-crear.html">Vam connectar, vau crear</a></td>
+        <td class="topic">Pretèrit perfet perifràstic</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">31 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-31-que-estiga-que-vaja.html">Que estiga, que vaja</a></td>
+        <td class="topic">Present de subjuntiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">30 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-30-posa-guarda-ix.html">Posa, guarda, ix!</a></td>
+        <td class="topic">Imperatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">29 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-29-trac-caic-i-ric.html">Trac, caic i ric</a></td>
+        <td class="topic">Present d'indicatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">28 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-28-rient-i-escrivint.html">Rient i escrivint</a></td>
+        <td class="topic">Gerundis irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">27 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-27-resolt-apres-impres.html">Resolt, après, imprés</a></td>
+        <td class="topic">Participis irregulars i temps compostos</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">26 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-26-feia-o-fera.html">Feia o fera?</a></td>
+        <td class="topic">Imperfet d'indicatiu i de subjuntiu</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">25 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-25-era-estava-havia-anava.html">Era, estava, havia, anava</a></td>
+        <td class="topic">Ser / estar / haver / anar en diversos temps</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">24 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-24-voldre-haure-anire.html">Voldré, hauré, aniré</a></td>
+        <td class="topic">Futur i condicional dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">23 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-23-vam-clicar-vau-guardar.html">Vam clicar, vau guardar</a></td>
+        <td class="topic">Pretèrit perfet perifràstic</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">22 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-22-que-faca-que-tinga.html">Que faça, que tinga</a></td>
+        <td class="topic">Present de subjuntiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">21 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-21-pren-obri-escriu.html">Pren, obri, escriu!</a></td>
+        <td class="topic">Imperatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">20 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-20-conec-veig-caic.html">Conec, veig, caic</a></td>
+        <td class="topic">Present d'indicatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">19 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-19-duent-seient-bevent.html">Duent, seient, bevent</a></td>
+        <td class="topic">Gerundis irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">18 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-18-haja-fet-hagues-dit.html">Haja fet, hagués dit</a></td>
+        <td class="topic">Participis irregulars i temps compostos</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">17 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-17-sabia-o-sabera.html">Sabia o sabera?</a></td>
+        <td class="topic">Imperfet d'indicatiu i de subjuntiu</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">16 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-16-siga-estiga-haja-vaja.html">Siga, estiga, haja, vaja</a></td>
+        <td class="topic">Ser / estar / haver / anar en diversos temps</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">15 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-15-caldra-o-caldria.html">Caldrà o caldria?</a></td>
+        <td class="topic">Futur i condicional dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">14 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-14-vaig-entrenar-vas-provar.html">Vaig entrenar, vas provar</a></td>
+        <td class="topic">Pretèrit perfet perifràstic</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">13 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-13-que-vinga-que-diga.html">Que vinga, que diga</a></td>
+        <td class="topic">Present de subjuntiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">12 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-12-tingues-vulgues-sigues.html">Tingues, vulgues, sigues!</a></td>
+        <td class="topic">Imperatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">11 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-11-vinc-tinc-visc.html">Vinc, tinc, visc</a></td>
+        <td class="topic">Present d'indicatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">10 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-10-veient-creient-traient.html">Veient, creient, traient</a></td>
+        <td class="topic">Gerundis irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">9 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-09-havia-fet-haure-dit.html">Havia fet, hauré dit</a></td>
+        <td class="topic">Participis irregulars i temps compostos</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">8 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-08-volia-o-volguera.html">Volia o volguera?</a></td>
+        <td class="topic">Imperfet d'indicatiu i de subjuntiu</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">7 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-07-som-estem-hem-anem.html">Som, estem, hem, anem</a></td>
+        <td class="topic">Ser / estar / haver / anar en diversos temps</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">6 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-06-vindre-sabre-podre.html">Vindré, sabré, podré</a></td>
+        <td class="topic">Futur i condicional dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">5 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-05-vas-preguntar-vaig-respondre.html">Vas preguntar, vaig respondre</a></td>
+        <td class="topic">Pretèrit perfet perifràstic</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">4 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-04-que-isca-que-sapia.html">Que isca, que sàpia</a></td>
+        <td class="topic">Present de subjuntiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">3 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-03-ix-estigues-sapies.html">Ix, estigues, sàpies!</a></td>
+        <td class="topic">Imperatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">2 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-02-vull-puc-se.html">Vull, puc, sé</a></td>
+        <td class="topic">Present d'indicatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">1 oct 2026</td>
+        <td class="lesson"><a href="lessons/2026-10-01-tenint-venint-sent.html">Tenint, venint, sent</a></td>
+        <td class="topic">Gerundis irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">30 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-30-escrit-obert-resolt.html">Escrit, obert, resolt</a></td>
+        <td class="topic">Participis irregulars i temps compostos</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">29 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-29-si-poguera-si-volguera.html">Si poguera, si volguera</a></td>
+        <td class="topic">Imperfet d'indicatiu i de subjuntiu</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">28 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-28-soc-estic-he-vaig.html">Sóc, estic, he, vaig</a></td>
+        <td class="topic">Ser / estar / haver / anar en diversos temps</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">27 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-27-tindre-no-tindria.html">Tindré, no tindria</a></td>
+        <td class="topic">Futur i condicional dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">26 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-26-vam-fer-vau-dir-van-venir.html">Vam fer, vau dir, van venir</a></td>
+        <td class="topic">Pretèrit perfet perifràstic</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">25 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-25-que-puga-que-vulga.html">Que puga, que vulga</a></td>
+        <td class="topic">Present de subjuntiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">24 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-24-ves-vine-sapies.html">Vés, vine, sàpies!</a></td>
+        <td class="topic">Imperatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">23 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-23-dic-faig-vull.html">Dic, faig, vull</a></td>
+        <td class="topic">Present d'indicatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">22 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-22-fent-dient-vivint.html">Fent, dient, vivint</a></td>
+        <td class="topic">Gerundis irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">21 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-21-he-fet-he-dit-he-vist.html">He fet, he dit, he vist</a></td>
+        <td class="topic">Participis irregulars i temps compostos</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">20 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-20-cantava-o-cantara.html">Cantava o cantara?</a></td>
+        <td class="topic">Imperfet d'indicatiu i de subjuntiu</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">19 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-19-ets-estas-vas-has.html">Ets, estàs, vas, has</a></td>
+        <td class="topic">Ser / estar / haver / anar en diversos temps</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+      <tr>
+        <td class="date">18 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-18-fare-o-faria.html">Faré... o faria?</a></td>
+        <td class="topic">Futur i condicional dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag1-bg);color:var(--tag1)">RDR</span></td>
+      </tr>
+      <tr>
+        <td class="date">17 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-17-vaig-fer-vas-dir.html">Vaig fer, vas dir…</a></td>
+        <td class="topic">Pretèrit perfet perifràstic</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">17 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-17-subjuntiu-irregulars-17-set.html">Subjuntiu irregulars 17 set</a></td>
+        <td class="topic">Present de subjuntiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag3-bg);color:var(--tag3)">Digitalització</span></td>
+      </tr>
+      <tr>
+        <td class="date">16 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-16-vine-digues-fes.html">Vine, digues, fes!</a></td>
+        <td class="topic">Imperatiu dels verbs irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag2-bg);color:var(--tag2)">PIAR I</span></td>
+      </tr>
+      <tr>
+        <td class="date">16 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-16-vaig-programar-en-valencia.html">Vaig programar en valencià</a></td>
+        <td class="topic">Pretèrit perfet perifràstic</td>
+        <td><span class="vocab-tag" style="background:var(--tag4-bg);color:var(--tag4)">PRSI I i II</span></td>
+      </tr>
+      <tr>
+        <td class="date">16 set 2026</td>
+        <td class="lesson"><a href="lessons/2026-09-16-isc-ixo-o-ixe.html">Isc, ixo o ixe?</a></td>
+        <td class="topic">Present d'indicatiu dels irregulars</td>
+        <td><span class="vocab-tag" style="background:var(--tag5-bg);color:var(--tag5)">Robòtica i IA (ampliació)</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="progress-section" id="progressSection">
+  <h2>Progrés del temari</h2>
+  <p class="sub">Quins temes i blocs ja s'han treballat en alguna lliçó, i quins encara estan pendents de rotació. Des del 6 de novembre de 2026, el punt general és l'eix principal de cada lliçó i el tema verbal és un sol exercici breu de repàs; el vocabulari tècnic queda com a historial congelat.</p>
+  <div class="progress-grid">
+
+    <div class="progress-card">
+      <h3>Temes verbals <span style="font-weight:400;color:var(--ink-soft);font-size:.78rem">(repàs breu diari)</span></h3>
+      <span class="count" id="grammarCount">9 / 9 fets</span>
+      <div class="progress-list" id="grammarList">
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Present d'indicatiu dels irregulars</span><a class="mini-link" href="lessons/2026-11-16-des-de-o-des-que.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Pretèrit perfet perifràstic</span><a class="mini-link" href="lessons/2026-11-19-cap-a-on-fins-quan.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Present de subjuntiu dels irregulars</span><a class="mini-link" href="lessons/2026-11-18-vulga-o-no-vulga.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Imperatiu dels irregulars</span><a class="mini-link" href="lessons/2026-11-17-a-peu-o-en-bici.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Futur i condicional dels irregulars</span><a class="mini-link" href="lessons/2026-11-20-vindre-o-vendre.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Ser / estar / haver / anar en diversos temps</span><a class="mini-link" href="lessons/2026-11-21-sere-o-seria.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Imperfet d'indicatiu i de subjuntiu</span><a class="mini-link" href="lessons/2026-11-22-de-fusta-o-de-ferro.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Participis irregulars i temps compostos</span><a class="mini-link" href="lessons/2026-11-23-veig-laura-no-a-laura.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Gerundis irregulars</span><a class="mini-link" href="lessons/2026-11-15-per-tu-o-per-a-tu.html">veure lliçó →</a></div>
+      </div>
+    </div>
+
+    <div class="progress-card">
+      <h3>Blocs de vocabulari</h3>
+      <p class="note">Activitat descontinuada des del 6 de novembre de 2026 — historial congelat, ja no es genera cada dia.</p>
+      <span class="count" id="vocabCount">5 / 5 fets</span>
+      <div class="progress-list" id="vocabList">
+        <div class="progress-item done"><span class="status">✅</span><span class="label">RDR · Relacions Digitals Responsables (1r ESO)</span><a class="mini-link" href="lessons/2026-11-18-vulga-o-no-vulga.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">PIAR I · Scratch, Microbit i IA (2n-3r ESO)</span><a class="mini-link" href="lessons/2026-11-06-ixent-corrent-prenent.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Digitalització · maquinari i xarxes (4t ESO)</span><a class="mini-link" href="lessons/2026-11-05-cobert-o-descobert.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">PRSI I i II · programació i xarxes (Batxillerat)</span><a class="mini-link" href="lessons/2026-11-21-sere-o-seria.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Robòtica i IA · ampliació (4t ESO)</span><a class="mini-link" href="lessons/2026-11-20-vindre-o-vendre.html">veure lliçó →</a></div>
+      </div>
+    </div>
+
+    <div class="progress-card wide">
+      <h3>Temes generals <span style="font-weight:400;color:var(--ink-soft);font-size:.78rem">(eix principal des del 6 de novembre de 2026)</span></h3>
+      <span class="count" id="generalCount">14 / 52 fets</span>
+      <div class="progress-list" id="generalList">
+        <div class="progress-subhead">Pronoms febles i la seua col·locació</div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Pronoms febles: formes plenes, reforçades i reduïdes (em, me, 'm, m')</span><a class="mini-link" href="lessons/2026-11-07-em-dic-m-agrada-porta-m.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Combinacions de pronoms febles: el hi, li ho, se'n, me'l, els en...</span><a class="mini-link" href="lessons/2026-11-08-se-n-va-li-ho-dic.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Pronoms hi, en i ho: usos sense equivalent exacte en castellà</span><a class="mini-link" href="lessons/2026-11-09-ves-hi-n-hi-ha-ho-se.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Ordre dels pronoms febles abans i després del verb (proclisi/enclisi) i ús del guionet</span><a class="mini-link" href="lessons/2026-11-10-fes-m-ho-no-m-ho-faces.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Pronoms relatius: que, qui, on, el qual, i preposició davant (la persona amb qui, la casa on)</span><a class="mini-link" href="lessons/2026-11-11-que-qui-on-el-qual.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Pronoms interrogatius: què, qui, quin/quina, quant/quanta</span><a class="mini-link" href="lessons/2026-11-12-que-quin-quant.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Pronoms forts: mi, tu, ell, nosaltres, vosaltres, vostè, vós</span><a class="mini-link" href="lessons/2026-11-13-a-mi-per-a-tu.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Duplicació de complements: dislocació i repressa pronominal (el llibre, el tinc; a Joan, li ho he dit)</span><a class="mini-link" href="lessons/2026-11-14-el-llibre-el-tinc.html">veure lliçó →</a></div>
+
+        <div class="progress-subhead">Preposicions i conjuncions</div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Per a / per</span><a class="mini-link" href="lessons/2026-11-15-per-tu-o-per-a-tu.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Des de / des que</span><a class="mini-link" href="lessons/2026-11-16-des-de-o-des-que.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">A / en (lloc, temps, mitjà)</span><a class="mini-link" href="lessons/2026-11-17-a-peu-o-en-bici.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Fins a, cap a, a prop de, al voltant de</span><a class="mini-link" href="lessons/2026-11-19-cap-a-on-fins-quan.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">De / d' en complements del nom</span><a class="mini-link" href="lessons/2026-11-22-de-fusta-o-de-ferro.html">veure lliçó →</a></div>
+        <div class="progress-item done"><span class="status">✅</span><span class="label">Absència de la "a" personal davant de complement directe</span><a class="mini-link" href="lessons/2026-11-23-veig-laura-no-a-laura.html">veure lliçó →</a></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Perquè / per què / per que</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Sinó / si no</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">També / tan bé</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Però / sinó / sinó que</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Mentre / mentre que</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Encara que, tot i que, malgrat que, a pesar que</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Ja que, com que, puix que</span></div>
+
+        <div class="progress-subhead">Articles i determinants</div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">El / la davant de vocal: apòstrof i excepcions (la hora, la unió, l'home, la història)</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Contraccions: al, del, pel, cal, als, dels, pels</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Article personal en / na davant de noms propis</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Article davant de possessius (el meu, la meua)</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Possessius: meua/mia, teua/tua, seua/sua</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Demostratius de tres graus: este/aquest, eixe/aqueix, aquell</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Quantitatius i indefinits: tot/tots, algun, cap, res, gens, ningú, quelcom, gaire</span></div>
+
+        <div class="progress-subhead">Nombre i gènere</div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Substantius amb gènere diferent del castellà: el mar, la sal, el costum, la llet, la pell, el front, la front</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Plurals en -s, -os, -ns, -ssos, -ços (boig/bojos, maig/maigs, passeig/passejos)</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Femenins irregulars i adjectius invariables</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Numerals: 11-19, vint-i-u, trenta-dos, cent, mil, ordinals</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Comparatius: més... que / més... de, tan... com, millor/pitjor, tant... com</span></div>
+
+        <div class="progress-subhead">Adverbis</div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Ací / ahí / allà</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Molt / massa / tan / tant</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Bé / bon / ben i mal / mala</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Gens, gaire, prou, bastant</span></div>
+
+        <div class="progress-subhead">Ortografia i fonètica</div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Accent obert / tancat (é/è, ó/ò) i regles d'accentuació</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Accents diacrítics (més/mes, bé/be, dóna/dona, sé/se, mà/ma)</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Dígrafs: ny, ll, tx, ig final, tg, tj, ss</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">L geminada (l·l) i punt volat</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Sonorització i ensordiment final (llibre/llibres, cap, ràpid)</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">S sorda/sonora entre vocals (casa/passa, cosa/gossa)</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">C / ç / z / s</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">B / v: distinció escrita sense diferència oral en valencià</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">H muda i ús de h inicial</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">G / j, i g / gu, q / qu / c</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Apòstrof i guionet (l'amic, d'ells, vés-hi, dóna-m'ho)</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Majúscules i minúscules: dies, mesos, gentilicis, idiomes</span></div>
+
+        <div class="progress-subhead">Lèxic</div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Falsos amics: rellotge, setmana, cadira, carrer, poble, bolígraf, xic/xica</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Formes valencianes admeses davant d'estàndard: açò/això, aquest/este, huit/vuit, dèsset/disset</span></div>
+        <div class="progress-item pending"><span class="status">⏳</span><span class="label">Interferències del castellà: calcs lèxics i sintàctics</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="note">Aquest índex s'actualitza automàticament cada dia amb la nova lliçó · IES Jorge Juan, Alacant</footer>
+
+</body></html>

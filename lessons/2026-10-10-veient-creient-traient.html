@@ -1,0 +1,720 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Veient, creient, traient</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout: single scrolling worksheet column (max 760px), header card, theory card,
+     a sequence of activity cards each with its own check button + feedback,
+     a sticky-free running score strip under the header, closing <details> for solutions. */
+  :root{
+    --bg:#eef2f0;
+    --surface:#ffffff;
+    --surface-2:#dfe9e4;
+    --ink:#132620;
+    --ink-soft:#52685f;
+    --accent:#0f766a;
+    --accent-ink:#ffffff;
+    --accent-soft:#d7ece7;
+    --accent-soft-ink:#0a4f46;
+    --line:#c7d9d1;
+    --good:#2f8f5b;
+    --good-bg:#e1f3e7;
+    --bad:#b2423b;
+    --bad-bg:#fbe6e3;
+    --shadow: 0 1px 2px rgba(19,38,32,.06), 0 10px 26px -14px rgba(19,38,32,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1714;
+      --surface:#15241f;
+      --surface-2:#1c2f28;
+      --ink:#e7f1ec;
+      --ink-soft:#9bb3a9;
+      --accent:#5fd9c6;
+      --accent-ink:#07241d;
+      --accent-soft:#1d3a33;
+      --accent-soft-ink:#bdf0e2;
+      --line:#2a443c;
+      --good:#7fdc9e;
+      --good-bg:#17301f;
+      --bad:#f0938a;
+      --bad-bg:#3a1e1c;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1714;
+    --surface:#15241f;
+    --surface-2:#1c2f28;
+    --ink:#e7f1ec;
+    --ink-soft:#9bb3a9;
+    --accent:#5fd9c6;
+    --accent-ink:#07241d;
+    --accent-soft:#1d3a33;
+    --accent-soft-ink:#bdf0e2;
+    --line:#2a443c;
+    --good:#7fdc9e;
+    --good-bg:#17301f;
+    --bad:#f0938a;
+    --bad-bg:#3a1e1c;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-inline:20px;
+    padding-block:22px 64px;
+    max-width:760px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Source Serif 4', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+  p{ margin:0 0 .9em; }
+  p:last-child{ margin-bottom:0; }
+
+  a.backlink{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  a.backlink:hover{ filter:brightness(1.05); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:16px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, transparent 2px 24px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.65rem, 5vw, 2.3rem); font-weight:600; }
+  header.top p{ margin:10px 0 0; max-width:58ch; opacity:.94; font-size:.95rem; }
+  .badge-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .badge{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    white-space:nowrap;
+  }
+
+  .score-strip{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.84rem;
+    flex-wrap:wrap;
+  }
+  .score-strip b{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    font-weight:600;
+    color:var(--accent);
+  }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{
+    font-size:1.2rem;
+    margin-bottom:10px;
+  }
+  .step-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:3px 9px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:14px 0; }
+  table{ border-collapse:collapse; width:100%; min-width:460px; font-size:.9rem; }
+  thead th{
+    background:var(--surface-2);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.inf{ font-weight:600; white-space:nowrap; }
+  td.ger{ color:var(--accent); font-weight:600; white-space:nowrap; font-family:'IBM Plex Mono', monospace; }
+
+  .item{
+    padding-block:14px;
+    border-top:1px solid var(--line);
+  }
+  .item:first-of-type{ border-top:none; padding-top:4px; }
+  .item .prompt{ margin-bottom:8px; }
+  .item .prompt .infin{ color:var(--ink-soft); font-style:italic; }
+
+  input[type="text"]{
+    font:inherit;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.92rem;
+    padding:6px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface-2);
+    color:var(--ink);
+    width:150px;
+    max-width:60vw;
+  }
+  input[type="text"]:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  input.cell{ width:120px; }
+
+  select{
+    font:inherit;
+    font-size:.9rem;
+    padding:6px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface-2);
+    color:var(--ink);
+    max-width:100%;
+  }
+  select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .opts{ display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+  .opts label{ display:flex; align-items:center; gap:8px; cursor:pointer; font-size:.92rem; }
+  .opts input[type="radio"]{ accent-color:var(--accent); width:16px; height:16px; }
+
+  .mark{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem;
+    margin-left:10px;
+    font-weight:600;
+  }
+  .mark.ok{ color:var(--good); }
+  .mark.ko{ color:var(--bad); }
+  .feedback-row{ display:flex; flex-wrap:wrap; align-items:center; gap:4px; }
+
+  .vocab-row{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:10px;
+    padding-block:10px;
+    border-top:1px solid var(--line);
+  }
+  .vocab-row:first-of-type{ border-top:none; }
+  .vocab-row .term{ font-weight:600; min-width:200px; flex:1; }
+
+  button.check{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.84rem;
+    font-weight:600;
+    letter-spacing:.02em;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  button.check:hover{ filter:brightness(1.07); }
+  button.check:active{ transform:translateY(1px); }
+
+  .activity-score{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:8px;
+  }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px;
+    box-shadow:var(--shadow);
+    margin-top:8px;
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Source Serif 4', serif;
+    font-size:1.1rem;
+    font-weight:600;
+    list-style:none;
+  }
+  details.solutions summary::-webkit-details-marker{ display:none; }
+  details.solutions summary::before{
+    content:"▸ ";
+    color:var(--accent);
+  }
+  details.solutions[open] summary::before{ content:"▾ "; }
+  .sol-block{ margin-top:16px; }
+  .sol-block h3{ font-size:.98rem; margin-bottom:6px; }
+  .sol-list{ display:flex; flex-direction:column; gap:7px; font-size:.9rem; }
+  .sol-list .sol-item b{ color:var(--accent); font-family:'IBM Plex Mono', monospace; }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:26px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:20px 18px 20px; }
+    section.card{ padding:16px 16px 18px; }
+    input[type="text"]{ width:130px; }
+  }
+</style>
+
+<a class="backlink" href="../index.html">&larr; Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">Tema gramatical d'avui · Gerundis irregulars</div>
+    <h1>Veient, creient, traient</h1>
+    <p>Pràctica oral diària de valencià per a l'àmbit educatiu-informàtic: hui repassem els gerundis que trenquen el patró regular — fent, dient, sent, veient, creient, traient, rient, duent, jaent, ixint — amb exemples del dia a dia al departament d'informàtica.</p>
+    <div class="badge-row">
+      <span class="badge">📚 Gerundis irregulars</span>
+      <span class="badge">💻 PRSI I i II · programació i xarxes</span>
+      <span class="badge">🎓 IES Jorge Juan, Alacant</span>
+    </div>
+  </div>
+</header>
+
+<div class="score-strip">
+  <span>Puntuació acumulada de tota la lliçó</span>
+  <span><b id="totalScore">0</b> / <span id="totalMax">30</span> encerts</span>
+</div>
+
+<section class="card">
+  <div class="step-tag">Teoria</div>
+  <h2>El gerundi i els seus irregulars</h2>
+  <p>El gerundi expressa una acció que es desenvolupa al mateix temps que una altra ("Fent els deures, vas escoltant música"; "Ho vas dient mentre programes"). De manera regular, es forma afegint una terminació a l'arrel segons la conjugació del verb: els verbs en <b>-ar</b> fan <b class="mono">-ant</b> (programar &rarr; programant), els verbs en <b>-er/-re</b> fan <b class="mono">-ent</b> (perdre &rarr; perdent, córrer &rarr; corrent) i els verbs en <b>-ir</b> fan <b class="mono">-int</b> (imprimir &rarr; imprimint, connectir&hellip; connectar-se &rarr; connectant-se).</p>
+  <p>Alguns verbs trenquen este patró perquè la seua arrel acaba en vocal (i agafen <b class="mono">-ent</b> encara que no siguen de la segona conjugació) o perquè canvien l'arrel. Aquests són els gerundis irregulars que repassem hui:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Infinitiu</th><th>Gerundi irregular</th><th>Exemple a classe</th></tr></thead>
+      <tbody>
+        <tr><td class="inf">fer</td><td class="ger">fent</td><td>Fent una consulta a la base de dades, l'alumne va trobar l'error.</td></tr>
+        <tr><td class="inf">dir</td><td class="ger">dient</td><td>El professor, dient-ho en veu alta, va repetir la contrasenya del servidor.</td></tr>
+        <tr><td class="inf">ser</td><td class="ger">sent</td><td>Sent les deu, encara no havia arribat la còpia de seguretat.</td></tr>
+        <tr><td class="inf">veure</td><td class="ger">veient</td><td>Veient que el sistema operatiu no responia, va reiniciar la màquina virtual.</td></tr>
+        <tr><td class="inf">creure</td><td class="ger">creient</td><td>Creient que el certificat digital era vàlid, va acceptar la connexió.</td></tr>
+        <tr><td class="inf">traure</td><td class="ger">traient</td><td>Traient les dades de la taula, va comprovar el protocol de comunicació.</td></tr>
+        <tr><td class="inf">riure</td><td class="ger">rient</td><td>Rient, l'alumnat va acabar entenent l'error del codi.</td></tr>
+        <tr><td class="inf">dur</td><td class="ger">duent</td><td>Duent l'ordinador portàtil al laboratori, es va connectar a la xarxa.</td></tr>
+        <tr><td class="inf">jaure</td><td class="ger">jaent</td><td>El cable jaent damunt la taula molestava per a treballar.</td></tr>
+        <tr><td class="inf">eixir</td><td class="ger">ixint</td><td>Ixint de classe, van comentar el dubte sobre l'enrutador.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Compte: no tots els verbs que "sonen rars" són irregulars. <b>Poder &rarr; podent</b>, <b>voler &rarr; volent</b>, <b>tenir &rarr; tenint</b> i <b>venir &rarr; venint</b> ja segueixen el patró de la seua conjugació &mdash; els trobaràs a l'activitat 3 per a distingir-los dels irregulars de veritat.</p>
+</section>
+
+<section class="card" id="act1">
+  <div class="step-tag">Activitat 1</div>
+  <h2>Omple els buits amb el gerundi correcte</h2>
+  <p>Escriu el gerundi de l'infinitiu entre parèntesis.</p>
+
+  <div class="item">
+    <div class="prompt">1. <input type="text" id="a1-1" data-answer="fent"> exercicis de SQL amb XAMPP, l'alumnat practica les consultes a la base de dades relacional. <span class="infin">(fer)</span></div>
+  </div>
+  <div class="item">
+    <div class="prompt">2. Els alumnes van entrar <input type="text" id="a1-2" data-answer="dient"> que no els arribava l'enllaç de la màquina virtual amb VirtualBox. <span class="infin">(dir)</span></div>
+  </div>
+  <div class="item">
+    <div class="prompt">3. <input type="text" id="a1-3" data-answer="sent"> les nou del matí, el professor ja havia configurat el servidor de correu del departament. <span class="infin">(ser)</span></div>
+  </div>
+  <div class="item">
+    <div class="prompt">4. <input type="text" id="a1-4" data-answer="traient"> les dades de la taula, l'alumna va comprovar el xifratge de la connexió. <span class="infin">(traure)</span></div>
+  </div>
+  <div class="item">
+    <div class="prompt">5. El professor actualitza el lloc de WordPress del departament, <input type="text" id="a1-5" data-answer="rient"> dels comentaris dels antics alumnes. <span class="infin">(riure)</span></div>
+  </div>
+  <div class="item">
+    <div class="prompt">6. <input type="text" id="a1-6" data-answer="duent"> l'ordinador portàtil a classe, l'alumne es va connectar a la xarxa del centre. <span class="infin">(dur)</span></div>
+  </div>
+
+  <button class="check" onclick="checkFill('act1')">Comprova les respostes</button>
+  <div class="activity-score" id="act1-score"></div>
+</section>
+
+<section class="card" id="act2">
+  <div class="step-tag">Activitat 2</div>
+  <h2>Tria l'opció correcta</h2>
+  <p>Selecciona el gerundi ben escrit per a cada verb.</p>
+
+  <div class="item">
+    <div class="prompt">1. riure &rarr;</div>
+    <div class="opts">
+      <label><input type="radio" name="a2-1" value="a"> riuent</label>
+      <label><input type="radio" name="a2-1" value="b"> rient</label>
+      <label><input type="radio" name="a2-1" value="c"> riint</label>
+    </div>
+  </div>
+  <div class="item">
+    <div class="prompt">2. dur &rarr;</div>
+    <div class="opts">
+      <label><input type="radio" name="a2-2" value="a"> durent</label>
+      <label><input type="radio" name="a2-2" value="b"> duent</label>
+      <label><input type="radio" name="a2-2" value="c"> duint</label>
+    </div>
+  </div>
+  <div class="item">
+    <div class="prompt">3. jaure &rarr;</div>
+    <div class="opts">
+      <label><input type="radio" name="a2-3" value="a"> jauent</label>
+      <label><input type="radio" name="a2-3" value="b"> jaent</label>
+      <label><input type="radio" name="a2-3" value="c"> jaint</label>
+    </div>
+  </div>
+  <div class="item">
+    <div class="prompt">4. ser &rarr;</div>
+    <div class="opts">
+      <label><input type="radio" name="a2-4" value="a"> seent</label>
+      <label><input type="radio" name="a2-4" value="b"> sent</label>
+      <label><input type="radio" name="a2-4" value="c"> sient</label>
+    </div>
+  </div>
+  <div class="item">
+    <div class="prompt">5. eixir &rarr;</div>
+    <div class="opts">
+      <label><input type="radio" name="a2-5" value="a"> eixint</label>
+      <label><input type="radio" name="a2-5" value="b"> ixint</label>
+      <label><input type="radio" name="a2-5" value="c"> exint</label>
+    </div>
+  </div>
+
+  <button class="check" onclick="checkRadio('act2', {'a2-1':'b','a2-2':'b','a2-3':'b','a2-4':'b','a2-5':'b'})">Comprova les respostes</button>
+  <div class="activity-score" id="act2-score"></div>
+</section>
+
+<section class="card" id="act3">
+  <div class="step-tag">Activitat 3</div>
+  <h2>Completa la taula de gerundis</h2>
+  <p>Alerta: no tots són irregulars &mdash; alguns segueixen el patró normal de la seua conjugació.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Infinitiu</th><th>Gerundi</th></tr></thead>
+      <tbody>
+        <tr><td class="inf">fer</td><td><input type="text" class="cell" id="a3-1" data-answer="fent"></td></tr>
+        <tr><td class="inf">dir</td><td><input type="text" class="cell" id="a3-2" data-answer="dient"></td></tr>
+        <tr><td class="inf">veure</td><td><input type="text" class="cell" id="a3-3" data-answer="veient"></td></tr>
+        <tr><td class="inf">creure</td><td><input type="text" class="cell" id="a3-4" data-answer="creient"></td></tr>
+        <tr><td class="inf">traure</td><td><input type="text" class="cell" id="a3-5" data-answer="traient"></td></tr>
+        <tr><td class="inf">voler</td><td><input type="text" class="cell" id="a3-6" data-answer="volent"></td></tr>
+        <tr><td class="inf">tenir</td><td><input type="text" class="cell" id="a3-7" data-answer="tenint"></td></tr>
+        <tr><td class="inf">venir</td><td><input type="text" class="cell" id="a3-8" data-answer="venint"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <button class="check" onclick="checkFill('act3')">Comprova la taula</button>
+  <div class="activity-score" id="act3-score"></div>
+</section>
+
+<section class="card" id="act4">
+  <div class="step-tag">Activitat 4</div>
+  <h2>Mini-diàlegs del departament d'informàtica</h2>
+  <p>Omple cada gerundi per a practicar l'expressió oral en situacions reals de classe.</p>
+
+  <div class="item">
+    <div class="prompt">1. Al claustre, abans de la pràctica: &mdash; <input type="text" id="a4-1" data-answer="fent"> les proves amb Python abans de publicar-les, evitarem errors en la sessió de demà. <span class="infin">(fer)</span></div>
+  </div>
+  <div class="item">
+    <div class="prompt">2. Donant instruccions amb MakeCode: &mdash; Aneu <input type="text" id="a4-2" data-answer="dient"> en veu alta cada pas mentre programeu el bloc de la Microbit, així no es perd ningú. <span class="infin">(dir)</span></div>
+  </div>
+  <div class="item">
+    <div class="prompt">3. Al departament, revisant la xarxa: &mdash; <input type="text" id="a4-3" data-answer="veient"> que el servidor de correu no responia, l'alumne de Batxillerat va avisar el tècnic. <span class="infin">(veure)</span></div>
+  </div>
+  <div class="item">
+    <div class="prompt">4. Parlant amb un company: &mdash; <input type="text" id="a4-4" data-answer="creient"> que la còpia de seguretat del gestor de bases de dades ja estava feta, no la vam comprovar fins l'endemà. <span class="infin">(creure)</span></div>
+  </div>
+
+  <button class="check" onclick="checkFill('act4')">Comprova els diàlegs</button>
+  <div class="activity-score" id="act4-score"></div>
+</section>
+
+<section class="card" id="act5">
+  <div class="step-tag">Activitat 5 · Vocabulari</div>
+  <h2>PRSI I i II &middot; programació i xarxes</h2>
+  <p>Relaciona cada terme valencià amb la seua traducció al castellà.</p>
+
+  <div class="vocab-row"><span class="term">llenguatge de programació</span>
+    <select id="a5-1" data-answer="lenguaje de programación">
+      <option value="">— tria —</option>
+      <option value="lenguaje de programación">lenguaje de programación</option>
+      <option value="lenguaje de marcas">lenguaje de marcas</option>
+      <option value="lenguaje natural">lenguaje natural</option>
+    </select>
+  </div>
+  <div class="vocab-row"><span class="term">base de dades relacional</span>
+    <select id="a5-2" data-answer="base de datos relacional">
+      <option value="">— tria —</option>
+      <option value="base de datos relacional">base de datos relacional</option>
+      <option value="hoja de cálculo">hoja de cálculo</option>
+      <option value="base de datos documental">base de datos documental</option>
+    </select>
+  </div>
+  <div class="vocab-row"><span class="term">encaminador</span>
+    <select id="a5-3" data-answer="enrutador / router">
+      <option value="">— tria —</option>
+      <option value="enrutador / router">enrutador / router</option>
+      <option value="conmutador / switch">conmutador / switch</option>
+      <option value="módem">módem</option>
+    </select>
+  </div>
+  <div class="vocab-row"><span class="term">xifratge</span>
+    <select id="a5-4" data-answer="cifrado">
+      <option value="">— tria —</option>
+      <option value="cifrado">cifrado</option>
+      <option value="compresión">compresión</option>
+      <option value="copia de seguridad">copia de seguridad</option>
+    </select>
+  </div>
+  <div class="vocab-row"><span class="term">certificat digital</span>
+    <select id="a5-5" data-answer="certificado digital">
+      <option value="">— tria —</option>
+      <option value="certificado digital">certificado digital</option>
+      <option value="firma manuscrita">firma manuscrita</option>
+      <option value="contraseña">contraseña</option>
+    </select>
+  </div>
+  <div class="vocab-row"><span class="term">còpia de seguretat</span>
+    <select id="a5-6" data-answer="copia de seguridad">
+      <option value="">— tria —</option>
+      <option value="copia de seguridad">copia de seguridad</option>
+      <option value="copia pirata">copia pirata</option>
+      <option value="caché del navegador">caché del navegador</option>
+    </select>
+  </div>
+  <div class="vocab-row"><span class="term">servidor de correu</span>
+    <select id="a5-7" data-answer="servidor de correo">
+      <option value="">— tria —</option>
+      <option value="servidor de correo">servidor de correo</option>
+      <option value="servidor web">servidor web</option>
+      <option value="servidor de archivos">servidor de archivos</option>
+    </select>
+  </div>
+
+  <button class="check" onclick="checkSelect('act5')">Comprova el vocabulari</button>
+  <div class="activity-score" id="act5-score"></div>
+</section>
+
+<details class="solutions">
+  <summary>Solucions i explicacions completes</summary>
+
+  <div class="sol-block">
+    <h3>Activitat 1 &middot; buits</h3>
+    <div class="sol-list">
+      <div class="sol-item">1. <b>Fent</b> &mdash; de "fer"; irregular perquè no segueix cap de les terminacions regulars (-ant/-ent/-int).</div>
+      <div class="sol-item">2. <b>dient</b> &mdash; de "dir"; arrel "di-" + "-ent", encara que "dir" siga de la 3a conjugació.</div>
+      <div class="sol-item">3. <b>Sent</b> &mdash; de "ser"; forma curta i irregular, no "seent".</div>
+      <div class="sol-item">4. <b>Traient</b> &mdash; de "traure"; l'arrel acaba en vocal i pren "-ent" (trae-ent &rarr; traient).</div>
+      <div class="sol-item">5. <b>rient</b> &mdash; de "riure"; arrel "ri-" + "-ent".</div>
+      <div class="sol-item">6. <b>Duent</b> &mdash; de "dur"; no és "durent" ni "duint".</div>
+    </div>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 2 &middot; tria l'opció</h3>
+    <div class="sol-list">
+      <div class="sol-item">1. <b>rient</b> (no "riuent" ni "riint").</div>
+      <div class="sol-item">2. <b>duent</b> (no "durent" ni "duint").</div>
+      <div class="sol-item">3. <b>jaent</b> (no "jauent" ni "jaint").</div>
+      <div class="sol-item">4. <b>sent</b> (no "seent" ni "sient").</div>
+      <div class="sol-item">5. <b>ixint</b> &mdash; "eixir" canvia l'arrel a "ix-" en les formes irregulars (isc, ix, ixen, ixint).</div>
+    </div>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 3 &middot; taula</h3>
+    <div class="sol-list">
+      <div class="sol-item">fer &rarr; <b>fent</b> · dir &rarr; <b>dient</b> · veure &rarr; <b>veient</b> · creure &rarr; <b>creient</b> · traure &rarr; <b>traient</b> (els cinc, irregulars).</div>
+      <div class="sol-item">voler &rarr; <b>volent</b> · tenir &rarr; <b>tenint</b> · venir &rarr; <b>venint</b> (els tres, regulars dins de la seua conjugació).</div>
+    </div>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 4 &middot; mini-diàlegs</h3>
+    <div class="sol-list">
+      <div class="sol-item">1. <b>Fent</b> les proves amb Python&hellip; &mdash; acció simultània a "evitarem errors".</div>
+      <div class="sol-item">2. Aneu <b>dient</b> en veu alta&hellip; &mdash; el gerundi acompanya ací l'imperatiu "aneu" per a expressar una acció continuada.</div>
+      <div class="sol-item">3. <b>Veient</b> que el servidor no responia&hellip; &mdash; causa simultània a l'avís.</div>
+      <div class="sol-item">4. <b>Creient</b> que la còpia ja estava feta&hellip; &mdash; de "creure", amb l'arrel + "-ent".</div>
+    </div>
+  </div>
+
+  <div class="sol-block">
+    <h3>Activitat 5 &middot; vocabulari PRSI I i II</h3>
+    <div class="sol-list">
+      <div class="sol-item">llenguatge de programació = <b>lenguaje de programación</b></div>
+      <div class="sol-item">base de dades relacional = <b>base de datos relacional</b></div>
+      <div class="sol-item">encaminador = <b>enrutador / router</b></div>
+      <div class="sol-item">xifratge = <b>cifrado</b></div>
+      <div class="sol-item">certificat digital = <b>certificado digital</b></div>
+      <div class="sol-item">còpia de seguretat = <b>copia de seguridad</b></div>
+      <div class="sol-item">servidor de correu = <b>servidor de correo</b></div>
+    </div>
+  </div>
+</details>
+
+<footer class="note">Exercici generat per a pràctica oral diària &middot; IES Jorge Juan, Alacant &middot; Departament d'Informàtica</footer>
+
+<script>
+(function(){
+  var scores = {act1:0, act2:0, act3:0, act4:0, act5:0};
+  var maxes = {act1:6, act2:5, act3:8, act4:4, act5:7};
+
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function updateTotal(){
+    var sum = 0;
+    for (var k in scores){ sum += scores[k]; }
+    var el = document.getElementById('totalScore');
+    if (el) el.textContent = sum;
+  }
+
+  function markInput(input, isOk){
+    input.style.borderColor = isOk ? 'var(--good)' : 'var(--bad)';
+    var old = input.parentElement.querySelector('.mark');
+    if (old) old.remove();
+    var span = document.createElement('span');
+    span.className = 'mark ' + (isOk ? 'ok' : 'ko');
+    span.textContent = isOk ? '✓' : '✗';
+    input.insertAdjacentElement('afterend', span);
+  }
+
+  window.checkFill = function(sectionId){
+    var section = document.getElementById(sectionId);
+    var inputs = section.querySelectorAll('input[type="text"][data-answer]');
+    var correct = 0;
+    inputs.forEach(function(inp){
+      var ok = norm(inp.value) === norm(inp.getAttribute('data-answer'));
+      if (ok) correct++;
+      markInput(inp, ok);
+    });
+    scores[sectionId] = correct;
+    document.getElementById(sectionId + '-score').textContent =
+      'Resultat: ' + correct + ' / ' + maxes[sectionId] + ' correctes.';
+    updateTotal();
+  };
+
+  window.checkRadio = function(sectionId, answerMap){
+    var correct = 0;
+    for (var name in answerMap){
+      var radios = document.getElementsByName(name);
+      var chosen = null;
+      radios.forEach(function(r){ if (r.checked) chosen = r.value; });
+      var wrap = radios[0] ? radios[0].closest('.item') : null;
+      var old = wrap ? wrap.querySelector('.mark') : null;
+      if (old) old.remove();
+      var ok = chosen === answerMap[name];
+      if (ok) correct++;
+      if (wrap){
+        var span = document.createElement('span');
+        span.className = 'mark ' + (ok ? 'ok' : 'ko');
+        span.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+        wrap.querySelector('.prompt').appendChild(span);
+      }
+    }
+    scores[sectionId] = correct;
+    document.getElementById(sectionId + '-score').textContent =
+      'Resultat: ' + correct + ' / ' + maxes[sectionId] + ' correctes.';
+    updateTotal();
+  };
+
+  window.checkSelect = function(sectionId){
+    var section = document.getElementById(sectionId);
+    var selects = section.querySelectorAll('select[data-answer]');
+    var correct = 0;
+    selects.forEach(function(sel){
+      var ok = sel.value !== '' && norm(sel.value) === norm(sel.getAttribute('data-answer'));
+      if (ok) correct++;
+      sel.style.borderColor = sel.value === '' ? 'var(--line)' : (ok ? 'var(--good)' : 'var(--bad)');
+      var row = sel.closest('.vocab-row');
+      var old = row.querySelector('.mark');
+      if (old) old.remove();
+      if (sel.value !== ''){
+        var span = document.createElement('span');
+        span.className = 'mark ' + (ok ? 'ok' : 'ko');
+        span.textContent = ok ? '✓' : '✗';
+        sel.insertAdjacentElement('afterend', span);
+      }
+    });
+    scores[sectionId] = correct;
+    document.getElementById(sectionId + '-score').textContent =
+      'Resultat: ' + correct + ' / ' + maxes[sectionId] + ' correctes.';
+    updateTotal();
+  };
+})();
+</script>
+
+</body></html>

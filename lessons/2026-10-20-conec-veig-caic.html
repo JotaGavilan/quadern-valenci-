@@ -1,0 +1,797 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Conec, veig, caic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+  /* Layout concept: una "fitxa de pissarra" — capçalera com una franja de pissarra verd-fosc
+     amb guix groc, i cada activitat com una fitxa de paper clar sobre fons de sala d'informàtica. */
+  :root{
+    --bg:#eef2ee;
+    --surface:#ffffff;
+    --surface-2:#e0e8e2;
+    --ink:#152420;
+    --ink-soft:#52625a;
+    --accent:#b6821e;
+    --accent-ink:#2a1c03;
+    --accent-soft:#f3e3bf;
+    --accent-soft-ink:#6b4c0c;
+    --code:#2f6f78;
+    --code-bg:#dcebec;
+    --line:#cdd8d0;
+    --good:#2f7d4c;
+    --good-bg:#dcefe2;
+    --bad:#b23a3a;
+    --bad-bg:#f6dede;
+    --board:#152420;
+    --board-ink:#f2ead0;
+    --font-display:'Literata', Georgia, serif;
+    --font-body:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    --shadow: 0 1px 2px rgba(21,36,32,.07), 0 10px 24px -14px rgba(21,36,32,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121c18;
+      --surface:#182622;
+      --surface-2:#1f302a;
+      --ink:#eee7d4;
+      --ink-soft:#a9b6ac;
+      --accent:#e3b24b;
+      --accent-ink:#231503;
+      --accent-soft:#3a2d12;
+      --accent-soft-ink:#f0d79a;
+      --code:#7fc7cf;
+      --code-bg:#163336;
+      --line:#2d3e37;
+      --good:#6fcb8e;
+      --good-bg:#1c342477;
+      --bad:#e38787;
+      --bad-bg:#3a1f1f77;
+      --board:#0d1613;
+      --board-ink:#f2ead0;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121c18;
+    --surface:#182622;
+    --surface-2:#1f302a;
+    --ink:#eee7d4;
+    --ink-soft:#a9b6ac;
+    --accent:#e3b24b;
+    --accent-ink:#231503;
+    --accent-soft:#3a2d12;
+    --accent-soft-ink:#f0d79a;
+    --code:#7fc7cf;
+    --code-bg:#163336;
+    --line:#2d3e37;
+    --good:#6fcb8e;
+    --good-bg:#1c342477;
+    --bad:#e38787;
+    --bad-bg:#3a1f1f77;
+    --board:#0d1613;
+    --board-ink:#f2ead0;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.55;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+    padding-block:22px 64px;
+  }
+  .wrap{ max-width:800px; margin:0 auto; }
+  h1,h2,h3{ font-family:var(--font-display); text-wrap:balance; margin:0; }
+  code, .mono{ font-family:var(--font-mono); }
+
+  a.backlink{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:var(--font-mono);
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  a.backlink:hover{ filter:brightness(0.95); }
+
+  header.board{
+    background:var(--board);
+    color:var(--board-ink);
+    border-radius:18px;
+    padding:26px 24px 24px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+    margin-bottom:18px;
+  }
+  header.board::after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at 15% 15%, rgba(255,255,255,.05), transparent 45%),
+      repeating-linear-gradient(100deg, rgba(255,255,255,.035) 0 1px, transparent 1px 90px);
+    pointer-events:none;
+  }
+  header.board .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.78;
+    margin-bottom:10px;
+  }
+  header.board h1{ font-size:clamp(1.7rem,5vw,2.3rem); font-weight:600; color:var(--accent); }
+  header.board p{ margin:10px 0 0; max-width:58ch; opacity:.92; font-size:.95rem; }
+  .topic-pill{
+    display:inline-block;
+    margin-top:14px;
+    font-family:var(--font-mono);
+    font-size:.78rem;
+    padding:5px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.18);
+  }
+
+  .scoreboard{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:var(--font-mono);
+    font-size:.86rem;
+  }
+  .scoreboard b{ font-family:var(--font-display); font-size:1.15rem; color:var(--accent); font-variant-numeric:tabular-nums; }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 20px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{
+    font-size:1.2rem;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  section.card h2 .num{
+    font-family:var(--font-mono);
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:2px 9px;
+    border-radius:999px;
+    flex:none;
+  }
+  section.card > p.lead{ color:var(--ink-soft); margin:4px 0 16px; font-size:.92rem; }
+
+  table.theory{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.92rem;
+    margin:10px 0 4px;
+  }
+  table.theory th, table.theory td{
+    border:1px solid var(--line);
+    padding:9px 10px;
+    text-align:left;
+  }
+  table.theory th{
+    background:var(--surface-2);
+    font-family:var(--font-mono);
+    font-size:.74rem;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--ink-soft);
+  }
+  table.theory td.verbform{ font-family:var(--font-mono); font-weight:600; color:var(--code); }
+  .table-scroll{ overflow-x:auto; }
+
+  .item{
+    padding:12px 0;
+    border-top:1px solid var(--line);
+  }
+  .item:first-of-type{ border-top:none; padding-top:0; }
+  .item p.sentence{ margin:0 0 8px; }
+  .item input[type="text"]{
+    font-family:var(--font-mono);
+    font-size:.95rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+    width:140px;
+    max-width:100%;
+  }
+  .item input[type="text"]:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  .feedback{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    margin-left:10px;
+    font-size:.85rem;
+    font-family:var(--font-mono);
+    vertical-align:middle;
+  }
+  .feedback.ok{ color:var(--good); }
+  .feedback.bad{ color:var(--bad); }
+
+  .mcq-options{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+  .mcq-options button{
+    font-family:var(--font-body);
+    font-size:.9rem;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .mcq-options button:hover{ border-color:var(--accent); }
+  .mcq-options button.selected{ border-color:var(--accent); background:var(--accent-soft); color:var(--accent-soft-ink); font-weight:600; }
+  .mcq-options button.correct{ border-color:var(--good); background:var(--good-bg); color:var(--good); font-weight:600; }
+  .mcq-options button.incorrect{ border-color:var(--bad); background:var(--bad-bg); color:var(--bad); }
+  .mcq-options button:disabled{ cursor:default; }
+
+  select.vocab-select{
+    font-family:var(--font-body);
+    font-size:.9rem;
+    padding:6px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+  }
+
+  .conj-table input[type="text"]{ width:100%; min-width:90px; }
+  td.tdcell{ min-width:0; }
+
+  .dialogue-line{ display:flex; gap:10px; margin-bottom:10px; align-items:flex-start; }
+  .dialogue-line .who{
+    font-family:var(--font-mono);
+    font-weight:700;
+    font-size:.82rem;
+    color:var(--code);
+    background:var(--code-bg);
+    border-radius:8px;
+    padding:4px 8px;
+    flex:none;
+    white-space:nowrap;
+  }
+  .dialogue-line p{ margin:4px 0 0; }
+
+  button.check-btn{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:.92rem;
+    padding:10px 18px;
+    border-radius:10px;
+    border:none;
+    background:var(--accent);
+    color:var(--accent-ink);
+    cursor:pointer;
+    margin-top:8px;
+  }
+  button.check-btn:hover{ filter:brightness(1.05); }
+  button.check-btn:active{ transform:translateY(1px); }
+
+  .activity-result{
+    margin-top:10px;
+    font-family:var(--font-mono);
+    font-size:.84rem;
+    color:var(--ink-soft);
+  }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 20px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions > summary{
+    cursor:pointer;
+    font-family:var(--font-display);
+    font-size:1.15rem;
+    font-weight:600;
+    list-style:revert;
+  }
+  .sol-group{ margin-top:16px; }
+  .sol-group h3{ font-size:1rem; margin-bottom:8px; }
+  .sol-item{ font-size:.9rem; padding:7px 0; border-top:1px solid var(--line); }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item .ans{ font-family:var(--font-mono); font-weight:700; color:var(--code); }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:26px;
+  }
+
+  @media (max-width:480px){
+    header.board{ padding:20px 18px; }
+    .mcq-options{ gap:6px; }
+    .mcq-options button{ padding:6px 11px; font-size:.85rem; }
+  }
+</style>
+
+<div class="wrap">
+
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="board">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Alacant — Pràctica oral diària</div>
+      <h1>Conec, veig, caic</h1>
+      <p>Hui treballem el present d'indicatiu dels verbs irregulars, amb exemples pensats per a parlar amb naturalitat a classe d'informàtica. També repassem vocabulari de programació i xarxes.</p>
+      <span class="topic-pill">📘 Tema gramatical: Present d'indicatiu dels irregulars</span>
+    </div>
+  </header>
+
+  <div class="scoreboard">
+    <span>Puntuació acumulada</span>
+    <span><b id="totalScore">0</b> / <span id="totalMax">29</span></span>
+  </div>
+
+  <section class="card">
+    <h2><span class="num">Teoria</span> El present irregular, persona a persona</h2>
+    <p class="lead">
+      En la majoria dels verbs irregulars valencians, la irregularitat es concentra en la primera persona del singular (<em>jo</em>): la resta de persones (tu, ell/ella, nosaltres, vosaltres, ells/elles) solen seguir el patró regular de la seua conjugació. Dos grups molt freqüents:
+    </p>
+    <div class="table-scroll">
+      <table class="theory">
+        <thead><tr><th>Patró</th><th>Infinitiu</th><th>Jo</th><th>Tu / Ell</th><th>On ho sents a classe</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="3">Acaba en <span class="mono">-c</span></td><td>conéixer</td><td class="verbform">conec</td><td>coneixes / coneix</td><td>«Ja <span class="mono">conec</span> esta base de dades relacional»</td></tr>
+          <tr><td>dur</td><td class="verbform">duc</td><td>dus / du</td><td>«Sempre <span class="mono">duc</span> l'ordinador al laboratori»</td></tr>
+          <tr><td>caure</td><td class="verbform">caic</td><td>caus / cau</td><td>«<span class="mono">Caic</span> sempre en el mateix error de sintaxi»</td></tr>
+          <tr><td rowspan="2">Acaba en <span class="mono">-ig</span></td><td>veure</td><td class="verbform">veig</td><td>veus / veu</td><td>«Ara <span class="mono">veig</span> el resultat en pantalla»</td></tr>
+          <tr><td>fer</td><td class="verbform">faig</td><td>fas / fa</td><td>«<span class="mono">Faig</span> la consulta SQL amb XAMPP»</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead" style="margin-top:14px;">
+      Compte: el valencià no afig una <span class="mono">-o</span> final com el català central (no es diu <em>“conosco”</em> ni <em>“duco”</em>). I recorda que <span class="mono">isc</span> (eixir), <span class="mono">dic</span> (dir), <span class="mono">tinc</span> (tindre), <span class="mono">vinc</span> (vindre), <span class="mono">visc</span> (viure), <span class="mono">vull</span> (voler), <span class="mono">puc</span> (poder) i <span class="mono">sé</span> (saber) segueixen la mateixa lògica: irregularitat només en «jo».
+    </p>
+  </section>
+
+  <section class="card" id="act1">
+    <h2><span class="num">Activitat 1</span> Omple els buits</h2>
+    <p class="lead">Escriu la forma correcta del present d'indicatiu (persona «jo», llevat que s'indique una altra).</p>
+
+    <div class="item" data-correct="veig">
+      <p class="sentence">1. Cada matí <input type="text" aria-label="resposta 1"> (veure) la safata del correu abans d'encendre el projector.</p>
+    </div>
+    <div class="item" data-correct="conec">
+      <p class="sentence">2. <input type="text" aria-label="resposta 2"> (conéixer) prou bé els alumnes de 4t, perquè ja els vaig tindre l'any passat a Digitalització.</p>
+    </div>
+    <div class="item" data-correct="duc">
+      <p class="sentence">3. Sempre <input type="text" aria-label="resposta 3"> (dur) l'ordinador portàtil i el carregador al laboratori.</p>
+    </div>
+    <div class="item" data-correct="caic">
+      <p class="sentence">4. Si no faig la còpia de seguretat abans, <input type="text" aria-label="resposta 4"> (caure) sempre en el mateix error amb la base de dades.</p>
+    </div>
+    <div class="item" data-correct="dic">
+      <p class="sentence">5. Els divendres <input type="text" aria-label="resposta 5"> (dir) als alumnes quins deures han d'entregar en el Moodle.</p>
+    </div>
+    <div class="item" data-correct="faig">
+      <p class="sentence">6. Quan falla el wifi, <input type="text" aria-label="resposta 6"> (fer) la classe amb els portàtils en xarxa local i prou.</p>
+    </div>
+
+    <button class="check-btn" onclick="gradeTextActivity('act1', 6)">Comprova les respostes</button>
+    <div class="activity-result" id="act1-result"></div>
+  </section>
+
+  <section class="card" id="act2">
+    <h2><span class="num">Activitat 2</span> Tria l'opció correcta</h2>
+    <p class="lead">Fes clic en la forma correcta de cada frase.</p>
+
+    <div class="mcq-item item" data-correct="sé">
+      <p class="sentence">1. Jo <strong>___</strong> utilitzar Teachable Machine per a entrenar un model senzill d'intel·ligència artificial.</p>
+      <div class="mcq-options">
+        <button onclick="selectMcq(this)">sé</button>
+        <button onclick="selectMcq(this)">sapo</button>
+        <button onclick="selectMcq(this)">sabo</button>
+      </div>
+    </div>
+    <div class="mcq-item item" data-correct="isc">
+      <p class="sentence">2. Jo <strong>___</strong> de classe cada dia a les tres per a la reunió de departament.</p>
+      <div class="mcq-options">
+        <button onclick="selectMcq(this)">ixo</button>
+        <button onclick="selectMcq(this)">isc</button>
+        <button onclick="selectMcq(this)">eixo</button>
+      </div>
+    </div>
+    <div class="mcq-item item" data-correct="conec">
+      <p class="sentence">3. Jo <strong>___</strong> els dos administradors de la xarxa de l'institut.</p>
+      <div class="mcq-options">
+        <button onclick="selectMcq(this)">coneixc</button>
+        <button onclick="selectMcq(this)">conosco</button>
+        <button onclick="selectMcq(this)">conec</button>
+      </div>
+    </div>
+    <div class="mcq-item item" data-correct="duc">
+      <p class="sentence">4. Jo sempre <strong>___</strong> els apunts de PRSI en una carpeta compartida.</p>
+      <div class="mcq-options">
+        <button onclick="selectMcq(this)">duco</button>
+        <button onclick="selectMcq(this)">duc</button>
+        <button onclick="selectMcq(this)">portc</button>
+      </div>
+    </div>
+    <div class="mcq-item item" data-correct="caic">
+      <p class="sentence">5. Jo <strong>___</strong> en el mateix error cada vegada que oblide fer la còpia de seguretat.</p>
+      <div class="mcq-options">
+        <button onclick="selectMcq(this)">caigo</button>
+        <button onclick="selectMcq(this)">cac</button>
+        <button onclick="selectMcq(this)">caic</button>
+      </div>
+    </div>
+
+    <button class="check-btn" onclick="gradeMcqActivity('act2', 5)">Comprova les respostes</button>
+    <div class="activity-result" id="act2-result"></div>
+  </section>
+
+  <section class="card" id="act3">
+    <h2><span class="num">Activitat 3</span> Completa la conjugació</h2>
+    <p class="lead">Omple les caselles buides del present d'indicatiu.</p>
+    <div class="table-scroll">
+      <table class="theory conj-table">
+        <thead><tr><th>Infinitiu</th><th>Jo</th><th>Tu</th><th>Ell/Ella</th><th>Nosaltres</th><th>Vosaltres</th><th>Ells/Elles</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>conéixer</td>
+            <td class="tdcell"><div class="item" data-correct="conec"><input type="text" aria-label="conéixer jo"></div></td>
+            <td>coneixes</td>
+            <td>coneix</td>
+            <td class="tdcell"><div class="item" data-correct="coneixem"><input type="text" aria-label="conéixer nosaltres"></div></td>
+            <td>coneixeu</td>
+            <td>coneixen</td>
+          </tr>
+          <tr>
+            <td>dur</td>
+            <td>duc</td>
+            <td class="tdcell"><div class="item" data-correct="dus"><input type="text" aria-label="dur tu"></div></td>
+            <td>du</td>
+            <td>duem</td>
+            <td class="tdcell"><div class="item" data-correct="dueu"><input type="text" aria-label="dur vosaltres"></div></td>
+            <td>duen</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button class="check-btn" onclick="gradeTextActivity('act3', 4)">Comprova les respostes</button>
+    <div class="activity-result" id="act3-result"></div>
+  </section>
+
+  <section class="card" id="act4">
+    <h2><span class="num">Activitat 4</span> Mini-diàleg: al departament d'informàtica</h2>
+    <p class="lead">Omple els buits del diàleg entre dos professors del departament.</p>
+
+    <div class="dialogue-line">
+      <span class="who">MARTA</span>
+      <div class="item" data-correct="vull" style="flex:1;">
+        <p class="sentence">Hola! <input type="text" aria-label="dialeg 1"> (voler) preguntar-te una cosa sobre la pràctica d'avui.</p>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <span class="who">JOSEP</span>
+      <div class="item" data-correct="puc" style="flex:1;">
+        <p class="sentence">Diga'm, <input type="text" aria-label="dialeg 2"> (poder) ajudar-te si tens algun dubte amb la base de dades relacional.</p>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <span class="who">MARTA</span>
+      <div class="item" data-correct="sé" style="flex:1;">
+        <p class="sentence">És que no <input type="text" aria-label="dialeg 3"> (saber) molt bé com configurar la màquina virtual amb XAMPP.</p>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <span class="who">JOSEP</span>
+      <div class="item" data-correct="faig" style="flex:1;">
+        <p class="sentence">Tranquil·la, jo <input type="text" aria-label="dialeg 4"> (fer) estes consultes SQL cada curs amb els alumnes de Batxillerat.</p>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <span class="who">MARTA</span>
+      <div class="item" data-correct="coneixes" style="flex:1;">
+        <p class="sentence">Genial. I tu, <input type="text" aria-label="dialeg 5"> (conéixer) algun manual en valencià per a l'encaminador del laboratori?</p>
+      </div>
+    </div>
+    <div class="dialogue-line">
+      <span class="who">JOSEP</span>
+      <div class="item" data-correct="tinc" style="flex:1;">
+        <p class="sentence">Sí, <input type="text" aria-label="dialeg 6"> (tindre) un PDF que vaig guardar en el Drive del departament fa un parell d'anys.</p>
+      </div>
+    </div>
+
+    <button class="check-btn" onclick="gradeTextActivity('act4', 6)">Comprova les respostes</button>
+    <div class="activity-result" id="act4-result"></div>
+  </section>
+
+  <section class="card" id="act5">
+    <h2><span class="num">Activitat 5 · Vocabulari</span> PRSI I i II — programació i xarxes</h2>
+    <p class="lead">Relaciona cada terme valencià amb la seua traducció correcta al castellà.</p>
+
+    <div class="item" data-correct="lenguaje de programación">
+      <p class="sentence">1. llenguatge de programació →
+        <select class="vocab-select" aria-label="vocab 1">
+          <option value="">— tria —</option>
+          <option>lenguaje de programación</option>
+          <option>lenguaje natural</option>
+          <option>protocolo de comunicación</option>
+        </select>
+      </p>
+    </div>
+    <div class="item" data-correct="variable">
+      <p class="sentence">2. variable →
+        <select class="vocab-select" aria-label="vocab 2">
+          <option value="">— tria —</option>
+          <option>función</option>
+          <option>variable</option>
+          <option>constante</option>
+        </select>
+      </p>
+    </div>
+    <div class="item" data-correct="base de datos relacional">
+      <p class="sentence">3. base de dades relacional →
+        <select class="vocab-select" aria-label="vocab 3">
+          <option value="">— tria —</option>
+          <option>base de datos documental</option>
+          <option>hoja de cálculo</option>
+          <option>base de datos relacional</option>
+        </select>
+      </p>
+    </div>
+    <div class="item" data-correct="máquina virtual">
+      <p class="sentence">4. màquina virtual →
+        <select class="vocab-select" aria-label="vocab 4">
+          <option value="">— tria —</option>
+          <option>máquina virtual</option>
+          <option>máquina física</option>
+          <option>servidor web</option>
+        </select>
+      </p>
+    </div>
+    <div class="item" data-correct="sistema operativo">
+      <p class="sentence">5. sistema operatiu →
+        <select class="vocab-select" aria-label="vocab 5">
+          <option value="">— tria —</option>
+          <option>sistema de archivos</option>
+          <option>sistema de red</option>
+          <option>sistema operativo</option>
+        </select>
+      </p>
+    </div>
+    <div class="item" data-correct="enrutador/router">
+      <p class="sentence">6. encaminador →
+        <select class="vocab-select" aria-label="vocab 6">
+          <option value="">— tria —</option>
+          <option>conmutador/switch</option>
+          <option>enrutador/router</option>
+          <option>módem</option>
+        </select>
+      </p>
+    </div>
+    <div class="item" data-correct="cifrado">
+      <p class="sentence">7. xifratge →
+        <select class="vocab-select" aria-label="vocab 7">
+          <option value="">— tria —</option>
+          <option>descifrado</option>
+          <option>compresión</option>
+          <option>cifrado</option>
+        </select>
+      </p>
+    </div>
+    <div class="item" data-correct="copia de seguridad">
+      <p class="sentence">8. còpia de seguretat →
+        <select class="vocab-select" aria-label="vocab 8">
+          <option value="">— tria —</option>
+          <option>copia de seguridad</option>
+          <option>copia impresa</option>
+          <option>copia en caché</option>
+        </select>
+      </p>
+    </div>
+
+    <button class="check-btn" onclick="gradeSelectActivity('act5', 8)">Comprova les respostes</button>
+    <div class="activity-result" id="act5-result"></div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-group">
+      <h3>Activitat 1 · Omple els buits</h3>
+      <div class="sol-item">1. <span class="ans">veig</span> — veure → veig (acaba en -ig, com faig).</div>
+      <div class="sol-item">2. <span class="ans">conec</span> — conéixer → conec (acaba en -c, sense -eix- en «jo»).</div>
+      <div class="sol-item">3. <span class="ans">duc</span> — dur → duc (acaba en -c, no «duco»).</div>
+      <div class="sol-item">4. <span class="ans">caic</span> — caure → caic (acaba en -c).</div>
+      <div class="sol-item">5. <span class="ans">dic</span> — dir → dic (ja conegut: irregularitat només en «jo»).</div>
+      <div class="sol-item">6. <span class="ans">faig</span> — fer → faig (acaba en -ig, com veig).</div>
+    </div>
+
+    <div class="sol-group">
+      <h3>Activitat 2 · Tria l'opció correcta</h3>
+      <div class="sol-item">1. <span class="ans">sé</span> — saber → sé; «sapo»/«sabo» no existeixen en valencià.</div>
+      <div class="sol-item">2. <span class="ans">isc</span> — eixir → isc; «ixo» és una forma col·loquial incorrecta i «eixo» no existeix.</div>
+      <div class="sol-item">3. <span class="ans">conec</span> — conéixer → conec; ni «coneixc» ni «conosco» (este últim és un castellanisme).</div>
+      <div class="sol-item">4. <span class="ans">duc</span> — dur → duc; el valencià no afig -o final.</div>
+      <div class="sol-item">5. <span class="ans">caic</span> — caure → caic; «caigo» és la forma castellana.</div>
+    </div>
+
+    <div class="sol-group">
+      <h3>Activitat 3 · Completa la conjugació</h3>
+      <div class="sol-item">conéixer, jo → <span class="ans">conec</span> · nosaltres → <span class="ans">coneixem</span></div>
+      <div class="sol-item">dur, tu → <span class="ans">dus</span> · vosaltres → <span class="ans">dueu</span></div>
+    </div>
+
+    <div class="sol-group">
+      <h3>Activitat 4 · Mini-diàleg</h3>
+      <div class="sol-item">1. <span class="ans">vull</span> (voler) · 2. <span class="ans">puc</span> (poder) · 3. <span class="ans">sé</span> (saber)</div>
+      <div class="sol-item">4. <span class="ans">faig</span> (fer) · 5. <span class="ans">coneixes</span> (conéixer, forma «tu») · 6. <span class="ans">tinc</span> (tindre)</div>
+    </div>
+
+    <div class="sol-group">
+      <h3>Activitat 5 · Vocabulari PRSI I i II</h3>
+      <div class="sol-item">1. llenguatge de programació = <span class="ans">lenguaje de programación</span></div>
+      <div class="sol-item">2. variable = <span class="ans">variable</span> (mot internacional, idèntic en les dues llengües)</div>
+      <div class="sol-item">3. base de dades relacional = <span class="ans">base de datos relacional</span></div>
+      <div class="sol-item">4. màquina virtual = <span class="ans">máquina virtual</span></div>
+      <div class="sol-item">5. sistema operatiu = <span class="ans">sistema operativo</span></div>
+      <div class="sol-item">6. encaminador = <span class="ans">enrutador/router</span></div>
+      <div class="sol-item">7. xifratge = <span class="ans">cifrado</span></div>
+      <div class="sol-item">8. còpia de seguretat = <span class="ans">copia de seguridad</span></div>
+    </div>
+  </details>
+
+  <footer class="note">IES Jorge Juan, Alacant · Departament d'Informàtica · Pràctica oral diària de valencià</footer>
+</div>
+
+<script>
+  const scores = {}; // activityId -> {correct, max}
+
+  function normalize(s){
+    return s.trim().toLowerCase()
+      .replace(/·/g,'')
+      .normalize('NFD').replace(/[̀-ͯ]/g,'') // strip accents for forgiving match
+      .replace(/\s+/g,' ');
+  }
+
+  function updateTotal(){
+    let correct = 0, max = 0;
+    for(const k in scores){
+      correct += scores[k].correct;
+      max += scores[k].max;
+    }
+    document.getElementById('totalScore').textContent = correct;
+    document.getElementById('totalMax').textContent = 29;
+  }
+
+  function gradeTextActivity(sectionId, maxCount){
+    const section = document.getElementById(sectionId);
+    const items = section.querySelectorAll('.item[data-correct]');
+    let correctCount = 0;
+    items.forEach(item => {
+      const input = item.querySelector('input[type="text"]');
+      if(!input) return;
+      const expected = normalize(item.getAttribute('data-correct'));
+      const given = normalize(input.value || '');
+      let fb = item.querySelector('.feedback');
+      if(!fb){
+        fb = document.createElement('span');
+        fb.className = 'feedback';
+        input.insertAdjacentElement('afterend', fb);
+      }
+      if(given && given === expected){
+        correctCount++;
+        fb.className = 'feedback ok';
+        fb.textContent = '✓ correcte';
+        input.style.borderColor = 'var(--good)';
+      } else {
+        fb.className = 'feedback bad';
+        fb.textContent = '✗ la resposta és: ' + item.getAttribute('data-correct');
+        input.style.borderColor = 'var(--bad)';
+      }
+    });
+    scores[sectionId] = {correct: correctCount, max: maxCount};
+    document.getElementById(sectionId + '-result').textContent = correctCount + ' / ' + maxCount + ' correctes';
+    updateTotal();
+  }
+
+  function selectMcq(btn){
+    const group = btn.parentElement;
+    group.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  function gradeMcqActivity(sectionId, maxCount){
+    const section = document.getElementById(sectionId);
+    const items = section.querySelectorAll('.mcq-item[data-correct]');
+    let correctCount = 0;
+    items.forEach(item => {
+      const expected = item.getAttribute('data-correct');
+      const buttons = item.querySelectorAll('.mcq-options button');
+      const selected = item.querySelector('.mcq-options button.selected');
+      buttons.forEach(b => b.disabled = true);
+      if(selected && selected.textContent.trim() === expected){
+        correctCount++;
+        selected.classList.add('correct');
+      } else {
+        if(selected) selected.classList.add('incorrect');
+        buttons.forEach(b => { if(b.textContent.trim() === expected) b.classList.add('correct'); });
+      }
+    });
+    scores[sectionId] = {correct: correctCount, max: maxCount};
+    document.getElementById(sectionId + '-result').textContent = correctCount + ' / ' + maxCount + ' correctes';
+    updateTotal();
+  }
+
+  function gradeSelectActivity(sectionId, maxCount){
+    const section = document.getElementById(sectionId);
+    const items = section.querySelectorAll('.item[data-correct]');
+    let correctCount = 0;
+    items.forEach(item => {
+      const select = item.querySelector('select');
+      if(!select) return;
+      const expected = item.getAttribute('data-correct');
+      let fb = item.querySelector('.feedback');
+      if(!fb){
+        fb = document.createElement('span');
+        fb.className = 'feedback';
+        select.insertAdjacentElement('afterend', fb);
+      }
+      if(select.value === expected){
+        correctCount++;
+        fb.className = 'feedback ok';
+        fb.textContent = '✓ correcte';
+      } else {
+        fb.className = 'feedback bad';
+        fb.textContent = '✗ la resposta és: ' + expected;
+      }
+    });
+    scores[sectionId] = {correct: correctCount, max: maxCount};
+    document.getElementById(sectionId + '-result').textContent = correctCount + ' / ' + maxCount + ' correctes';
+    updateTotal();
+  }
+</script>
+
+</body></html>

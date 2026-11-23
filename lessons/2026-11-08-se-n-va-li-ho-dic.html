@@ -1,0 +1,730 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Se'n va, li ho dic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  /*
+    Disseny: "nusos de pronoms" — dues peces (dos clítics) que s'enllacen
+    en una de sola. L'accent és un cordó taronja-terra que uneix caixes;
+    cada combinació es mostra com dos blocs que s'ajunten amb un "+".
+  */
+  :root{
+    --bg:#eef0f4;
+    --surface:#ffffff;
+    --surface-2:#dde2ea;
+    --ink:#232a35;
+    --ink-soft:#656f80;
+    --accent:#b5542f;
+    --accent-ink:#ffffff;
+    --accent-soft:#f6e2d6;
+    --accent-soft-ink:#8a3f1f;
+    --thread:#3d6b5e;
+    --line:#cfd5e0;
+    --good:#2f7d52;
+    --good-bg:#dcece0;
+    --bad:#b23b35;
+    --bad-bg:#f6dcda;
+    --verbbox:#2f4d78;
+    --verbbox-bg:#dde6f2;
+    --verbbox-ink:#17304f;
+    --shadow:0 1px 2px rgba(35,42,53,.08), 0 10px 26px -14px rgba(35,42,53,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171a21;
+      --surface:#1f2430;
+      --surface-2:#272d3b;
+      --ink:#e8eaef;
+      --ink-soft:#a1a9ba;
+      --accent:#e39064;
+      --accent-ink:#2a1206;
+      --accent-soft:#3a2518;
+      --accent-soft-ink:#f0bd99;
+      --thread:#7fb3a0;
+      --line:#343c4d;
+      --good:#82d4a4;
+      --good-bg:#1f3527;
+      --bad:#e8958f;
+      --bad-bg:#3a201e;
+      --verbbox:#9cbce8;
+      --verbbox-bg:#1d2c42;
+      --verbbox-ink:#cfe0f7;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171a21;
+    --surface:#1f2430;
+    --surface-2:#272d3b;
+    --ink:#e8eaef;
+    --ink-soft:#a1a9ba;
+    --accent:#e39064;
+    --accent-ink:#2a1206;
+    --accent-soft:#3a2518;
+    --accent-soft-ink:#f0bd99;
+    --thread:#7fb3a0;
+    --line:#343c4d;
+    --good:#82d4a4;
+    --good-bg:#1f3527;
+    --bad:#e8958f;
+    --bad-bg:#3a201e;
+    --verbbox:#9cbce8;
+    --verbbox-bg:#1d2c42;
+    --verbbox-ink:#cfe0f7;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:26px;
+    padding-bottom:60px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page{ max-width:780px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; font-weight:600; }
+  .mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.76rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .back-link:hover{ text-decoration:underline; }
+
+  header.top{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:26px 26px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:6px;
+    background-image: repeating-linear-gradient(90deg, var(--thread) 0 14px, transparent 14px 24px);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  header.top h1{ font-size:clamp(1.9rem, 6vw, 2.6rem); font-style:italic; color:var(--accent); }
+  header.top p{ margin:12px 0 0; max-width:60ch; color:var(--ink-soft); font-size:.95rem; }
+  .pill-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .pill{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:var(--surface-2);
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  .pill.verb{ background:var(--verbbox-bg); color:var(--verbbox-ink); }
+
+  .score-bar{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:5;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    box-shadow:var(--shadow);
+    flex-wrap:wrap;
+  }
+  .score-bar .label{ font-size:.86rem; color:var(--ink-soft); }
+  .score-bar .score{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .score-bar button{
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:.88rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+  }
+  .score-bar button:hover{ opacity:.9; }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  section.card::before{
+    content:"";
+    position:absolute; top:0; left:22px; right:22px; height:3px;
+    background-image: repeating-linear-gradient(90deg, var(--thread) 0 8px, transparent 8px 14px);
+  }
+  section.card h2{ font-size:1.3rem; margin-bottom:4px; }
+  section.card .kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--accent);
+    margin-bottom:6px;
+    display:block;
+  }
+  section.card p.intro{ color:var(--ink-soft); font-size:.92rem; margin:8px 0 16px; max-width:62ch; }
+
+  section.verbbox{
+    background:var(--verbbox-bg);
+    border:1px solid var(--verbbox);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.verbbox h2{ font-size:1.2rem; margin-bottom:4px; color:var(--verbbox-ink); }
+  section.verbbox .kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--verbbox);
+    margin-bottom:6px;
+    display:block;
+  }
+  section.verbbox p.intro{ color:var(--verbbox-ink); opacity:.85; font-size:.92rem; margin:8px 0 16px; max-width:62ch; }
+
+  .theory-table{ width:100%; margin:14px 0; overflow-x:auto; }
+  .theory-table table{ width:100%; border-collapse:collapse; min-width:580px; font-size:.88rem; }
+  .theory-table thead th{
+    background:var(--surface-2);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+  }
+  .theory-table tbody td{
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  .theory-table .form{ color:var(--accent); font-weight:700; font-family:'JetBrains Mono', monospace; white-space:nowrap; }
+  .theory-table .plus{ color:var(--ink-soft); font-weight:400; }
+
+  .qblock{ padding:14px 0; border-top:1px solid var(--line); }
+  .qblock:first-of-type{ border-top:none; padding-top:4px; }
+  .qnum{ font-family:'JetBrains Mono', monospace; font-size:.76rem; color:var(--ink-soft); margin-right:4px; }
+  .qtext{ font-size:.96rem; }
+
+  select.blank{
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:.9rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    background:var(--surface);
+    color:var(--ink);
+    margin:0 4px;
+  }
+  select.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  input[type="text"].blank{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.9rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    width:110px;
+    background:var(--surface);
+    color:var(--ink);
+    margin:0 4px;
+  }
+  input[type="text"].blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .mc-options{ display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+  .mc-options label{
+    display:flex; align-items:center; gap:8px;
+    font-size:.92rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+  }
+  .mc-options label:hover{ background:var(--surface-2); }
+  .mc-options input{ accent-color:var(--accent); }
+
+  .feedback{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:.84rem;
+    font-weight:700;
+    margin-left:8px;
+    padding:2px 9px;
+    border-radius:999px;
+  }
+  .feedback.ok{ background:var(--good-bg); color:var(--good); }
+  .feedback.bad{ background:var(--bad-bg); color:var(--bad); }
+  .feedback[hidden]{ display:none !important; }
+
+  .rule-table{ width:100%; margin-top:10px; overflow-x:auto; }
+  .rule-table table{ width:100%; border-collapse:collapse; min-width:520px; }
+  .rule-table th{
+    background:var(--surface-2); text-align:left; font-size:.72rem;
+    font-family:'JetBrains Mono', monospace; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); padding:8px 12px; border-bottom:1px solid var(--line);
+  }
+  .rule-table td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:.88rem; }
+
+  .solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-top:26px;
+    box-shadow:var(--shadow);
+  }
+  .solutions h2{ font-size:1.25rem; margin-bottom:6px; }
+  .solutions .sol-item{ padding:10px 0; border-top:1px solid var(--line); font-size:.9rem; }
+  .solutions .sol-item:first-of-type{ border-top:none; }
+  .solutions .sol-item .ans{ color:var(--accent); font-weight:700; font-family:'JetBrains Mono', monospace; }
+  .solutions details{ margin-top:16px; }
+  .solutions summary{
+    cursor:pointer;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.8rem;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:26px; }
+
+  @media (max-width:480px){
+    header.top{ padding:22px 18px 20px; }
+    section.card, section.verbbox{ padding:18px 16px 20px; }
+  }
+</style>
+
+<div class="page">
+
+<a class="back-link" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 8 de novembre de 2026</div>
+    <h1>Se'n va, li ho dic</h1>
+    <p>Tema d'avui: <strong>Combinacions de pronoms febles (el hi/l'hi, li ho, se'n, me'l, els en)</strong>. Quan dos pronoms febles coincideixen en la mateixa frase, no es diuen un darrere l'altre: es fonen en una sola parauleta nova. Dominar estes fusions és el que fa que una explicació ràpida a classe sone natural i no forçada.</p>
+    <div class="pill-row">
+      <span class="pill">Combinacions de pronoms febles</span>
+      <span class="pill verb">Verb del dia: imperatiu dels irregulars</span>
+    </div>
+  </div>
+</header>
+
+<div class="score-bar">
+  <span class="label">Puntuació acumulada</span>
+  <span class="score"><span id="scoreVal">0</span> / <span id="scoreMax">20</span></span>
+  <button id="checkBtn">Comprova les respostes</button>
+</div>
+
+<section class="card">
+  <span class="kicker">Teoria</span>
+  <h2>Dos pronoms, una sola paraula</h2>
+  <p class="intro">Quan un verb necessita alhora un pronom d'objecte directe i un d'indirecte (o un reflexiu i un altre pronom), les dos formes <strong>no van soltes</strong>: s'ajunten seguint unes combinacions fixes, pròpies del valencià parlat formal.</p>
+  <div class="theory-table">
+    <table>
+      <thead><tr><th>Combinació</th><th>Es forma amb</th><th>Quan s'usa</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="form">me'l / me la / me'ls / me les</td><td><span class="mono">em</span> <span class="plus">+</span> <span class="mono">el/la/els/les</span></td><td>Jo rep l'objecte directe (a mi)</td><td>Porta-<strong>me'l</strong>, l'adaptador HDMI.</td></tr>
+        <tr><td class="form">se'n / me'n / te'n</td><td><span class="mono">es/em/et</span> <span class="plus">+</span> <span class="mono">en</span></td><td>Verb pronominal (anar-se'n) o "d'açò, d'ací"</td><td>El conserge <strong>se'n</strong> va a dinar.</td></tr>
+        <tr><td class="form">li ho / els ho</td><td><span class="mono">li/els</span> <span class="plus">+</span> <span class="mono">ho</span></td><td>L'objecte directe és "allò", indeterminat</td><td><strong>Li ho</strong> explicaré demà al departament.</td></tr>
+        <tr><td class="form">els en</td><td><span class="mono">els</span> <span class="plus">+</span> <span class="mono">en</span></td><td>Dono una part de quelcom a "ells"</td><td><strong>Els en</strong> done una còpia a cada u.</td></tr>
+        <tr><td class="form">l'hi</td><td><span class="mono">li</span> <span class="plus">+</span> <span class="mono">el</span> (objecte masc. singular)</td><td>Objecte directe masculí singular + algú de 3a persona</td><td>Done l'ordinador a Marc → <strong>L'hi</strong> done.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="intro" style="margin-bottom:0">El patró de <span class="mono">em/es/et</span> + objecte directe es repeteix amb qualsevol persona: <span class="mono">me'l</span>, <span class="mono">te'l</span>, <span class="mono">se'l</span>, <span class="mono">nos el</span>... i igual amb <span class="mono">en</span>: <span class="mono">se'n</span>, <span class="mono">me'n</span>, <span class="mono">te'n</span>. Una vegada entens una combinació, ja tens la clau de totes les altres.</p>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 1 · Tria la combinació</span>
+  <h2>Al departament d'informàtica</h2>
+  <p class="intro">Selecciona la combinació de pronoms que completa correctament cada frase.</p>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">Porta-<select class="blank" id="a1q1" data-answer="me'l">
+        <option value="">— tria —</option>
+        <option value="me'l">me'l</option>
+        <option value="me la">me la</option>
+        <option value="se'n">se'n</option>
+        <option value="li ho">li ho</option>
+      </select> l'adaptador HDMI, que el necessite ara mateix.</span>
+    <span class="feedback" id="fb-a1q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">Quan acaba l'última classe, el professor sempre
+      <select class="blank" id="a1q2" data-answer="se'n">
+        <option value="">— tria —</option>
+        <option value="se'n">se'n</option>
+        <option value="me'n">me'n</option>
+        <option value="li ho">li ho</option>
+        <option value="els en">els en</option>
+      </select>
+      va corrent cap al departament.</span>
+    <span class="feedback" id="fb-a1q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">Als alumnes encara no els he dit la nota de l'examen, però
+      <select class="blank" id="a1q3" data-answer="els ho">
+        <option value="">— tria —</option>
+        <option value="els ho">els ho</option>
+        <option value="li ho">li ho</option>
+        <option value="els en">els en</option>
+        <option value="l'hi">l'hi</option>
+      </select>
+      diré demà a primera hora.</span>
+    <span class="feedback" id="fb-a1q3" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext">En Marc no té llibre de text del departament;
+      <select class="blank" id="a1q4" data-answer="l'hi">
+        <option value="">— tria —</option>
+        <option value="l'hi">l'hi</option>
+        <option value="li ho">li ho</option>
+        <option value="me'l">me'l</option>
+        <option value="els en">els en</option>
+      </select>
+      done jo mateix, que en tinc un de sobra.</span>
+    <span class="feedback" id="fb-a1q4" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">5.</span>
+    <span class="qtext">Al claustre hem parlat de les llicències de programari i, si algú en vol una còpia,
+      <select class="blank" id="a1q5" data-answer="els en">
+        <option value="">— tria —</option>
+        <option value="els en">els en</option>
+        <option value="els ho">els ho</option>
+        <option value="se'n">se'n</option>
+        <option value="me'n">me'n</option>
+      </select>
+      done a cada departament.</span>
+    <span class="feedback" id="fb-a1q5" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">6.</span>
+    <span class="qtext">Esta contrasenya és massa complicada d'explicar per escrit; al nou company
+      <select class="blank" id="a1q6" data-answer="li ho">
+        <option value="">— tria —</option>
+        <option value="li ho">li ho</option>
+        <option value="els ho">els ho</option>
+        <option value="me'l">me'l</option>
+        <option value="se'n">se'n</option>
+      </select>
+      explicaré en persona a la reunió.</span>
+    <span class="feedback" id="fb-a1q6" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 2 · Tipus test</span>
+  <h2>La regla i la frase correcta</h2>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">Quina combinació fas servir quan l'objecte directe és "allò, una cosa indeterminada" i el destinatari és "ells"?</span>
+    <div class="mc-options" data-qid="a2q1" data-answer="els ho">
+      <label><input type="radio" name="a2q1" value="els ho"> els ho</label>
+      <label><input type="radio" name="a2q1" value="els en"> els en</label>
+      <label><input type="radio" name="a2q1" value="se'n"> se'n</label>
+      <label><input type="radio" name="a2q1" value="l'hi"> l'hi</label>
+    </div>
+    <span class="feedback" id="fb-a2q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">Quina frase és correcta per a dir que algú marxa d'un lloc?</span>
+    <div class="mc-options" data-qid="a2q2" data-answer="a">
+      <label><input type="radio" name="a2q2" value="a"> Se'n va cap a casa abans d'hora.</label>
+      <label><input type="radio" name="a2q2" value="b"> Es'n va cap a casa abans d'hora.</label>
+      <label><input type="radio" name="a2q2" value="c"> Se'ns va cap a casa abans d'hora.</label>
+      <label><input type="radio" name="a2q2" value="d"> Se'l va cap a casa abans d'hora.</label>
+    </div>
+    <span class="feedback" id="fb-a2q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">Si dono "l'ordinador portàtil" (masculí singular) a un company, quina combinació d'objecte directe + indirecte és la més habitual?</span>
+    <div class="mc-options" data-qid="a2q3" data-answer="l'hi">
+      <label><input type="radio" name="a2q3" value="l'hi"> l'hi</label>
+      <label><input type="radio" name="a2q3" value="li ho"> li ho</label>
+      <label><input type="radio" name="a2q3" value="els en"> els en</label>
+      <label><input type="radio" name="a2q3" value="me'l"> me'l</label>
+    </div>
+    <span class="feedback" id="fb-a2q3" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext">Quina frase és correcta quan vull que algú em passe l'USB?</span>
+    <div class="mc-options" data-qid="a2q4" data-answer="a">
+      <label><input type="radio" name="a2q4" value="a"> Passa-me'l.</label>
+      <label><input type="radio" name="a2q4" value="b"> Passa-li'l.</label>
+      <label><input type="radio" name="a2q4" value="c"> Passa'ns-el.</label>
+      <label><input type="radio" name="a2q4" value="d"> Passa-se'l.</label>
+    </div>
+    <span class="feedback" id="fb-a2q4" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 3 · Completa la frase</span>
+  <h2>Escriu la combinació</h2>
+  <p class="intro">Escriu la combinació de pronoms que falta en cada exemple (fixa't en qui rep l'acció i quin és l'objecte).</p>
+  <div class="rule-table">
+    <table>
+      <thead><tr><th>Regla</th><th>Exemple a completar</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>em + el (objecte masc. singular)</td>
+          <td>Porta-<input type="text" class="blank" id="a3q1" data-answer="me'l" autocomplete="off"> de pressa, l'USB del projecte. <span class="feedback" id="fb-a3q1" hidden></span></td>
+        </tr>
+        <tr>
+          <td>es + en (verb pronominal "anar-se'n")</td>
+          <td>Al migdia, el conserge <input type="text" class="blank" id="a3q2" data-answer="se'n" autocomplete="off"> va a dinar sense esperar ningú. <span class="feedback" id="fb-a3q2" hidden></span></td>
+        </tr>
+        <tr>
+          <td>li + ho (objecte indeterminat)</td>
+          <td>Com no sap on és el router de l'aula, <input type="text" class="blank" id="a3q3" data-answer="li ho" autocomplete="off"> explicaré jo. <span class="feedback" id="fb-a3q3" hidden></span></td>
+        </tr>
+        <tr>
+          <td>els + en (partitiu: una part de quelcom)</td>
+          <td>Als alumnes de 4t els falten diapositives per al treball d'IA, i <input type="text" class="blank" id="a3q4" data-answer="els en" autocomplete="off"> envie unes quantes pel Microsoft 365. <span class="feedback" id="fb-a3q4" hidden></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 4 · Mini-diàleg al laboratori</span>
+  <h2>Abans de començar la pràctica</h2>
+  <p class="intro">Completa cada intervenció amb la combinació de pronoms correcta.</p>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">— Encara no tinc l'enllaç del qüestionari de Moodle. — Tranquil,
+      <select class="blank" id="a4q1" data-answer="te'l">
+        <option value="">— tria —</option>
+        <option value="te'l">te'l</option>
+        <option value="li ho">li ho</option>
+        <option value="els en">els en</option>
+        <option value="se'n">se'n</option>
+      </select>
+      envie ara mateix pel Microsoft 365.</span>
+    <span class="feedback" id="fb-a4q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">— He explicat la instal·lació del XAMPP al grup A, però al grup B encara no. — No patisques,
+      <select class="blank" id="a4q2" data-answer="els ho">
+        <option value="">— tria —</option>
+        <option value="els ho">els ho</option>
+        <option value="els en">els en</option>
+        <option value="me'l">me'l</option>
+        <option value="l'hi">l'hi</option>
+      </select>
+      explicaré esta vesprada abans que se'n vagen.</span>
+    <span class="feedback" id="fb-a4q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">— Hui la reunió del departament acaba molt tard i tinc pressa. — Doncs
+      <select class="blank" id="a4q3" data-answer="te'n">
+        <option value="">— tria —</option>
+        <option value="te'n">te'n</option>
+        <option value="li ho">li ho</option>
+        <option value="els en">els en</option>
+        <option value="me'l">me'l</option>
+      </select>
+      pots anar quan vulgues, no cal que esperes.</span>
+    <span class="feedback" id="fb-a4q3" hidden></span>
+  </div>
+</section>
+
+<section class="verbbox">
+  <span class="kicker">Verb del dia · repàs breu</span>
+  <h2>Imperatiu dels irregulars</h2>
+  <p class="intro">Tres ordres curtes i freqüents al laboratori d'informàtica, amb la forma imperativa irregular (tu).</p>
+  <div class="qblock" style="border-top:none;padding-top:0">
+    <span class="qnum">1.</span>
+    <span class="qtext"><input type="text" class="blank" id="v1" data-answer="ix" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(eixir, tu)</span> ara mateix de l'aula i porta la clau del laboratori. <span class="feedback" id="fb-v1" hidden></span></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext"><input type="text" class="blank" id="v2" data-answer="fes" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(fer, tu)</span> el favor de guardar la presentació abans de tancar l'ordinador. <span class="feedback" id="fb-v2" hidden></span></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext"><input type="text" class="blank" id="v3" data-answer="tingues" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(tindre, tu)</span> cura amb les connexions elèctriques del laboratori de robòtica. <span class="feedback" id="fb-v3" hidden></span></span>
+  </div>
+</section>
+
+<div class="solutions">
+  <h2>Solucions i explicacions</h2>
+  <details>
+    <summary>Mostra totes les solucions</summary>
+
+    <div class="sol-item"><strong>Activitat 1.1</strong> — <span class="ans">me'l</span>. "A mi" (em) + objecte directe masculí singular ("l'adaptador") → me'l.</div>
+    <div class="sol-item"><strong>Activitat 1.2</strong> — <span class="ans">se'n</span>. Verb pronominal "anar-se'n": es + en.</div>
+    <div class="sol-item"><strong>Activitat 1.3</strong> — <span class="ans">els ho</span>. "A ells" (els) + objecte indeterminat ("la nota, allò") → els ho.</div>
+    <div class="sol-item"><strong>Activitat 1.4</strong> — <span class="ans">l'hi</span>. "A ell" (li) + objecte directe masculí singular ("el llibre") → l'hi.</div>
+    <div class="sol-item"><strong>Activitat 1.5</strong> — <span class="ans">els en</span>. "A ells" (els) + "d'alguna cosa, una part" (en, la còpia) → els en.</div>
+    <div class="sol-item"><strong>Activitat 1.6</strong> — <span class="ans">li ho</span>. "A ell/ella" (li) + objecte indeterminat ("açò, la contrasenya") → li ho.</div>
+
+    <div class="sol-item"><strong>Activitat 2.1</strong> — <span class="ans">els ho</span>. Destinatari plural de 3a persona + objecte indeterminat.</div>
+    <div class="sol-item"><strong>Activitat 2.2</strong> — <span class="ans">Se'n va cap a casa abans d'hora.</span> "Es" mai no s'escriu sol davant del verb en esta combinació; es fon amb "en" formant "se'n".</div>
+    <div class="sol-item"><strong>Activitat 2.3</strong> — <span class="ans">l'hi</span>. Objecte directe masculí singular + indirecte de 3a persona.</div>
+    <div class="sol-item"><strong>Activitat 2.4</strong> — <span class="ans">Passa-me'l.</span> "A mi" + "l'USB" (masculí singular) → me'l, amb guionet darrere del verb imperatiu.</div>
+
+    <div class="sol-item"><strong>Activitat 3</strong> — <span class="ans">me'l</span> (em + el, "l'USB"), <span class="ans">se'n</span> (es + en, "anar-se'n"), <span class="ans">li ho</span> (li + ho, objecte indeterminat), <span class="ans">els en</span> (els + en, una part de les diapositives).</div>
+
+    <div class="sol-item"><strong>Activitat 4.1</strong> — <span class="ans">te'l</span>. "A tu" (et) + "l'enllaç" (masculí singular) → te'l, seguint el mateix patró que "me'l".</div>
+    <div class="sol-item"><strong>Activitat 4.2</strong> — <span class="ans">els ho</span>. "Al grup B" (plural, 3a persona) + objecte indeterminat ("la instal·lació, allò") → els ho.</div>
+    <div class="sol-item"><strong>Activitat 4.3</strong> — <span class="ans">te'n</span>. "Anar-se'n" en 2a persona (et + en) → te'n, igual que "se'n" però referit a "tu".</div>
+
+    <div class="sol-item"><strong>Verb del dia 1</strong> — <span class="ans">ix</span>. De <em>eixir</em>: imperatiu irregular (ix, isca/isques, ix, eixim, eixiu, isquen).</div>
+    <div class="sol-item"><strong>Verb del dia 2</strong> — <span class="ans">fes</span>. De <em>fer</em>: imperatiu irregular (fes, faça, fem, feu, facen).</div>
+    <div class="sol-item"><strong>Verb del dia 3</strong> — <span class="ans">tingues</span>. De <em>tindre</em>: imperatiu irregular (tingues, tinga, tinguem, tingueu, tinguen).</div>
+  </details>
+</div>
+
+<footer class="note">IES Jorge Juan, Alacant · Quadern de valencià oral per al professorat d'informàtica</footer>
+
+</div>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase();
+  }
+
+  function checkTextInput(id){
+    var el = document.getElementById(id);
+    var fb = document.getElementById('fb-' + id);
+    if(!el || !fb) return false;
+    var raw = el.getAttribute('data-answer') || '';
+    var accepted = raw.split('|').map(norm);
+    var val = norm(el.value);
+    var ok = val.length > 0 && accepted.indexOf(val) !== -1;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  function checkSelect(id){
+    var el = document.getElementById(id);
+    var fb = document.getElementById('fb-' + id);
+    if(!el || !fb) return false;
+    var answer = norm(el.getAttribute('data-answer'));
+    var val = norm(el.value);
+    var ok = val.length > 0 && val === answer;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  function checkMC(qid){
+    var group = document.querySelector('.mc-options[data-qid="' + qid + '"]');
+    var fb = document.getElementById('fb-' + qid);
+    if(!group || !fb) return false;
+    var answer = group.getAttribute('data-answer');
+    var checked = group.querySelector('input[type="radio"]:checked');
+    var ok = !!checked && checked.value === answer;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  var selectIds = ['a1q1','a1q2','a1q3','a1q4','a1q5','a1q6','a4q1','a4q2','a4q3'];
+  var mcIds = ['a2q1','a2q2','a2q3','a2q4'];
+  var textIds = ['a3q1','a3q2','a3q3','a3q4','v1','v2','v3'];
+
+  var total = selectIds.length + mcIds.length + textIds.length;
+  document.getElementById('scoreMax').textContent = total;
+
+  function runCheck(){
+    var score = 0;
+    selectIds.forEach(function(id){ if(checkSelect(id)) score++; });
+    mcIds.forEach(function(id){ if(checkMC(id)) score++; });
+    textIds.forEach(function(id){ if(checkTextInput(id)) score++; });
+    document.getElementById('scoreVal').textContent = score;
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', runCheck);
+})();
+</script>
+
+</body></html>

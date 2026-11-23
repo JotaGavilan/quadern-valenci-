@@ -1,0 +1,595 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Des de, o des que?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Disseny: fitxa de quadern amb dos colors de ressaltat fixos -- indi per a
+     "des de" (preposició, punt d'origen) i terracota per a "des que"
+     (conjunció temporal davant d'una clàusula amb verb conjugat) */
+  :root{
+    --bg:#eef1f3;
+    --surface:#ffffff;
+    --surface-2:#e1e7ea;
+    --ink:#1b2430;
+    --ink-soft:#596575;
+    --accent:#35576e;
+    --accent-ink:#f4f8fa;
+    --accent-soft:#dde7ec;
+    --accent-soft-ink:#24404f;
+    --line:#d4dde1;
+    --good:#2f7d54;
+    --good-bg:#dcf0e4;
+    --bad:#a23b3b;
+    --bad-bg:#f6e3e1;
+    --desde:#3d4f8a;
+    --desde-bg:#dde1f2;
+    --desque:#a85a2e;
+    --desque-bg:#f4e0cf;
+    --shadow:0 1px 2px rgba(27,36,48,.07), 0 10px 26px -14px rgba(27,36,48,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12161a; --surface:#181d22; --surface-2:#1f262c;
+      --ink:#e7ecef; --ink-soft:#9fb0ba;
+      --accent:#7fb8d6; --accent-ink:#0c2430; --accent-soft:#1f3540; --accent-soft-ink:#c9e6f5;
+      --line:#263038;
+      --good:#86d6a8; --good-bg:#1b3225;
+      --bad:#e79e97; --bad-bg:#3a2320;
+      --desde:#9aa8e0; --desde-bg:#232c4a;
+      --desque:#e0a373; --desque-bg:#3a2a18;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12161a; --surface:#181d22; --surface-2:#1f262c;
+    --ink:#e7ecef; --ink-soft:#9fb0ba;
+    --accent:#7fb8d6; --accent-ink:#0c2430; --accent-soft:#1f3540; --accent-soft-ink:#c9e6f5;
+    --line:#263038;
+    --good:#86d6a8; --good-bg:#1b3225;
+    --bad:#e79e97; --bad-bg:#3a2320;
+    --desde:#9aa8e0; --desde-bg:#232c4a;
+    --desque:#e0a373; --desque-bg:#3a2a18;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Karla', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:22px;
+    padding-bottom:70px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+  }
+  .wrap{ max-width:760px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a.backlink{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid var(--accent-soft);
+    margin-bottom:14px;
+  }
+  a.backlink:hover{ border-bottom-color:var(--accent); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:22px 22px 20px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 2px, transparent 2px 22px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.55rem,5vw,2.1rem); font-weight:600; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .tag-row .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    white-space:nowrap;
+  }
+
+  .scorebar{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+  }
+  .scorebar b{ font-family:'Fraunces', serif; font-size:1.15rem; font-weight:600; color:var(--accent); }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{
+    font-size:1.2rem;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:4px;
+    flex-wrap:wrap;
+  }
+  section.card h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    border:1px solid var(--accent-soft);
+    background:var(--accent-soft);
+    border-radius:999px;
+    padding:3px 9px;
+    flex:none;
+  }
+  section.card > p.lead{ color:var(--ink-soft); margin:8px 0 16px; font-size:.92rem; }
+
+  .theory-table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:14px 0; }
+  table.theory{ border-collapse:collapse; width:100%; min-width:580px; font-size:.87rem; }
+  table.theory th{
+    background:var(--surface-2); text-align:left; padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase;
+    letter-spacing:.03em; color:var(--ink-soft); border-bottom:1px solid var(--line);
+  }
+  table.theory td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; min-width:0; }
+  table.theory tr:last-child td{ border-bottom:none; }
+  table.theory .ex{ font-family:'IBM Plex Mono', monospace; font-size:.83rem; }
+  .chip{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:.82rem; padding:2px 8px; border-radius:7px; white-space:nowrap; }
+  .chip.a{ color:var(--desde); background:var(--desde-bg); }
+  .chip.b{ color:var(--desque); background:var(--desque-bg); }
+  .chip.x{ color:var(--bad); background:var(--bad-bg); text-decoration:line-through; }
+
+  .rule-box{
+    background:var(--accent-soft);
+    border:1px solid var(--accent);
+    border-radius:12px;
+    padding:14px 16px;
+    margin:14px 0 4px;
+    font-size:.9rem;
+    color:var(--accent-soft-ink);
+  }
+  .rule-box b{ color:var(--accent); }
+
+  .item{ border-top:1px solid var(--line); padding:14px 0; }
+  .item:first-child{ border-top:none; padding-top:0; }
+  .item p.sentence{ margin:0 0 10px; font-size:.97rem; }
+  .item .hint{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; color:var(--ink-soft); }
+  input.blank{
+    font:inherit; font-family:'IBM Plex Mono', monospace;
+    width:7.5em; max-width:60vw;
+    padding:6px 9px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+  }
+  input.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  .feedback{ display:inline-flex; align-items:center; gap:6px; margin-left:8px; font-size:.84rem; font-family:'IBM Plex Mono', monospace; }
+  .feedback.ok{ color:var(--good); }
+  .feedback.ko{ color:var(--bad); }
+
+  .mc-opts{ display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+  .mc-opt{ display:flex; align-items:baseline; gap:9px; padding:8px 11px; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; font-size:.93rem; }
+  .mc-opt:hover{ background:var(--surface-2); }
+  .mc-opt input{ margin:0; flex:none; }
+  .mc-opt.right-ans{ border-color:var(--good); background:var(--good-bg); }
+  .mc-opt.wrong-ans{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin-top:6px; }
+  table.fillgrid{ border-collapse:collapse; width:100%; min-width:460px; font-size:.9rem; }
+  table.fillgrid th{ background:var(--surface-2); text-align:left; padding:9px 12px; font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase; color:var(--ink-soft); border-bottom:1px solid var(--line); }
+  table.fillgrid td{ padding:9px 12px; border-bottom:1px solid var(--line); min-width:0; }
+  table.fillgrid tr:last-child td{ border-bottom:none; }
+  table.fillgrid .given{ font-family:'IBM Plex Mono', monospace; }
+
+  .dialogue .turn{ display:flex; gap:10px; margin-bottom:12px; align-items:baseline; flex-wrap:wrap; }
+  .dialogue .who{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; font-weight:600; color:var(--accent); flex:none; width:7.6em; }
+  .dialogue .say{ flex:1 1 220px; min-width:0; font-size:.95rem; }
+
+  button.check{
+    font:inherit; font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:.84rem;
+    background:var(--accent); color:var(--accent-ink);
+    border:none; border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check:hover{ opacity:.9; }
+  button.check:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+  .section-score{ font-family:'IBM Plex Mono', monospace; font-size:.84rem; margin-top:10px; color:var(--ink-soft); }
+  .section-score.show b{ color:var(--accent); }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px 20px;
+    margin-top:26px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{ font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem; cursor:pointer; }
+  .sol-block{ margin-top:16px; }
+  .sol-block h3{ font-size:.95rem; font-family:'IBM Plex Mono', monospace; color:var(--accent); text-transform:uppercase; letter-spacing:.03em; margin-bottom:8px; }
+  .sol-item{ font-size:.9rem; padding:8px 0; border-top:1px solid var(--line); }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item .ans{ color:var(--good); font-family:'IBM Plex Mono', monospace; font-weight:600; }
+  .sol-item .expl{ color:var(--ink-soft); display:block; margin-top:2px; }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:26px; }
+
+  @media (max-width:480px){
+    header.top{ padding:18px 16px; }
+    .dialogue .who{ width:100%; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none!important; } }
+</style>
+
+<div class="wrap">
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 16 novembre 2026</div>
+      <h1>Des de, o des que?</h1>
+      <div class="tag-row">
+        <span class="pill">Tema del dia: Des de / des que</span>
+        <span class="pill">Repàs verbal: Present d'indicatiu dels irregulars</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="scorebar" id="scorebar">
+    <span>Puntuació global</span>
+    <span><b id="globalScore">0</b> / <span id="globalTotal">0</span></span>
+  </div>
+
+  <section class="card">
+    <h2><span class="num">Teoria</span> Un punt d'origen, en l'espai i en el temps</h2>
+    <p class="lead"><span class="chip a">des de</span> i <span class="chip b">des que</span> marquen totes dos un punt d'origen, però no s'usen davant del mateix tipus de paraula: la primera va amb un nom, un pronom o un infinitiu; la segona introdueix una oració amb un verb conjugat. El castellà oral confon sovint les dos, i d'ahí ve el calc <span class="chip x">des de que</span>, que el valencià normatiu no admet.</p>
+
+    <div class="theory-table-wrap">
+      <table class="theory">
+        <thead><tr><th>Forma</th><th>Es combina amb</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip a">des de</span></td><td>nom o sintagma nominal</td><td class="ex">Fem servir Microsoft 365 <b>des de</b> l'any passat.</td></tr>
+          <tr><td><span class="chip a">des de</span></td><td>pronom</td><td class="ex">Des d'<b>ell</b>, tota la informació passa pel servidor del centre.</td></tr>
+          <tr><td><span class="chip a">des de</span></td><td>infinitiu</td><td class="ex"><b>Des de</b> instal·lar XAMPP, les pràctiques de SQL van molt més ràpides.</td></tr>
+          <tr><td><span class="chip a">des de</span> + fa</td><td>expressió de durada</td><td class="ex">Treballem amb bases de dades relacionals <b>des de fa</b> tres cursos.</td></tr>
+          <tr><td><span class="chip b">des que</span></td><td>oració amb verb conjugat</td><td class="ex"><b>Des que</b> vam instal·lar la pissarra digital, les classes són més dinàmiques.</td></tr>
+          <tr><td><span class="chip x">des de que</span></td><td style="color:var(--ink-soft)">— calc, no s'usa —</td><td class="ex" style="color:var(--ink-soft)"><s>Des de que</s> vam connectar la Microbit, no para de fer preguntes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <b>El parany del "des de que".</b> En castellà, "desde que" funciona igual davant d'un nom que davant d'una oració sencera. El valencià, en canvi, exigix fer la distinció: si després ve un verb conjugat, la forma correcta és sempre <span class="chip b">des que</span>, sense preposició "de" entremig ("<b>des que</b> va arribar l'alumnat nou, el grup funciona millor"). La preposició <span class="chip a">des de</span> es reserva per als noms, els pronoms i els infinitius, i també per a l'expressió de durada <span class="mono">des de fa</span> ("<b>des de fa</b> dos anys fem robòtica cada divendres").
+    </div>
+  </section>
+
+  <section class="card" id="act1">
+    <h2><span class="num">Activitat 1</span> Omple els buits</h2>
+    <p class="lead">Escriu <span class="mono">des de</span> o <span class="mono">des que</span> segons si el que segueix és un nom/infinitiu o una oració amb verb conjugat.</p>
+
+    <div class="item" data-ans="des de">
+      <p class="sentence">1. Tot el professorat fa servir Microsoft 365 per a compartir documents <input type="text" class="blank" id="a1-1" aria-label="resposta 1"> l'any passat.<span class="feedback" id="fb-a1-1"></span></p>
+    </div>
+    <div class="item" data-ans="des que">
+      <p class="sentence">2. <input type="text" class="blank" id="a1-2" aria-label="resposta 2"> vam connectar la Microbit per primera vegada, l'alumnat no para de fer propostes noves.<span class="feedback" id="fb-a1-2"></span></p>
+    </div>
+    <div class="item" data-ans="des de">
+      <p class="sentence">3. Treballem amb bases de dades relacionals <input type="text" class="blank" id="a1-3" aria-label="resposta 3"> l'any 2021.<span class="feedback" id="fb-a1-3"></span></p>
+    </div>
+    <div class="item" data-ans="des que">
+      <p class="sentence">4. <input type="text" class="blank" id="a1-4" aria-label="resposta 4"> l'alumne va aprovar l'examen de Python, ha millorat molt l'actitud a classe.<span class="feedback" id="fb-a1-4"></span></p>
+    </div>
+    <div class="item" data-ans="des de">
+      <p class="sentence">5. El projecte de robòtica funciona bé <input type="text" class="blank" id="a1-5" aria-label="resposta 5"> fa dos cursos.<span class="feedback" id="fb-a1-5"></span></p>
+    </div>
+    <div class="item" data-ans="des que">
+      <p class="sentence">6. <input type="text" class="blank" id="a1-6" aria-label="resposta 6"> es va actualitzar el sistema operatiu dels ordinadors, no hem tingut cap problema de seguretat.<span class="feedback" id="fb-a1-6"></span></p>
+    </div>
+
+    <button class="check" onclick="checkActivity('act1')">Comprova les respostes</button>
+    <div class="section-score" id="score-act1"></div>
+  </section>
+
+  <section class="card" id="act2">
+    <h2><span class="num">Activitat 2</span> Selecciona l'opció correcta</h2>
+    <p class="lead">Marca la forma ben triada. Recorda: la tercera opció és el calc que no s'ha d'usar mai.</p>
+
+    <div class="item" data-ans="b">
+      <p class="sentence">1. <span class="hint">[des de / des que / des de que]</span> l'institut té wifi en totes les aules, les classes són molt més àgils.</p>
+      <div class="mc-opts" data-q="1">
+        <label class="mc-opt"><input type="radio" name="a2-1" value="a"> des de</label>
+        <label class="mc-opt"><input type="radio" name="a2-1" value="b"> des que</label>
+        <label class="mc-opt"><input type="radio" name="a2-1" value="c"> des de que</label>
+      </div>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">2. Guardem còpies de seguretat dels servidors <span class="hint">[des de / des que / des de que]</span> fa deu anys.</p>
+      <div class="mc-opts" data-q="2">
+        <label class="mc-opt"><input type="radio" name="a2-2" value="a"> des de</label>
+        <label class="mc-opt"><input type="radio" name="a2-2" value="b"> des que</label>
+        <label class="mc-opt"><input type="radio" name="a2-2" value="c"> des de que</label>
+      </div>
+    </div>
+    <div class="item" data-ans="b">
+      <p class="sentence">3. <span class="hint">[des de / des que / des de que]</span> vam començar amb Scratch, l'alumnat ix molt motivat de classe.</p>
+      <div class="mc-opts" data-q="3">
+        <label class="mc-opt"><input type="radio" name="a2-3" value="a"> des de</label>
+        <label class="mc-opt"><input type="radio" name="a2-3" value="b"> des que</label>
+        <label class="mc-opt"><input type="radio" name="a2-3" value="c"> des de que</label>
+      </div>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">4. El company del departament treballa ací <span class="hint">[des de / des que / des de que]</span> l'any 2015.</p>
+      <div class="mc-opts" data-q="4">
+        <label class="mc-opt"><input type="radio" name="a2-4" value="a"> des de</label>
+        <label class="mc-opt"><input type="radio" name="a2-4" value="b"> des que</label>
+        <label class="mc-opt"><input type="radio" name="a2-4" value="c"> des de que</label>
+      </div>
+    </div>
+    <div class="item" data-ans="b">
+      <p class="sentence">5. <span class="hint">[des de / des que / des de que]</span> l'alumne va parlar amb el tutor, ha millorat molt l'assistència.</p>
+      <div class="mc-opts" data-q="5">
+        <label class="mc-opt"><input type="radio" name="a2-5" value="a"> des de</label>
+        <label class="mc-opt"><input type="radio" name="a2-5" value="b"> des que</label>
+        <label class="mc-opt"><input type="radio" name="a2-5" value="c"> des de que</label>
+      </div>
+    </div>
+
+    <button class="check" onclick="checkActivity('act2')">Comprova les respostes</button>
+    <div class="section-score" id="score-act2"></div>
+  </section>
+
+  <section class="card" id="act3">
+    <h2><span class="num">Activitat 3</span> Classifica cada complement</h2>
+    <p class="lead">Escriu <span class="mono">des de</span> o <span class="mono">des que</span> davant de cada complement, segons el que indica entre parèntesis.</p>
+
+    <div class="table-wrap">
+      <table class="fillgrid">
+        <thead><tr><th>Complement (indicació)</th><th>Des de / Des que</th></tr></thead>
+        <tbody>
+          <tr><td class="given">___ fa un mes (durada)</td><td><input type="text" class="blank" id="a3-1" aria-label="resposta taula 1" data-ans="des de"> <span class="feedback" id="fb-a3-1"></span></td></tr>
+          <tr><td class="given">___ es va instal·lar la impressora 3D, l'alumnat prova nous dissenys (oració amb verb)</td><td><input type="text" class="blank" id="a3-2" aria-label="resposta taula 2" data-ans="des que"> <span class="feedback" id="fb-a3-2"></span></td></tr>
+          <tr><td class="given">___ l'inici del curs (nom)</td><td><input type="text" class="blank" id="a3-3" aria-label="resposta taula 3" data-ans="des de"> <span class="feedback" id="fb-a3-3"></span></td></tr>
+          <tr><td class="given">___ vas enviar el correu, no he tingut resposta (oració amb verb)</td><td><input type="text" class="blank" id="a3-4" aria-label="resposta taula 4" data-ans="des que"> <span class="feedback" id="fb-a3-4"></span></td></tr>
+          <tr><td class="given">___ l'any 2020 (nom)</td><td><input type="text" class="blank" id="a3-5" aria-label="resposta taula 5" data-ans="des de"> <span class="feedback" id="fb-a3-5"></span></td></tr>
+          <tr><td class="given">___ van canviar el router, la xarxa va molt més ràpida (oració amb verb)</td><td><input type="text" class="blank" id="a3-6" aria-label="resposta taula 6" data-ans="des que"> <span class="feedback" id="fb-a3-6"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button class="check" onclick="checkActivity('act3')">Comprova les respostes</button>
+    <div class="section-score" id="score-act3"></div>
+  </section>
+
+  <section class="card" id="act4">
+    <h2><span class="num">Activitat 4</span> Claustre del departament d'informàtica</h2>
+    <p class="lead">Completa els buits del mini-diàleg amb <span class="mono">des de</span> o <span class="mono">des que</span>.</p>
+
+    <div class="dialogue">
+      <div class="turn"><span class="who">Cap de dept.:</span><span class="say"><input type="text" class="blank" id="a4-1" aria-label="resposta dialeg 1" data-ans="des que"> vam rebre els ordinadors nous, el laboratori de PRSI funciona molt millor.<span class="feedback" id="fb-a4-1"></span></span></div>
+      <div class="turn"><span class="who">Professor 1:</span><span class="say">I el servidor amb XAMPP, porta estable <input type="text" class="blank" id="a4-2" aria-label="resposta dialeg 2" data-ans="des de"> quin dia?<span class="feedback" id="fb-a4-2"></span></span></div>
+      <div class="turn"><span class="who">Professor 2:</span><span class="say"><input type="text" class="blank" id="a4-3" aria-label="resposta dialeg 3" data-ans="des que"> vam actualitzar el WordPress del departament, ja no hi ha eixos errors de seguretat.<span class="feedback" id="fb-a4-3"></span></span></div>
+      <div class="turn"><span class="who">Cap de dept.:</span><span class="say">Fem servir Microsoft 365 al departament <input type="text" class="blank" id="a4-4" aria-label="resposta dialeg 4" data-ans="des de"> fa dos cursos.<span class="feedback" id="fb-a4-4"></span></span></div>
+      <div class="turn"><span class="who">Professor 1:</span><span class="say"><input type="text" class="blank" id="a4-5" aria-label="resposta dialeg 5" data-ans="des que"> vam entrenar el primer model amb Teachable Machine, l'alumnat demana fer-ne més.<span class="feedback" id="fb-a4-5"></span></span></div>
+    </div>
+
+    <button class="check" onclick="checkActivity('act4')">Comprova les respostes</button>
+    <div class="section-score" id="score-act4"></div>
+  </section>
+
+  <section class="card" id="act5">
+    <h2><span class="num">Repàs verbal</span> Present d'indicatiu dels irregulars</h2>
+    <p class="lead">Escriu la forma correcta del present d'indicatiu (primera persona del singular) del verb entre parèntesis.</p>
+
+    <div class="item" data-ans="isc">
+      <p class="sentence">1. Cada vesprada <input type="text" class="blank" id="a5-1" aria-label="resposta verb 1"> (eixir) tard de l'institut perquè acabe de configurar els ordinadors del laboratori.<span class="feedback" id="fb-a5-1"></span></p>
+    </div>
+    <div class="item" data-ans="sé">
+      <p class="sentence">2. No <input type="text" class="blank" id="a5-2" aria-label="resposta verb 2"> (saber) si tot l'alumnat ha entregat ja la pràctica de Python.<span class="feedback" id="fb-a5-2"></span></p>
+    </div>
+    <div class="item" data-ans="vull">
+      <p class="sentence">3. <input type="text" class="blank" id="a5-3" aria-label="resposta verb 3"> (voler) que hui useu MakeCode per a programar la Microbit.<span class="feedback" id="fb-a5-3"></span></p>
+    </div>
+    <div class="item" data-ans="vinc">
+      <p class="sentence">4. Quan <input type="text" class="blank" id="a5-4" aria-label="resposta verb 4"> (vindre) a classe, sempre porte l'ordinador portàtil carregat.<span class="feedback" id="fb-a5-4"></span></p>
+    </div>
+
+    <button class="check" onclick="checkActivity('act5')">Comprova les respostes</button>
+    <div class="section-score" id="score-act5"></div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-block">
+      <h3>Activitat 1 — Omple els buits</h3>
+      <div class="sol-item"><span class="ans">1. des de</span><span class="expl">Punt d'origen amb un sintagma nominal ("l'any passat").</span></div>
+      <div class="sol-item"><span class="ans">2. des que</span><span class="expl">Davant d'una oració amb verb conjugat ("vam connectar") cal "des que", mai "des de que".</span></div>
+      <div class="sol-item"><span class="ans">3. des de</span><span class="expl">Punt d'origen amb un nom ("l'any 2021").</span></div>
+      <div class="sol-item"><span class="ans">4. des que</span><span class="expl">Oració amb verb conjugat ("va aprovar").</span></div>
+      <div class="sol-item"><span class="ans">5. des de</span><span class="expl">Expressió de durada "des de fa", amb "fa" ja present a la frase.</span></div>
+      <div class="sol-item"><span class="ans">6. des que</span><span class="expl">Oració amb verb conjugat ("es va actualitzar").</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 2 — Selecció</h3>
+      <div class="sol-item"><span class="ans">1. des que</span><span class="expl">Davant d'oració amb verb conjugat ("té"). "Des de que" és el calc a evitar.</span></div>
+      <div class="sol-item"><span class="ans">2. des de</span><span class="expl">Expressió de durada "des de fa deu anys".</span></div>
+      <div class="sol-item"><span class="ans">3. des que</span><span class="expl">Oració amb verb conjugat ("vam començar").</span></div>
+      <div class="sol-item"><span class="ans">4. des de</span><span class="expl">Punt d'origen amb un nom/data ("l'any 2015").</span></div>
+      <div class="sol-item"><span class="ans">5. des que</span><span class="expl">Oració amb verb conjugat ("va parlar").</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 3 — Classificació</h3>
+      <div class="sol-item"><span class="ans">1. des de</span><span class="expl">Durada, amb "fa" ("des de fa un mes").</span></div>
+      <div class="sol-item"><span class="ans">2. des que</span><span class="expl">Oració amb verb conjugat ("es va instal·lar").</span></div>
+      <div class="sol-item"><span class="ans">3. des de</span><span class="expl">Nom ("l'inici del curs").</span></div>
+      <div class="sol-item"><span class="ans">4. des que</span><span class="expl">Oració amb verb conjugat ("vas enviar").</span></div>
+      <div class="sol-item"><span class="ans">5. des de</span><span class="expl">Nom/data ("l'any 2020").</span></div>
+      <div class="sol-item"><span class="ans">6. des que</span><span class="expl">Oració amb verb conjugat ("van canviar").</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 4 — Claustre de departament</h3>
+      <div class="sol-item"><span class="ans">1. des que</span><span class="expl">Oració amb verb conjugat ("vam rebre").</span></div>
+      <div class="sol-item"><span class="ans">2. des de</span><span class="expl">Pregunta pel punt d'origen amb un nom ("quin dia").</span></div>
+      <div class="sol-item"><span class="ans">3. des que</span><span class="expl">Oració amb verb conjugat ("vam actualitzar").</span></div>
+      <div class="sol-item"><span class="ans">4. des de</span><span class="expl">Expressió de durada "des de fa dos cursos".</span></div>
+      <div class="sol-item"><span class="ans">5. des que</span><span class="expl">Oració amb verb conjugat ("vam entrenar").</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Repàs verbal — Present d'indicatiu dels irregulars</h3>
+      <div class="sol-item"><span class="ans">1. isc</span><span class="expl">Present irregular de "eixir": primera persona isc, ixes, ix, eixim/ixim, eixiu/ixiu, isquen.</span></div>
+      <div class="sol-item"><span class="ans">2. sé</span><span class="expl">Present irregular de "saber": sé, saps, sap, sabem, sabeu, saben.</span></div>
+      <div class="sol-item"><span class="ans">3. vull</span><span class="expl">Present irregular de "voler": vull, vols, vol, volem, voleu, volen.</span></div>
+      <div class="sol-item"><span class="ans">4. vinc</span><span class="expl">Present irregular de "vindre": vinc, véns, ve, venim, veniu, vénen.</span></div>
+    </div>
+  </details>
+
+  <footer class="note">IES Jorge Juan, Alacant · Exercici diari de valencià oral per a l'àmbit educatiu-informàtic</footer>
+</div>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'')
+      .toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/['’]/g,"'")
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  var sectionScores = {};
+
+  function setFeedback(el, ok){
+    if(!el) return;
+    el.textContent = ok ? '✓ correcte' : '✗ revisa-ho';
+    el.className = 'feedback ' + (ok ? 'ok' : 'ko');
+  }
+
+  function checkTextItems(container){
+    var correct = 0, total = 0;
+    container.querySelectorAll('.item[data-ans]').forEach(function(item){
+      var input = item.querySelector('input.blank');
+      if(!input) return;
+      total++;
+      var ok = norm(input.value) === norm(item.getAttribute('data-ans'));
+      if(ok) correct++;
+      var fb = item.querySelector('.feedback');
+      setFeedback(fb, ok);
+    });
+    container.querySelectorAll('input.blank[data-ans]').forEach(function(input){
+      total++;
+      var ok = norm(input.value) === norm(input.getAttribute('data-ans'));
+      if(ok) correct++;
+      var fb = document.getElementById('fb-' + input.id);
+      setFeedback(fb, ok);
+    });
+    return {correct: correct, total: total};
+  }
+
+  function checkMcItems(container){
+    var correct = 0, total = 0;
+    container.querySelectorAll('.item[data-ans]').forEach(function(item){
+      var opts = item.querySelectorAll('.mc-opt');
+      if(!opts.length) return;
+      var expected = item.getAttribute('data-ans');
+      var checkedInput = item.querySelector('input[type=radio]:checked');
+      total++;
+      var ok = checkedInput && checkedInput.value === expected;
+      if(ok) correct++;
+      opts.forEach(function(opt){
+        opt.classList.remove('right-ans','wrong-ans');
+        var inp = opt.querySelector('input');
+        if(inp.value === expected){ opt.classList.add('right-ans'); }
+        else if(checkedInput && inp.value === checkedInput.value){ opt.classList.add('wrong-ans'); }
+      });
+    });
+    return {correct: correct, total: total};
+  }
+
+  window.checkActivity = function(sectionId){
+    var section = document.getElementById(sectionId);
+    if(!section) return;
+    var result;
+    if(section.querySelector('.mc-opts')){
+      result = checkMcItems(section);
+    } else {
+      result = checkTextItems(section);
+    }
+    sectionScores[sectionId] = result;
+    var scoreEl = document.getElementById('score-' + sectionId);
+    if(scoreEl){
+      scoreEl.classList.add('show');
+      scoreEl.innerHTML = 'Resultat: <b>' + result.correct + ' / ' + result.total + '</b>';
+    }
+    updateGlobal();
+  };
+
+  function updateGlobal(){
+    var correct = 0, total = 0;
+    Object.keys(sectionScores).forEach(function(k){
+      correct += sectionScores[k].correct;
+      total += sectionScores[k].total;
+    });
+    document.getElementById('globalScore').textContent = correct;
+    document.getElementById('globalTotal').textContent = total;
+  }
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,860 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Trac, caic i ric</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+  /* Layout concept: a single-column "quadern de taller" — amber chalk-rail
+     section markers down the left, verb data set in mono, practice blocks
+     stacked like worksheet pages, robotics-lab accent on a graphite ground. */
+  :root{
+    --bg:#121a17;
+    --surface:#1b2621;
+    --surface-2:#233129;
+    --ink:#eef5ee;
+    --ink-soft:#9fb3a8;
+    --accent:#f2a93b;
+    --accent-ink:#201402;
+    --accent-soft:#3a2f16;
+    --line:#2d3b33;
+    --good:#5fd38d;
+    --good-bg:#1a3326;
+    --bad:#ef7187;
+    --bad-bg:#3a1e24;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f3f1e8;
+      --surface:#ffffff;
+      --surface-2:#eae5d4;
+      --ink:#1c2420;
+      --ink-soft:#5b6a60;
+      --accent:#b36a0e;
+      --accent-ink:#ffffff;
+      --accent-soft:#f3e2c2;
+      --line:#ddd6bc;
+      --good:#2f7d50;
+      --good-bg:#e1f0e3;
+      --bad:#b43a52;
+      --bad-bg:#f6dde1;
+      --shadow: 0 1px 2px rgba(28,36,32,.06), 0 10px 26px -14px rgba(28,36,32,.2);
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f3f1e8;
+    --surface:#ffffff;
+    --surface-2:#eae5d4;
+    --ink:#1c2420;
+    --ink-soft:#5b6a60;
+    --accent:#b36a0e;
+    --accent-ink:#ffffff;
+    --accent-soft:#f3e2c2;
+    --line:#ddd6bc;
+    --good:#2f7d50;
+    --good-bg:#e1f0e3;
+    --bad:#b43a52;
+    --bad-bg:#f6dde1;
+    --shadow: 0 1px 2px rgba(28,36,32,.06), 0 10px 26px -14px rgba(28,36,32,.2);
+    color-scheme: light;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.55;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+    padding-block:26px 70px;
+  }
+  .page{ max-width:760px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Spectral', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+  a.backlink{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid var(--accent-soft);
+    margin-bottom:14px;
+  }
+  a.backlink:hover{ border-bottom-color:var(--accent); }
+
+  header.top{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:700; color:var(--ink); }
+  header.top p{ margin:10px 0 0; max-width:60ch; color:var(--ink-soft); font-size:.95rem; }
+
+  .topic-row{
+    display:flex; gap:10px; flex-wrap:wrap;
+    margin-top:16px;
+  }
+  .topic-row span{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    white-space:nowrap;
+  }
+
+  .scoreboard{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:24px;
+    box-shadow:var(--shadow);
+  }
+  .scoreboard .label{ font-size:.82rem; color:var(--ink-soft); }
+  .scoreboard .value{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:1.15rem;
+    color:var(--accent);
+  }
+
+  section.block{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 22px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+  }
+  .rail{
+    display:flex; align-items:baseline; gap:10px;
+    margin-bottom:14px;
+  }
+  .rail .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-radius:7px;
+    padding:3px 8px;
+    flex:none;
+  }
+  .rail h2{ font-size:1.18rem; font-weight:600; }
+  section.block > p.lead{ color:var(--ink-soft); margin:0 0 14px; font-size:.92rem; }
+
+  table.conj{
+    border-collapse:collapse;
+    width:100%;
+    font-size:.88rem;
+  }
+  table.conj caption{
+    text-align:left;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.74rem;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  table.conj th, table.conj td{
+    border:1px solid var(--line);
+    padding:8px 10px;
+    text-align:left;
+  }
+  table.conj thead th{
+    background:var(--surface-2);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  table.conj td.verb{ font-weight:600; font-family:'Spectral', serif; }
+  table.conj td.jo{ color:var(--accent); font-weight:700; font-family:'JetBrains Mono', monospace; }
+  .table-wrap{ overflow-x:auto; margin-bottom:6px; }
+
+  .note-box{
+    background:var(--surface-2);
+    border-left:3px solid var(--accent);
+    border-radius:0 10px 10px 0;
+    padding:12px 14px;
+    font-size:.88rem;
+    color:var(--ink-soft);
+    margin-top:12px;
+  }
+  .note-box b{ color:var(--ink); }
+
+  .item{
+    margin-bottom:14px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .item:last-child{ margin-bottom:0; padding-bottom:0; border-bottom:none; }
+  .item p.sent{ margin:0 0 8px; font-size:.95rem; }
+  .item .ctx{ color:var(--ink-soft); font-size:.8rem; font-style:italic; }
+
+  input.gap, select.gap{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.92rem;
+    padding:6px 9px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+    min-width:120px;
+    max-width:100%;
+  }
+  input.gap:focus, select.gap:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .mc-options{ display:flex; flex-direction:column; gap:6px; margin-top:6px; }
+  .mc-options label{
+    display:flex; align-items:center; gap:8px;
+    font-size:.9rem;
+    padding:7px 10px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    cursor:pointer;
+    background:var(--bg);
+  }
+  .mc-options label:hover{ background:var(--surface-2); }
+  .mc-options input{ accent-color:var(--accent); flex:none; }
+
+  .feedback{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:.82rem;
+    font-weight:600;
+    padding:3px 10px;
+    border-radius:999px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+  .feedback.ok{ background:var(--good-bg); color:var(--good); }
+  .feedback.bad{ background:var(--bad-bg); color:var(--bad); }
+
+  .dialog-line{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:10px;
+    margin-bottom:10px;
+    font-size:.94rem;
+  }
+  .dialog-line .who{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.74rem;
+    font-weight:700;
+    color:var(--accent);
+    padding-top:3px;
+    white-space:nowrap;
+  }
+  .dialog-line .what{ min-width:0; }
+
+  .check-btn{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:.9rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:8px;
+  }
+  .check-btn:hover{ filter:brightness(1.07); }
+  .check-btn:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+  .block-score{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-left:10px;
+  }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 20px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size:1.1rem;
+  }
+  details.solutions ol{ padding-left:20px; }
+  details.solutions li{ margin-bottom:10px; font-size:.9rem; }
+  details.solutions li b{ color:var(--accent); }
+  details.solutions .sol-sect{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    margin:18px 0 6px;
+  }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:24px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:20px 18px 20px; }
+    section.block{ padding:18px 16px 20px; }
+    .dialog-line{ grid-template-columns:1fr; }
+    .dialog-line .who{ padding-top:0; }
+  }
+</style>
+
+<div class="page">
+
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="eyebrow">IES Jorge Juan · Alacant · Departament d'Informàtica</div>
+    <h1>Trac, caic i ric</h1>
+    <p>Exercici diari de valencià oral per a l'àmbit educatiu. Hui repassem el <b>present d'indicatiu dels verbs irregulars</b>, amb vocabulari de robòtica i IA (ampliació).</p>
+    <div class="topic-row">
+      <span>Tema gramatical: Present d'indicatiu dels irregulars</span>
+      <span>Vocabulari: Robòtica i IA · ampliació (4t ESO)</span>
+    </div>
+  </header>
+
+  <div class="scoreboard">
+    <span class="label">Puntuació acumulada</span>
+    <span class="value"><span id="scoreTotal">0</span> / <span id="scoreMax">35</span></span>
+  </div>
+
+  <section class="block">
+    <div class="rail"><span class="num">i</span><h2>El present dels irregulars: on està el problema?</h2></div>
+    <p class="lead">
+      En valencià, la majoria de formes del present d'indicatiu són regulars (tu parl<b>es</b>, ell parl<b>a</b>...). El problema apareix sobretot en la persona <b>jo</b>, que en molts verbs de la 2a i 3a conjugació no acaba en <span class="mono">-e</span> ni en <span class="mono">-o</span>, sinó en <span class="mono">-c</span>, i en alguns verbs canvia l'arrel completa. Vegem primer sis verbs molt freqüents a classe, conjugats sencers:
+    </p>
+    <div class="table-wrap">
+      <table class="conj">
+        <caption>Present d'indicatiu — conjugació completa</caption>
+        <thead>
+          <tr><th>Infinitiu</th><th>jo</th><th>tu</th><th>ell / ella</th><th>nosaltres</th><th>vosaltres</th><th>ells / elles</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="verb">eixir</td><td class="jo">isc</td><td>ixes</td><td>ix</td><td>eixim</td><td>eixiu</td><td>ixen</td></tr>
+          <tr><td class="verb">voler</td><td class="jo">vull</td><td>vols</td><td>vol</td><td>volem</td><td>voleu</td><td>volen</td></tr>
+          <tr><td class="verb">poder</td><td class="jo">puc</td><td>pots</td><td>pot</td><td>podem</td><td>podeu</td><td>poden</td></tr>
+          <tr><td class="verb">saber</td><td class="jo">sé</td><td>saps</td><td>sap</td><td>sabem</td><td>sabeu</td><td>saben</td></tr>
+          <tr><td class="verb">fer</td><td class="jo">faig</td><td>fas</td><td>fa</td><td>fem</td><td>feu</td><td>fan</td></tr>
+          <tr><td class="verb">dir</td><td class="jo">dic</td><td>dius</td><td>diu</td><td>diem</td><td>dieu</td><td>diuen</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead" style="margin-top:16px;">
+      Hi ha, a més, un grup molt productiu de verbs que, en la persona <b>jo</b>, afegeixen simplement una <span class="mono">-c</span> a l'arrel (sense canviar les altres persones, que són regulars):
+    </p>
+    <div class="table-wrap">
+      <table class="conj">
+        <caption>Verbs amb "jo" en -c (resta de persones regular)</caption>
+        <thead>
+          <tr><th>Infinitiu</th><th>jo</th><th>Infinitiu</th><th>jo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="verb">tindre</td><td class="jo">tinc</td><td class="verb">caure</td><td class="jo">caic</td></tr>
+          <tr><td class="verb">vindre</td><td class="jo">vinc</td><td class="verb">creure</td><td class="jo">crec</td></tr>
+          <tr><td class="verb">viure</td><td class="jo">visc</td><td class="verb">riure</td><td class="jo">ric</td></tr>
+          <tr><td class="verb">traure</td><td class="jo">trac</td><td class="verb">seure</td><td class="jo">sec</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box">
+      <b>A classe:</b> este patró és molt útil perquè el fas servir constantment: "jo <span class="mono">tinc</span> un dubte", "no <span class="mono">sé</span> si funciona", "<span class="mono">isc</span> un moment a buscar els cables", "no <span class="mono">puc</span> obrir l'arxiu". Fixa't que "vull", "puc", "sé", "faig", "dic" no segueixen el patró de la -c de forma tan directa (canvien més l'arrel), mentre que "tinc", "vinc", "visc", "trac", "caic", "crec", "ric", "sec" sí que l'afegeixen de manera regular.
+    </div>
+  </section>
+
+  <section class="block" id="act1">
+    <div class="rail"><span class="num">1</span><h2>Omple els buits</h2><span class="block-score" id="score1Label"></span></div>
+    <p class="lead">Escriu la forma correcta del present d'indicatiu del verb entre parèntesis. Pensa en situacions reals de l'aula d'informàtica.</p>
+
+    <div class="item">
+      <p class="sent">Cada matí <input type="text" class="gap" id="a1-1" placeholder="eixir"> de casa a les 7:30 per arribar puntual a classe.</p>
+      <span class="ctx">(eixir, jo)</span>
+      <span class="feedback" id="fb1-1" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Si un alumne no <input type="text" class="gap" id="a1-2" placeholder="saber"> com obrir l'Scratch, l'ajude pas a pas des de la pissarra digital.</p>
+      <span class="ctx">(saber, ell/ella)</span>
+      <span class="feedback" id="fb1-2" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Jo <input type="text" class="gap" id="a1-3" placeholder="voler"> que useu MakeCode per a programar la placa Microbit abans del descans.</p>
+      <span class="ctx">(voler, jo)</span>
+      <span class="feedback" id="fb1-3" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Al claustre, jo <input type="text" class="gap" id="a1-4" placeholder="dir"> sempre que cal actualitzar el lloc de WordPress del departament.</p>
+      <span class="ctx">(dir, jo)</span>
+      <span class="feedback" id="fb1-4" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Quan el servidor de XAMPP falla, <input type="text" class="gap" id="a1-5" placeholder="fer"> una còpia de seguretat abans de tocar res.</p>
+      <span class="ctx">(fer, jo)</span>
+      <span class="feedback" id="fb1-5" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Ella <input type="text" class="gap" id="a1-6" placeholder="poder"> connectar-se al laboratori des de casa amb la màquina virtual de VirtualBox.</p>
+      <span class="ctx">(poder, ell/ella)</span>
+      <span class="feedback" id="fb1-6" hidden></span>
+    </div>
+
+    <button class="check-btn" onclick="checkAct1()">Comprova les respostes</button>
+  </section>
+
+  <section class="block" id="act2">
+    <div class="rail"><span class="num">2</span><h2>Tria l'opció correcta</h2><span class="block-score" id="score2Label"></span></div>
+    <p class="lead">Marca la forma verbal correcta en cada frase.</p>
+
+    <div class="item">
+      <p class="sent">Jo no <span class="mono">______</span> (saber) quina contrasenya té eixe compte de Microsoft 365.</p>
+      <div class="mc-options" id="a2-1">
+        <label><input type="radio" name="a2-1" value="sap"> sap</label>
+        <label><input type="radio" name="a2-1" value="sabem"> sabem</label>
+        <label><input type="radio" name="a2-1" value="sé"> sé</label>
+        <label><input type="radio" name="a2-1" value="saps"> saps</label>
+      </div>
+      <span class="feedback" id="fb2-1" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Nosaltres <span class="mono">______</span> (entrenar un model) amb Teachable Machine abans d'ensenyar-lo a l'IA del projecte.</p>
+      <div class="mc-options" id="a2-2">
+        <label><input type="radio" name="a2-2" value="entrena"> entrena</label>
+        <label><input type="radio" name="a2-2" value="entrenem"> entrenem</label>
+        <label><input type="radio" name="a2-2" value="entrenes"> entrenes</label>
+        <label><input type="radio" name="a2-2" value="entrenen"> entrenen</label>
+      </div>
+      <span class="feedback" id="fb2-2" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Els alumnes de 2n ESO <span class="mono">______</span> (eixir) de classe cinc minuts abans per a muntar el robot.</p>
+      <div class="mc-options" id="a2-3">
+        <label><input type="radio" name="a2-3" value="ix"> ix</label>
+        <label><input type="radio" name="a2-3" value="eixim"> eixim</label>
+        <label><input type="radio" name="a2-3" value="ixen"> ixen</label>
+        <label><input type="radio" name="a2-3" value="isc"> isc</label>
+      </div>
+      <span class="feedback" id="fb2-3" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Professor, jo no <span class="mono">______</span> (poder) connectar la placa d'expansió al port USB.</p>
+      <div class="mc-options" id="a2-4">
+        <label><input type="radio" name="a2-4" value="pot"> pot</label>
+        <label><input type="radio" name="a2-4" value="puc"> puc</label>
+        <label><input type="radio" name="a2-4" value="podem"> podem</label>
+        <label><input type="radio" name="a2-4" value="poden"> poden</label>
+      </div>
+      <span class="feedback" id="fb2-4" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent">Vosaltres <span class="mono">______</span> (fer) les consultes SQL amb XAMPP al laboratori d'informàtica.</p>
+      <div class="mc-options" id="a2-5">
+        <label><input type="radio" name="a2-5" value="feu"> feu</label>
+        <label><input type="radio" name="a2-5" value="fan"> fan</label>
+        <label><input type="radio" name="a2-5" value="fem"> fem</label>
+        <label><input type="radio" name="a2-5" value="faig"> faig</label>
+      </div>
+      <span class="feedback" id="fb2-5" hidden></span>
+    </div>
+
+    <button class="check-btn" onclick="checkAct2()">Comprova les respostes</button>
+  </section>
+
+  <section class="block" id="act3">
+    <div class="rail"><span class="num">3</span><h2>Completa la taula</h2><span class="block-score" id="score3Label"></span></div>
+    <p class="lead">Completa la conjugació del present d'indicatiu dels verbs <b>traure</b> i <b>riure</b>. La persona "jo" ja està feta com a exemple.</p>
+
+    <div class="table-wrap">
+      <table class="conj">
+        <caption>traure (present d'indicatiu)</caption>
+        <thead><tr><th>jo</th><th>tu</th><th>ell/ella</th><th>nosaltres</th><th>vosaltres</th><th>ells/elles</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="jo">trac</td>
+            <td><input type="text" class="gap" id="a3-1" style="min-width:90px"></td>
+            <td><input type="text" class="gap" id="a3-2" style="min-width:90px"></td>
+            <td><input type="text" class="gap" id="a3-3" style="min-width:90px"></td>
+            <td><input type="text" class="gap" id="a3-4" style="min-width:90px"></td>
+            <td><input type="text" class="gap" id="a3-5" style="min-width:90px"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap" style="margin-top:14px;">
+      <table class="conj">
+        <caption>riure (present d'indicatiu)</caption>
+        <thead><tr><th>jo</th><th>tu</th><th>ell/ella</th><th>nosaltres</th><th>vosaltres</th><th>ells/elles</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="jo">ric</td>
+            <td><input type="text" class="gap" id="a3-6" style="min-width:90px"></td>
+            <td><input type="text" class="gap" id="a3-7" style="min-width:90px"></td>
+            <td><input type="text" class="gap" id="a3-8" style="min-width:90px"></td>
+            <td><input type="text" class="gap" id="a3-9" style="min-width:90px"></td>
+            <td><input type="text" class="gap" id="a3-10" style="min-width:90px"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:10px;"><span class="feedback" id="fb3" hidden></span></div>
+
+    <button class="check-btn" onclick="checkAct3()">Comprova les respostes</button>
+  </section>
+
+  <section class="block" id="act4">
+    <div class="rail"><span class="num">4</span><h2>Mini-diàleg al laboratori</h2><span class="block-score" id="score4Label"></span></div>
+    <p class="lead">Completa la conversa entre el professor i l'alumnat a classe d'informàtica.</p>
+
+    <div class="dialog-line"><span class="who">PROFESSOR</span><span class="what">Bon dia a tots! Hui <input type="text" class="gap" id="a4-1" placeholder="voler"> que obriu l'ordinador i <input type="text" class="gap" id="a4-2" placeholder="eixir"> de l'aplicació anterior. <span class="ctx">(voler / eixir, jo)</span> <span class="feedback" id="fb4-1" hidden></span></span></div>
+    <div class="dialog-line"><span class="who">ALUMNE</span><span class="what">Professor, jo no <input type="text" class="gap" id="a4-3" placeholder="poder"> obrir XAMPP, em diu un error de port. <span class="ctx">(poder, jo)</span> <span class="feedback" id="fb4-2" hidden></span></span></div>
+    <div class="dialog-line"><span class="who">PROFESSOR</span><span class="what">Espera, <input type="text" class="gap" id="a4-4" placeholder="fer"> una ullada ara mateix... <input type="text" class="gap" id="a4-5" placeholder="dir"> que cal reiniciar el servei Apache. <span class="ctx">(fer / dir, jo)</span> <span class="feedback" id="fb4-3" hidden></span></span></div>
+    <div class="dialog-line"><span class="who">ALUMNA</span><span class="what">I jo no <input type="text" class="gap" id="a4-6" placeholder="saber"> on guardar l'arxiu de la consulta SQL. <span class="ctx">(saber, jo)</span> <span class="feedback" id="fb4-4" hidden></span></span></div>
+
+    <button class="check-btn" onclick="checkAct4()">Comprova les respostes</button>
+  </section>
+
+  <section class="block" id="act5">
+    <div class="rail"><span class="num">5</span><h2>Vocabulari: Robòtica i IA (ampliació)</h2><span class="block-score" id="score5Label"></span></div>
+    <p class="lead">Relaciona cada terme valencià amb la seua traducció correcta al castellà.</p>
+
+    <div class="item">
+      <p class="sent"><b>prototip</b> →
+        <select class="gap" id="a5-1">
+          <option value="">— tria —</option>
+          <option value="borrador">borrador</option>
+          <option value="prototipo">prototipo</option>
+          <option value="maqueta">maqueta</option>
+        </select>
+      </p>
+      <span class="feedback" id="fb5-1" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent"><b>placa d'expansió</b> →
+        <select class="gap" id="a5-2">
+          <option value="">— tria —</option>
+          <option value="placa madre">placa madre</option>
+          <option value="tarjeta gráfica">tarjeta gráfica</option>
+          <option value="placa de expansión">placa de expansión</option>
+        </select>
+      </p>
+      <span class="feedback" id="fb5-2" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent"><b>estructura de control</b> →
+        <select class="gap" id="a5-3">
+          <option value="">— tria —</option>
+          <option value="estructura de datos">estructura de datos</option>
+          <option value="diagrama de flujo">diagrama de flujo</option>
+          <option value="estructura de control">estructura de control</option>
+        </select>
+      </p>
+      <span class="feedback" id="fb5-3" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent"><b>bucle</b> →
+        <select class="gap" id="a5-4">
+          <option value="">— tria —</option>
+          <option value="bucle">bucle</option>
+          <option value="rama">rama</option>
+          <option value="nodo">nodo</option>
+        </select>
+      </p>
+      <span class="feedback" id="fb5-4" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent"><b>reconeixement de patrons</b> →
+        <select class="gap" id="a5-5">
+          <option value="">— tria —</option>
+          <option value="reconocimiento facial">reconocimiento facial</option>
+          <option value="reconocimiento de patrones">reconocimiento de patrones</option>
+          <option value="detección de errores">detección de errores</option>
+        </select>
+      </p>
+      <span class="feedback" id="fb5-5" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent"><b>model entrenat</b> →
+        <select class="gap" id="a5-6">
+          <option value="">— tria —</option>
+          <option value="modelo de datos">modelo de datos</option>
+          <option value="modelo entrenado">modelo entrenado</option>
+          <option value="modelo base">modelo base</option>
+        </select>
+      </p>
+      <span class="feedback" id="fb5-6" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent"><b>indicació (prompt)</b> →
+        <select class="gap" id="a5-7">
+          <option value="">— tria —</option>
+          <option value="algoritmo">algoritmo</option>
+          <option value="comando">comando</option>
+          <option value="instrucción/prompt">instrucción/prompt</option>
+        </select>
+      </p>
+      <span class="feedback" id="fb5-7" hidden></span>
+    </div>
+    <div class="item">
+      <p class="sent"><b>prova d'usuari</b> →
+        <select class="gap" id="a5-8">
+          <option value="">— tria —</option>
+          <option value="prueba de usuario">prueba de usuario</option>
+          <option value="diseño iterativo">diseño iterativo</option>
+          <option value="documentación técnica">documentación técnica</option>
+        </select>
+      </p>
+      <span class="feedback" id="fb5-8" hidden></span>
+    </div>
+
+    <button class="check-btn" onclick="checkAct5()">Comprova les respostes</button>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-sect">Activitat 1 — Omple els buits</div>
+    <ol>
+      <li><b>isc</b> — "eixir" en jo fa "isc" (grup dels incoatius en -c/-sc), no "ixo" ni "eixixo".</li>
+      <li><b>sap</b> — "ell/ella" de "saber" és "sap" (arrel irregular: sé, saps, sap...).</li>
+      <li><b>vull</b> — "voler" en jo és "vull", amb arrel pròpia diferent de "vol-".</li>
+      <li><b>dic</b> — "dir" en jo és "dic" (no "die" ni "digo").</li>
+      <li><b>faig</b> — "fer" en jo és "faig", irregularitat molt marcada del valencià.</li>
+      <li><b>pot</b> — "ell/ella" de "poder" és "pot" (jo: puc, tu: pots, ell: pot).</li>
+    </ol>
+
+    <div class="sol-sect">Activitat 2 — Tria l'opció correcta</div>
+    <ol>
+      <li><b>sé</b> — "jo sé" és la forma correcta de "saber" en primera persona.</li>
+      <li><b>entrenem</b> — "nosaltres" sempre pren la desinència regular "-em" en estos verbs de 1a conjugació.</li>
+      <li><b>ixen</b> — "ells" de "eixir" és "ixen" (arrel "ix-" + "-en").</li>
+      <li><b>puc</b> — "jo puc" és l'única forma correcta per a la primera persona de "poder".</li>
+      <li><b>feu</b> — "vosaltres feu" (de "fer"), no "fan" (que és "ells") ni "faig" (que és "jo").</li>
+    </ol>
+
+    <div class="sol-sect">Activitat 3 — Completa la taula</div>
+    <ol>
+      <li><b>traure:</b> trac, <b>traus</b>, <b>trau</b>, <b>traem</b>, <b>traeu</b>, <b>trauen</b>.</li>
+      <li><b>riure:</b> ric, <b>rius</b>, <b>riu</b>, <b>riem</b>, <b>rieu</b>, <b>riuen</b>.</li>
+      <li>En els dos verbs, només la persona "jo" canvia l'arrel amb la "-c"; la resta de persones són regulars sobre l'arrel "trau-"/"riu-".</li>
+    </ol>
+
+    <div class="sol-sect">Activitat 4 — Mini-diàleg al laboratori</div>
+    <ol>
+      <li><b>vull</b> — "voler" en jo.</li>
+      <li><b>isc</b> — "eixir" en jo (ix + sc).</li>
+      <li><b>puc</b> — "poder" en jo.</li>
+      <li><b>faig</b> — "fer" en jo.</li>
+      <li><b>dic</b> — "dir" en jo.</li>
+      <li><b>sé</b> — "saber" en jo.</li>
+    </ol>
+
+    <div class="sol-sect">Activitat 5 — Vocabulari: Robòtica i IA (ampliació)</div>
+    <ol>
+      <li><b>prototip</b> = prototipo — primera versió funcional d'un projecte abans de la final.</li>
+      <li><b>placa d'expansió</b> = placa de expansión — component que s'afegeix a una placa controladora per a ampliar-ne les funcions.</li>
+      <li><b>estructura de control</b> = estructura de control — bucles i condicionals que decideixen el flux d'un programa.</li>
+      <li><b>bucle</b> = bucle — instrucció que repeteix un bloc de codi.</li>
+      <li><b>reconeixement de patrons</b> = reconocimiento de patrones — capacitat d'un model d'IA de detectar regularitats en les dades.</li>
+      <li><b>model entrenat</b> = modelo entrenado — model d'IA que ja ha aprés amb dades d'exemple.</li>
+      <li><b>indicació (prompt)</b> = instrucción/prompt — text que es dona a una IA generativa perquè produïsca una resposta.</li>
+      <li><b>prova d'usuari</b> = prueba de usuario — fase en què persones reals proven un prototip per a avaluar-lo.</li>
+    </ol>
+  </details>
+
+  <footer class="note">Exercici generat automàticament · IES Jorge Juan, Alacant</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var scores = {1:0, 2:0, 3:0, 4:0, 5:0};
+  var maxes  = {1:6, 2:5, 3:10, 4:6, 5:8};
+
+  function norm(s){
+    return (s || "").toString().trim().toLowerCase()
+      .replace(/\s+/g, " ");
+  }
+
+  function setFeedback(el, ok, correctText){
+    el.hidden = false;
+    el.classList.remove("ok","bad");
+    if(ok){
+      el.classList.add("ok");
+      el.textContent = "✓ Correcte";
+    } else {
+      el.classList.add("bad");
+      el.textContent = "✗ Correcte: " + correctText;
+    }
+  }
+
+  function updateTotal(){
+    var total = scores[1]+scores[2]+scores[3]+scores[4]+scores[5];
+    document.getElementById("scoreTotal").textContent = total;
+  }
+
+  function setBlockLabel(n){
+    document.getElementById("score"+n+"Label").textContent =
+      "(" + scores[n] + " / " + maxes[n] + ")";
+  }
+
+  window.checkAct1 = function(){
+    var answers = {
+      "a1-1": ["isc"],
+      "a1-2": ["sap"],
+      "a1-3": ["vull"],
+      "a1-4": ["dic"],
+      "a1-5": ["faig"],
+      "a1-6": ["pot"]
+    };
+    var correctTexts = { "a1-1":"isc", "a1-2":"sap", "a1-3":"vull", "a1-4":"dic", "a1-5":"faig", "a1-6":"pot" };
+    var score = 0;
+    Object.keys(answers).forEach(function(id){
+      var val = norm(document.getElementById(id).value);
+      var ok = answers[id].indexOf(val) !== -1;
+      if(ok) score++;
+      var fbId = "fb" + id.slice(1);
+      setFeedback(document.getElementById(fbId), ok, correctTexts[id]);
+    });
+    scores[1] = score;
+    setBlockLabel(1);
+    updateTotal();
+  };
+
+  window.checkAct2 = function(){
+    var answers = { "a2-1":"sé", "a2-2":"entrenem", "a2-3":"ixen", "a2-4":"puc", "a2-5":"feu" };
+    var score = 0;
+    Object.keys(answers).forEach(function(name){
+      var checked = document.querySelector('input[name="'+name+'"]:checked');
+      var val = checked ? checked.value : "";
+      var ok = val === answers[name];
+      if(ok) score++;
+      var fbId = "fb" + name.slice(1);
+      setFeedback(document.getElementById(fbId), ok, answers[name]);
+    });
+    scores[2] = score;
+    setBlockLabel(2);
+    updateTotal();
+  };
+
+  window.checkAct3 = function(){
+    var answers = {
+      "a3-1":["traus"], "a3-2":["trau"], "a3-3":["traem"], "a3-4":["traeu"], "a3-5":["trauen"],
+      "a3-6":["rius"],  "a3-7":["riu"],  "a3-8":["riem"],  "a3-9":["rieu"],  "a3-10":["riuen"]
+    };
+    var score = 0;
+    var anyWrong = [];
+    Object.keys(answers).forEach(function(id){
+      var val = norm(document.getElementById(id).value);
+      var ok = answers[id].indexOf(val) !== -1;
+      if(ok) score++;
+      else anyWrong.push(id + "→" + answers[id][0]);
+    });
+    scores[3] = score;
+    setBlockLabel(3);
+    var fb = document.getElementById("fb3");
+    fb.hidden = false;
+    fb.classList.remove("ok","bad");
+    if(anyWrong.length === 0){
+      fb.classList.add("ok");
+      fb.textContent = "✓ Taula completa i correcta (" + score + "/10)";
+    } else {
+      fb.classList.add("bad");
+      fb.textContent = "✗ " + score + "/10 correctes. Revisa: " + anyWrong.join(", ");
+    }
+    updateTotal();
+  };
+
+  window.checkAct4 = function(){
+    var pairs = [
+      {ids:["a4-1","a4-2"], answers:[["vull"],["isc"]], fb:"fb4-1"},
+      {ids:["a4-3"], answers:[["puc"]], fb:"fb4-2"},
+      {ids:["a4-4","a4-5"], answers:[["faig"],["dic"]], fb:"fb4-3"},
+      {ids:["a4-6"], answers:[["sé"]], fb:"fb4-4"}
+    ];
+    var score = 0;
+    pairs.forEach(function(group){
+      var allOk = true;
+      group.ids.forEach(function(id, i){
+        var val = norm(document.getElementById(id).value);
+        var ok = group.answers[i].indexOf(val) !== -1;
+        if(ok) score++;
+        else allOk = false;
+      });
+      var correctTxt = group.ids.map(function(id, i){ return group.answers[i][0]; }).join(" / ");
+      setFeedback(document.getElementById(group.fb), allOk, correctTxt);
+    });
+    scores[4] = score;
+    setBlockLabel(4);
+    updateTotal();
+  };
+
+  window.checkAct5 = function(){
+    var answers = {
+      "a5-1":"prototipo",
+      "a5-2":"placa de expansión",
+      "a5-3":"estructura de control",
+      "a5-4":"bucle",
+      "a5-5":"reconocimiento de patrones",
+      "a5-6":"modelo entrenado",
+      "a5-7":"instrucción/prompt",
+      "a5-8":"prueba de usuario"
+    };
+    var score = 0;
+    Object.keys(answers).forEach(function(id){
+      var val = document.getElementById(id).value;
+      var ok = val === answers[id];
+      if(ok) score++;
+      var fbId = "fb" + id.slice(1);
+      setFeedback(document.getElementById(fbId), ok, answers[id]);
+    });
+    scores[5] = score;
+    setBlockLabel(5);
+    updateTotal();
+  };
+
+})();
+</script>
+
+</body></html>

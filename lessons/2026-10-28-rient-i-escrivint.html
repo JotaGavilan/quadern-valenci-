@@ -1,0 +1,771 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Rient i escrivint</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  /* Layout: una columna de lectura (760px), capçalera en bloc ample amb la
+     metàfora de "l'acció en marxa" (el gerundi), targetes per activitat,
+     i una franja de solucions separada visualment al final. */
+  :root{
+    --bg:#faf6ee;
+    --surface:#ffffff;
+    --surface-2:#f0e6d2;
+    --ink:#22271f;
+    --ink-soft:#656b58;
+    --accent:#c6531f;
+    --accent-ink:#fff8f0;
+    --accent-soft:#f6ddc4;
+    --accent-soft-ink:#7a3610;
+    --good:#2f7a4f;
+    --good-bg:#dcefdf;
+    --bad:#b23a3a;
+    --bad-bg:#f6dcdc;
+    --line:#e4d7bb;
+    --shadow:0 1px 2px rgba(34,27,15,.06), 0 10px 26px -14px rgba(34,27,15,.22);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1b1812;
+      --surface:#241f17;
+      --surface-2:#2d261a;
+      --ink:#f1ebdc;
+      --ink-soft:#b9ad92;
+      --accent:#e8884a;
+      --accent-ink:#241206;
+      --accent-soft:#3a2415;
+      --accent-soft-ink:#f3c79a;
+      --good:#7fd19c;
+      --good-bg:#1c3326;
+      --bad:#e38080;
+      --bad-bg:#3a2020;
+      --line:#3a3222;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1b1812;
+    --surface:#241f17;
+    --surface-2:#2d261a;
+    --ink:#f1ebdc;
+    --ink-soft:#b9ad92;
+    --accent:#e8884a;
+    --accent-ink:#241206;
+    --accent-soft:#3a2415;
+    --accent-soft-ink:#f3c79a;
+    --good:#7fd19c;
+    --good-bg:#1c3326;
+    --bad:#e38080;
+    --bad-bg:#3a2020;
+    --line:#3a3222;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    margin:0;
+    padding-block:22px 64px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap{ max-width:760px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+  .backlink{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:5px 12px;
+    border-radius:999px;
+    text-decoration:none;
+    margin-bottom:14px;
+  }
+  .backlink:hover{ filter:brightness(1.05); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:20px;
+    padding:26px 26px 24px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"rient · escrivint · caient · dient · creixent · naixent";
+    position:absolute;
+    bottom:-6px; right:-10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    letter-spacing:.04em;
+    opacity:.16;
+    white-space:nowrap;
+    transform:rotate(-2deg);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:10px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:600; font-style:italic; }
+  header.top p{ margin:12px 0 0; max-width:50ch; opacity:.95; font-size:.95rem; }
+  .topic-chip{
+    display:inline-block;
+    margin-top:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.76rem;
+    background:rgba(255,255,255,.18);
+    padding:5px 12px;
+    border-radius:999px;
+  }
+
+  .scorebar{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:5;
+    margin-top:16px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    box-shadow:var(--shadow);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .scorebar .label{ font-size:.86rem; color:var(--ink-soft); }
+  .scorebar .score{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600;
+    font-size:1.05rem;
+  }
+  .scorebar .score b{ color:var(--accent); }
+
+  section{ margin-top:30px; }
+  section > h2{
+    font-size:1.25rem;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  section > h2 .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:2px 8px;
+    border-radius:7px;
+  }
+  section > p.lede{ color:var(--ink-soft); margin:6px 0 0; font-size:.92rem; }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 20px 20px;
+    margin-top:14px;
+    box-shadow:var(--shadow);
+  }
+
+  table.theory{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.9rem;
+    margin-top:4px;
+  }
+  table.theory th, table.theory td{
+    text-align:left;
+    padding:8px 10px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  table.theory th{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  table.theory td.inf{ font-weight:600; }
+  table.theory td.ger{ color:var(--accent); font-weight:600; font-family:'JetBrains Mono', monospace; }
+  .theory-wrap{ overflow-x:auto; }
+  .theory-note{
+    font-size:.86rem;
+    color:var(--ink-soft);
+    margin-top:12px;
+  }
+  .theory-note b{ color:var(--ink); }
+
+  .item{
+    padding-block:14px;
+    border-top:1px solid var(--line);
+  }
+  .item:first-child{ border-top:none; padding-top:0; }
+  .item .q{ font-size:.96rem; margin-bottom:8px; }
+  .item .q .inf-hint{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.8rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:1px 7px;
+    border-radius:6px;
+  }
+  input[type="text"]{
+    font:inherit;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.92rem;
+    padding:7px 10px;
+    border-radius:9px;
+    border:1.5px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+    min-width:150px;
+  }
+  input[type="text"]:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  input[type="text"].ok{ border-color:var(--good); background:var(--good-bg); }
+  input[type="text"].bad{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .feedback{
+    display:none;
+    margin-top:7px;
+    font-size:.84rem;
+    padding:6px 10px;
+    border-radius:8px;
+  }
+  .feedback.show{ display:block; }
+  .feedback.ok{ background:var(--good-bg); color:var(--good); }
+  .feedback.bad{ background:var(--bad-bg); color:var(--bad); }
+
+  .opts{ display:flex; flex-direction:column; gap:7px; margin-top:4px; }
+  .opt{
+    display:flex; align-items:center; gap:9px;
+    padding:8px 11px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+    font-size:.92rem;
+    background:var(--bg);
+  }
+  .opt:hover{ border-color:var(--accent); }
+  .opt input{ accent-color:var(--accent); }
+  .opt.ok{ border-color:var(--good); background:var(--good-bg); }
+  .opt.bad{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .conj-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 18px;
+  }
+  @media (max-width:520px){ .conj-grid{ grid-template-columns:1fr; } }
+  .conj-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:9px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .conj-row .vb{ font-weight:600; }
+  .conj-row input{ width:140px; }
+
+  .vocab-row{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; flex-wrap:wrap;
+    padding-block:12px;
+    border-top:1px solid var(--line);
+  }
+  .vocab-row:first-child{ border-top:none; padding-top:0; }
+  .vocab-row .term{ font-weight:600; min-width:170px; }
+  select{
+    font:inherit;
+    font-size:.88rem;
+    padding:7px 10px;
+    border-radius:9px;
+    border:1.5px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+    min-width:200px;
+  }
+  select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  select.ok{ border-color:var(--good); background:var(--good-bg); }
+  select.bad{ border-color:var(--bad); background:var(--bad-bg); }
+
+  button.check{
+    font:inherit;
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600;
+    font-size:.86rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:16px;
+  }
+  button.check:hover{ filter:brightness(1.07); }
+  button.check:active{ transform:translateY(1px); }
+
+  .section-score{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+    display:none;
+  }
+  .section-score.show{ display:block; }
+
+  details.solutions{
+    margin-top:30px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:4px 20px 18px;
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.1rem;
+    padding:16px 0 10px;
+  }
+  .sol-item{
+    padding-block:10px;
+    border-top:1px solid var(--line);
+    font-size:.9rem;
+  }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item .sol-head{ font-weight:600; margin-bottom:3px; }
+  .sol-item .sol-head .mono{ color:var(--accent); }
+  .sol-item .sol-expl{ color:var(--ink-soft); }
+  .sol-group{ margin-top:16px; font-family:'JetBrains Mono', monospace; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:30px;
+  }
+</style>
+
+<div class="wrap">
+
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="eyebrow">IES Jorge Juan · Alacant · Oral diari per al professorat d'informàtica</div>
+    <h1>Rient i escrivint</h1>
+    <p>Exercici d'avui: els gerundis irregulars del valencià, amb situacions de departament, claustre i laboratori d'informàtica.</p>
+    <span class="topic-chip">📍 Tema d'avui: Gerundis irregulars</span>
+  </header>
+
+  <div class="scorebar">
+    <span class="label">Puntuació acumulada</span>
+    <span class="score"><b id="scoreVal">0</b> / <span id="scoreMax">23</span> punts</span>
+  </div>
+
+  <section>
+    <h2><span class="num">00</span> Teoria: el gerundi que no segueix la regla</h2>
+    <p class="lede">La majoria de gerundis es formen afegint un sufix regular a l'arrel de l'infinitiu. Però un grapat de verbs molt freqüents trenquen eixe patró de maneres concretes — i són precisament els que un docent fa servir cada dia a classe.</p>
+
+    <div class="card">
+      <p style="margin:0 0 10px"><b>La regla general</b> (per a repassar-la): segons la conjugació, el gerundi pren un sufix diferent.</p>
+      <div class="theory-wrap">
+        <table class="theory">
+          <tr><th>Conjugació</th><th>Sufix</th><th>Exemple</th></tr>
+          <tr><td>1a (-ar)</td><td class="mono">-ant</td><td><span class="inf">programar</span> → <span class="ger">programant</span></td></tr>
+          <tr><td>2a (-er / -re)</td><td class="mono">-ent</td><td><span class="inf">perdre</span> → <span class="ger">perdent</span></td></tr>
+          <tr><td>3a (-ir)</td><td class="mono">-int</td><td><span class="inf">eixir</span> → <span class="ger">eixint</span></td></tr>
+        </table>
+      </div>
+
+      <p style="margin:18px 0 10px"><b>Quatre famílies d'irregulars</b> — cap no deriva directament de l'infinitiu:</p>
+      <div class="theory-wrap">
+        <table class="theory">
+          <tr><th>Grup</th><th>Infinitiu</th><th>Gerundi</th></tr>
+          <tr><td rowspan="3">Arrel pròpia (no ve de l'infinitiu)</td><td class="inf">fer</td><td class="ger">fent</td></tr>
+          <tr><td class="inf">dir</td><td class="ger">dient</td></tr>
+          <tr><td class="inf">ser</td><td class="ger">sent</td></tr>
+          <tr><td rowspan="2">Pèrdua de la -u- radical</td><td class="inf">riure</td><td class="ger">rient</td></tr>
+          <tr><td class="inf">jaure</td><td class="ger">jaent</td></tr>
+          <tr><td rowspan="3">Increment -eix- (verbs en -éixer/-àixer)</td><td class="inf">créixer</td><td class="ger">creixent</td></tr>
+          <tr><td class="inf">nàixer</td><td class="ger">naixent</td></tr>
+          <tr><td class="inf">aparéixer</td><td class="ger">apareixent</td></tr>
+          <tr><td rowspan="2"><em>v</em> intercalada</td><td class="inf">escriure</td><td class="ger">escrivint</td></tr>
+          <tr><td class="inf">viure</td><td class="ger">vivint</td></tr>
+        </table>
+      </div>
+      <p class="theory-note">Truc pràctic: cap d'aquests gerundis porta accent gràfic (ni <b>riént</b>, ni <b>duént</b>) perquè l'accentuació cau, com sempre, en la síl·laba final per defecte. On més erren els parlants castellanòfons és afegint una <b>-u-</b> que no toca (✗ <i>diguent</i>, ✗ <i>traguent</i>) o traient la <b>v</b> dels verbs del quart grup (✗ <i>escriint</i>).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">01</span> Omple els buits</h2>
+    <p class="lede">Escriu el gerundi del verb indicat. Situacions reals del dia a dia del departament d'informàtica.</p>
+    <div class="card" id="fillCard">
+
+      <div class="item" data-answer="rient">
+        <div class="q">1. Els alumnes de PIAR I estan <input type="text" data-idx="0"> perquè el seu bot de Scratch respon amb disbarats absurds. <span class="inf-hint">riure</span></div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="item" data-answer="dient">
+        <div class="q">2. Ha eixit del departament <input type="text" data-idx="1"> que cal actualitzar el lloc web de WordPress abans del claustre. <span class="inf-hint">dir</span></div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="item" data-answer="naixent">
+        <div class="q">3. Observem com està <input type="text" data-idx="2"> un nou grup de PRSI I, ple d'alumnat motivat amb les bases de dades relacionals. <span class="inf-hint">nàixer</span></div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="item" data-answer="escrivint">
+        <div class="q">4. <input type="text" data-idx="3"> la consulta SQL amb XAMPP, m'he adonat que falta una cometa. <span class="inf-hint">escriure</span></div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="item" data-answer="caient">
+        <div class="q">5. La xarxa sense fil del laboratori s'ha quedat <input type="text" data-idx="4"> tota la vesprada; hem acabat la pràctica de Teachable Machine sense internet. <span class="inf-hint">caure</span></div>
+        <div class="feedback"></div>
+      </div>
+
+      <button class="check" data-section="fill">Comprova les respostes</button>
+      <div class="section-score" id="fillScore"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span> Tria l'opció correcta</h2>
+    <p class="lede">Converses de departament i de claustre. Marca el gerundi ben escrit.</p>
+    <div class="card" id="mcqCard">
+
+      <div class="item" data-answer="1">
+        <div class="q">1. El cap d'estudis va entrar al laboratori d'informàtica _____ que calia revisar les llicències de programari abans de l'auditoria.</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="mcq0" value="0"> diguent</label>
+          <label class="opt"><input type="radio" name="mcq0" value="1"> dient</label>
+          <label class="opt"><input type="radio" name="mcq0" value="2"> dicent</label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="item" data-answer="1">
+        <div class="q">2. Anàvem _____ les eines del departament de PRSI quan va fallar el servidor de correu.</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="mcq1" value="0"> coneguent</label>
+          <label class="opt"><input type="radio" name="mcq1" value="1"> coneixent</label>
+          <label class="opt"><input type="radio" name="mcq1" value="2"> conexent</label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="item" data-answer="0">
+        <div class="q">3. El professorat d'informàtica continua _____ en competència digital gràcies als cursos del CEFIRE.</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="mcq2" value="0"> creixent</label>
+          <label class="opt"><input type="radio" name="mcq2" value="1"> créixent</label>
+          <label class="opt"><input type="radio" name="mcq2" value="2"> creguent</label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="item" data-answer="1">
+        <div class="q">4. Estàvem _____ les dades de la base de dades relacional quan es va tallar la llum del laboratori de PRSI.</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="mcq3" value="0"> traent</label>
+          <label class="opt"><input type="radio" name="mcq3" value="1"> traient</label>
+          <label class="opt"><input type="radio" name="mcq3" value="2"> traguent</label>
+        </div>
+        <div class="feedback"></div>
+      </div>
+
+      <button class="check" data-section="mcq">Comprova les respostes</button>
+      <div class="section-score" id="mcqScore"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span> Completa la taula de conjugació</h2>
+    <p class="lede">Escriu el gerundi de cada infinitiu.</p>
+    <div class="card" id="conjCard">
+      <div class="conj-grid">
+        <div class="conj-row" data-answer="rient"><span class="vb">riure</span><input type="text" data-idx="0"></div>
+        <div class="conj-row" data-answer="apareixent"><span class="vb">aparéixer</span><input type="text" data-idx="1"></div>
+        <div class="conj-row" data-answer="duent"><span class="vb">dur</span><input type="text" data-idx="2"></div>
+        <div class="conj-row" data-answer="caient"><span class="vb">caure</span><input type="text" data-idx="3"></div>
+        <div class="conj-row" data-answer="naixent"><span class="vb">nàixer</span><input type="text" data-idx="4"></div>
+        <div class="conj-row" data-answer="escrivint"><span class="vb">escriure</span><input type="text" data-idx="5"></div>
+      </div>
+      <button class="check" data-section="conj">Comprova les respostes</button>
+      <div class="section-score" id="conjScore"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span> Vocabulari: RDR, Relacions Digitals Responsables</h2>
+    <p class="lede">Tria la traducció al castellà del terme valencià (1r ESO, bloc de dispositius i identitat digital).</p>
+    <div class="card" id="vocabCard">
+
+      <div class="vocab-row" data-answer="1">
+        <span class="term">dispositiu mòbil</span>
+        <select data-idx="0">
+          <option value="">— tria —</option>
+          <option value="0">teléfono inteligente</option>
+          <option value="1">dispositivo móvil</option>
+          <option value="2">dispositivo fijo</option>
+          <option value="3">aparato electrónico</option>
+        </select>
+      </div>
+
+      <div class="vocab-row" data-answer="2">
+        <span class="term">petjada digital</span>
+        <select data-idx="1">
+          <option value="">— tria —</option>
+          <option value="0">huella dactilar</option>
+          <option value="1">firma digital</option>
+          <option value="2">huella digital</option>
+          <option value="3">rastro de navegación</option>
+        </select>
+      </div>
+
+      <div class="vocab-row" data-answer="0">
+        <span class="term">ciberassetjament</span>
+        <select data-idx="2">
+          <option value="">— tria —</option>
+          <option value="0">ciberacoso</option>
+          <option value="1">ciberseguridad</option>
+          <option value="2">ciberdelito</option>
+          <option value="3">acoso escolar</option>
+        </select>
+      </div>
+
+      <div class="vocab-row" data-answer="3">
+        <span class="term">nomofòbia</span>
+        <select data-idx="3">
+          <option value="">— tria —</option>
+          <option value="0">ludopatía</option>
+          <option value="1">tecnofobia</option>
+          <option value="2">ansiedad digital</option>
+          <option value="3">nomofobia</option>
+        </select>
+      </div>
+
+      <div class="vocab-row" data-answer="1">
+        <span class="term">bretxa digital</span>
+        <select data-idx="4">
+          <option value="">— tria —</option>
+          <option value="0">grieta tecnológica</option>
+          <option value="1">brecha digital</option>
+          <option value="2">división social</option>
+          <option value="3">falla de red</option>
+        </select>
+      </div>
+
+      <div class="vocab-row" data-answer="2">
+        <span class="term">desinformació</span>
+        <select data-idx="5">
+          <option value="">— tria —</option>
+          <option value="0">propaganda</option>
+          <option value="1">publicidad engañosa</option>
+          <option value="2">desinformación</option>
+          <option value="3">información falsa</option>
+        </select>
+      </div>
+
+      <div class="vocab-row" data-answer="1">
+        <span class="term">àlies</span>
+        <select data-idx="6">
+          <option value="">— tria —</option>
+          <option value="0">nombre de usuario</option>
+          <option value="1">alias</option>
+          <option value="2">apodo</option>
+          <option value="3">nombre real</option>
+        </select>
+      </div>
+
+      <div class="vocab-row" data-answer="0">
+        <span class="term">discurs d'odi</span>
+        <select data-idx="7">
+          <option value="">— tria —</option>
+          <option value="0">discurso de odio</option>
+          <option value="1">discurso violento</option>
+          <option value="2">discurso discriminatorio</option>
+          <option value="3">discurso de rencor</option>
+        </select>
+      </div>
+
+      <button class="check" data-section="vocab">Comprova les respostes</button>
+      <div class="section-score" id="vocabScore"></div>
+    </div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i les explicacions</summary>
+
+    <div class="sol-group">01 · Omple els buits</div>
+    <div class="sol-item"><div class="sol-head">1. <span class="mono">rient</span> (riure)</div><div class="sol-expl">Riure perd la -u- de l'arrel: no és "riuent" sinó "rient".</div></div>
+    <div class="sol-item"><div class="sol-head">2. <span class="mono">dient</span> (dir)</div><div class="sol-expl">Dir té un gerundi d'arrel pròpia, com fer→fent i ser→sent; no deriva de l'infinitiu.</div></div>
+    <div class="sol-item"><div class="sol-head">3. <span class="mono">naixent</span> (nàixer)</div><div class="sol-expl">Els verbs en -àixer/-éixer afegeixen l'increment -eix-: nàixer→naixent, créixer→creixent.</div></div>
+    <div class="sol-item"><div class="sol-head">4. <span class="mono">escrivint</span> (escriure)</div><div class="sol-expl">Escriure intercala una v: escriv- + -int. Igual que viure→vivint.</div></div>
+    <div class="sol-item"><div class="sol-head">5. <span class="mono">caient</span> (caure)</div><div class="sol-expl">Caure manté l'arrel cai- i afegeix -ent: caient (com traure→traient, veure→veient).</div></div>
+
+    <div class="sol-group">02 · Tria l'opció correcta</div>
+    <div class="sol-item"><div class="sol-head">1. dient</div><div class="sol-expl">"Diguent" i "dicent" són formes inventades per analogia amb el castellà o amb l'imperatiu; la forma real és dient.</div></div>
+    <div class="sol-item"><div class="sol-head">2. coneixent</div><div class="sol-expl">Conéixer segueix el mateix patró que créixer i nàixer: arrel + -eix- + -ent.</div></div>
+    <div class="sol-item"><div class="sol-head">3. creixent</div><div class="sol-expl">Mai porta accent: "créixent" no existeix. L'accentuació del gerundi recau per defecte en l'última síl·laba.</div></div>
+    <div class="sol-item"><div class="sol-head">4. traient</div><div class="sol-expl">Traure (= treure) forma el gerundi com caure i veure: arrel + -ent, sense -u- ni -g- intercalada.</div></div>
+
+    <div class="sol-group">03 · Taula de conjugació</div>
+    <div class="sol-item"><div class="sol-head">riure → <span class="mono">rient</span> · aparéixer → <span class="mono">apareixent</span> · dur → <span class="mono">duent</span></div></div>
+    <div class="sol-item"><div class="sol-head">caure → <span class="mono">caient</span> · nàixer → <span class="mono">naixent</span> · escriure → <span class="mono">escrivint</span></div></div>
+
+    <div class="sol-group">04 · Vocabulari RDR</div>
+    <div class="sol-item"><div class="sol-head">dispositiu mòbil = dispositivo móvil</div></div>
+    <div class="sol-item"><div class="sol-head">petjada digital = huella digital</div><div class="sol-expl">No s'ha de confondre amb "huella dactilar" (petjada del dit).</div></div>
+    <div class="sol-item"><div class="sol-head">ciberassetjament = ciberacoso</div></div>
+    <div class="sol-item"><div class="sol-head">nomofòbia = nomofobia</div><div class="sol-expl">Por irracional a estar sense el mòbil; no s'ha de confondre amb la ludopatia.</div></div>
+    <div class="sol-item"><div class="sol-head">bretxa digital = brecha digital</div></div>
+    <div class="sol-item"><div class="sol-head">desinformació = desinformación</div><div class="sol-expl">Terme diferent de "bo" (bulo), que és una informació falsa concreta i puntual.</div></div>
+    <div class="sol-item"><div class="sol-head">àlies = alias</div></div>
+    <div class="sol-item"><div class="sol-head">discurs d'odi = discurso de odio</div></div>
+  </details>
+
+  <footer class="note">IES Jorge Juan, Alacant · Quadern de valencià oral per al professorat d'informàtica</footer>
+</div>
+
+<script>
+(function(){
+  function normalize(s){
+    return (s || '')
+      .toString()
+      .trim()
+      .toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  var sectionMax = { fill: 5, mcq: 4, conj: 6, vocab: 8 };
+  var sectionScore = { fill: 0, mcq: 0, conj: 0, vocab: 0 };
+
+  function updateGlobal(){
+    var total = 0;
+    for (var k in sectionScore) total += sectionScore[k];
+    document.getElementById('scoreVal').textContent = total;
+  }
+
+  function checkFillLike(cardId, selector, scoreKey, scoreElId){
+    var card = document.getElementById(cardId);
+    var items = card.querySelectorAll(selector);
+    var correct = 0;
+    items.forEach(function(item){
+      var answer = normalize(item.getAttribute('data-answer'));
+      var input = item.querySelector('input[type="text"]');
+      var fb = item.querySelector('.feedback');
+      var given = normalize(input.value);
+      var isOk = given === answer;
+      input.classList.remove('ok','bad');
+      input.classList.add(isOk ? 'ok' : 'bad');
+      if (fb){
+        fb.classList.add('show');
+        fb.classList.remove('ok','bad');
+        fb.classList.add(isOk ? 'ok' : 'bad');
+        fb.textContent = isOk ? '✅ Correcte!' : ('✗ Resposta correcta: ' + item.getAttribute('data-answer'));
+      }
+      if (isOk) correct++;
+    });
+    sectionScore[scoreKey] = correct;
+    document.getElementById(scoreElId).textContent = 'Puntuació d\'esta activitat: ' + correct + ' / ' + items.length;
+    document.getElementById(scoreElId).classList.add('show');
+    updateGlobal();
+  }
+
+  function checkMcq(){
+    var card = document.getElementById('mcqCard');
+    var items = card.querySelectorAll('.item');
+    var correct = 0;
+    items.forEach(function(item, i){
+      var answer = item.getAttribute('data-answer');
+      var radios = item.querySelectorAll('input[type="radio"]');
+      var fb = item.querySelector('.feedback');
+      var checkedVal = null;
+      radios.forEach(function(r){
+        r.closest('.opt').classList.remove('ok','bad');
+        if (r.checked) checkedVal = r.value;
+      });
+      var isOk = checkedVal === answer;
+      radios.forEach(function(r){
+        if (r.value === answer) r.closest('.opt').classList.add('ok');
+        else if (r.checked) r.closest('.opt').classList.add('bad');
+      });
+      if (fb){
+        fb.classList.add('show');
+        fb.classList.remove('ok','bad');
+        fb.classList.add(isOk ? 'ok' : 'bad');
+        if (checkedVal === null){
+          fb.textContent = '✗ No has triat cap opció.';
+        } else {
+          fb.textContent = isOk ? '✅ Correcte!' : '✗ Incorrecte.';
+        }
+      }
+      if (isOk) correct++;
+    });
+    sectionScore.mcq = correct;
+    document.getElementById('mcqScore').textContent = 'Puntuació d\'esta activitat: ' + correct + ' / ' + items.length;
+    document.getElementById('mcqScore').classList.add('show');
+    updateGlobal();
+  }
+
+  function checkVocab(){
+    var card = document.getElementById('vocabCard');
+    var rows = card.querySelectorAll('.vocab-row');
+    var correct = 0;
+    rows.forEach(function(row){
+      var answer = row.getAttribute('data-answer');
+      var sel = row.querySelector('select');
+      var isOk = sel.value === answer;
+      sel.classList.remove('ok','bad');
+      sel.classList.add(isOk ? 'ok' : 'bad');
+      if (isOk) correct++;
+    });
+    sectionScore.vocab = correct;
+    document.getElementById('vocabScore').textContent = 'Puntuació d\'esta activitat: ' + correct + ' / ' + rows.length;
+    document.getElementById('vocabScore').classList.add('show');
+    updateGlobal();
+  }
+
+  document.querySelectorAll('button.check').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var sec = btn.getAttribute('data-section');
+      if (sec === 'fill') checkFillLike('fillCard', '.item', 'fill', 'fillScore');
+      else if (sec === 'conj') checkFillLike('conjCard', '.conj-row', 'conj', 'conjScore');
+      else if (sec === 'mcq') checkMcq();
+      else if (sec === 'vocab') checkVocab();
+    });
+  });
+
+  updateGlobal();
+})();
+</script>
+
+</body></html>

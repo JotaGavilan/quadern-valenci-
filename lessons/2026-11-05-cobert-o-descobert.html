@@ -1,0 +1,675 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Cobert o descobert?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Capa visual: colors de terra que es "descobreixen" sota la superfície (sienna càlid sobre sorra) */
+  :root{
+    --bg:#f2ede2;
+    --surface:#ffffff;
+    --surface-2:#e6ddc8;
+    --ink:#231f14;
+    --ink-soft:#6b6148;
+    --accent:#b5542a;
+    --accent-ink:#fff8ef;
+    --accent-soft:#f4ddc9;
+    --accent-soft-ink:#7a3517;
+    --line:#ddd2b0;
+    --good:#3f7d54;
+    --good-bg:#e1efe3;
+    --bad:#b23a3a;
+    --bad-bg:#f6dede;
+    --font-display:'Fraunces', Georgia, serif;
+    --font-body:'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1b1710;
+      --surface:#231e15;
+      --surface-2:#2c2518;
+      --ink:#efe6d4;
+      --ink-soft:#b8ab8c;
+      --accent:#e08a52;
+      --accent-ink:#241207;
+      --accent-soft:#3a2a18;
+      --accent-soft-ink:#f0c49c;
+      --line:#3a3122;
+      --good:#7ed99a;
+      --good-bg:#203328;
+      --bad:#e39292;
+      --bad-bg:#3a2424;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1b1710;
+    --surface:#231e15;
+    --surface-2:#2c2518;
+    --ink:#efe6d4;
+    --ink-soft:#b8ab8c;
+    --accent:#e08a52;
+    --accent-ink:#241207;
+    --accent-soft:#3a2a18;
+    --accent-soft-ink:#f0c49c;
+    --line:#3a3122;
+    --good:#7ed99a;
+    --good-bg:#203328;
+    --bad:#e39292;
+    --bad-bg:#3a2424;
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.55;
+    padding-block:22px 72px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+  }
+  .wrap{ max-width:780px; margin:0 auto; }
+  h1,h2,h3{ font-family:var(--font-display); text-wrap:balance; margin:0; color:var(--ink); }
+  .mono{ font-family:var(--font-mono); }
+  a{ color:var(--accent); }
+
+  .backlink{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--font-mono);
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:6px 12px;
+    border-radius:999px;
+    text-decoration:none;
+    margin-bottom:16px;
+  }
+  .backlink:hover{ background:var(--accent); color:var(--accent-ink); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:20px;
+    padding:26px 24px 24px;
+    box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 26px -14px rgba(0,0,0,.35);
+    position:relative;
+    overflow:hidden;
+    margin-bottom:20px;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, transparent 2px 22px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.8rem, 5.5vw, 2.5rem); font-weight:600; }
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-top:14px;
+  }
+  .meta-pill{
+    font-family:var(--font-mono);
+    font-size:.76rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    white-space:nowrap;
+  }
+
+  .score-bar{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 16px -10px rgba(0,0,0,.18);
+    font-family:var(--font-mono);
+    font-size:.84rem;
+  }
+  .score-bar b{ font-family:var(--font-display); font-size:1.15rem; color:var(--accent); }
+
+  section{ margin-bottom:30px; }
+  section > h2{
+    font-size:1.3rem;
+    margin-bottom:4px;
+  }
+  .step-num{
+    font-family:var(--font-mono);
+    font-size:.74rem;
+    color:var(--accent);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    display:block;
+    margin-bottom:4px;
+  }
+  section > p.lead{ margin:8px 0 16px; color:var(--ink-soft); font-size:.94rem; max-width:62ch; }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 20px 20px;
+    box-shadow:0 1px 2px rgba(0,0,0,.05), 0 8px 20px -14px rgba(0,0,0,.2);
+  }
+
+  .theory p{ margin:0 0 12px; }
+  .theory .formula{
+    font-family:var(--font-mono);
+    background:var(--surface-2);
+    border-radius:10px;
+    padding:12px 14px;
+    margin:14px 0;
+    font-size:.92rem;
+    overflow-x:auto;
+  }
+
+  .table-scroll{ overflow-x:auto; margin:14px 0; }
+  table.conj{ border-collapse:collapse; width:100%; min-width:460px; font-size:.9rem; }
+  table.conj th, table.conj td{ padding:8px 10px; border-bottom:1px solid var(--line); text-align:left; }
+  table.conj th{ font-family:var(--font-mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); background:var(--surface-2); }
+  table.conj td.inf{ font-style:italic; color:var(--ink-soft); white-space:nowrap; }
+  table.conj td.part{ font-family:var(--font-mono); font-weight:600; }
+
+  .item{
+    padding:12px 0;
+    border-top:1px solid var(--line);
+  }
+  .item:first-child{ border-top:none; padding-top:0; }
+  .item .q{ margin:0 0 8px; font-size:.95rem; }
+  .item .hint{ color:var(--ink-soft); font-size:.8rem; font-style:italic; }
+
+  input[type="text"]{
+    font-family:var(--font-mono);
+    font-size:.92rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+    width:150px;
+    max-width:100%;
+  }
+  input[type="text"]:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+
+  select{
+    font-family:var(--font-mono);
+    font-size:.88rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+    max-width:100%;
+  }
+  select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .feedback{
+    display:inline-block;
+    margin-left:8px;
+    font-size:.82rem;
+    font-weight:600;
+    padding:2px 9px;
+    border-radius:999px;
+    vertical-align:middle;
+  }
+  .feedback.ok{ background:var(--good-bg); color:var(--good); }
+  .feedback.no{ background:var(--bad-bg); color:var(--bad); }
+
+  .dialog-line{ margin:0 0 10px; font-size:.95rem; }
+  .dialog-line b{ font-family:var(--font-mono); font-size:.78rem; color:var(--accent); display:block; text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px; }
+
+  .check-btn{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:.9rem;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  .check-btn:hover{ opacity:.9; }
+  .check-btn:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+
+  .activity-score{
+    font-family:var(--font-mono);
+    font-size:.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:4px 20px 18px;
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:var(--font-display);
+    font-size:1.1rem;
+    padding:16px 0;
+    font-weight:600;
+  }
+  .sol-block{ margin-bottom:16px; }
+  .sol-block h3{ font-size:.95rem; margin-bottom:8px; color:var(--accent); }
+  .sol-item{ font-size:.88rem; margin-bottom:6px; padding-left:14px; border-left:2px solid var(--line); }
+  .sol-item b{ font-family:var(--font-mono); }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:30px; }
+
+  @media (max-width:480px){
+    header.top{ padding:20px 18px; }
+    input[type="text"]{ width:130px; }
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    .feedback{ animation:pop .18s ease; }
+    @keyframes pop{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  }
+</style>
+
+<div class="wrap">
+
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Alacant · Departament d'Informàtica</div>
+      <h1>Cobert o descobert?</h1>
+      <div class="meta-row">
+        <span class="meta-pill">Tema: Participis irregulars i temps compostos</span>
+        <span class="meta-pill">Vocabulari: Digitalització · maquinari i xarxes (4t ESO)</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="score-bar">
+    <span>Puntuació acumulada</span>
+    <span><b id="totalScore">0</b> / <span id="totalMax">35</span></span>
+  </div>
+
+  <section class="theory">
+    <span class="step-num">Teoria</span>
+    <h2>Haver + participi: com es forma un temps compost</h2>
+    <p class="lead">En valencià, els temps compostos es formen amb el verb <b>haver</b> conjugat (l'auxiliar) seguit del <b>participi</b> del verb principal. Amb esta construcció, el participi és invariable: no canvia encara que el subjecte siga femení o plural.</p>
+
+    <div class="card">
+      <div class="formula">subjecte&nbsp;+&nbsp;<b>haver</b> (conjugat)&nbsp;+&nbsp;<b>participi</b><br>
+      Hem <b>obert</b> l'aula d'informàtica. · Han <b>escrit</b> el codi en Python. · La professora ha <b>resolt</b> el dubte.</div>
+
+      <p>Amb estos temps pots parlar de fets acabats en diferents moments:</p>
+      <div class="table-scroll">
+        <table class="conj">
+          <thead><tr><th>Temps compost</th><th>Auxiliar (fer)</th><th>Exemple</th></tr></thead>
+          <tbody>
+            <tr><td>Pretèrit perfet compost</td><td class="mono">he / has / ha / hem / heu / han</td><td>Hem <b>fet</b> les pràctiques amb Microbit.</td></tr>
+            <tr><td>Plusquamperfet</td><td class="mono">havia / havies / havia…</td><td>Ja havíem <b>vist</b> eixe error abans.</td></tr>
+            <tr><td>Futur compost</td><td class="mono">hauré / hauràs / haurà…</td><td>Demà haurem <b>resolt</b> la incidència.</td></tr>
+            <tr><td>Condicional compost</td><td class="mono">hauria / hauries / hauria…</td><td>Hauríeu <b>escrit</b> millor el codi amb més temps.</td></tr>
+            <tr><td>Subjuntiu compost</td><td class="mono">haja / hages / haja… · hagués…</td><td>No crec que haja <b>vist</b> mai tal error.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Un grapat de verbs molt freqüents tenen un <b>participi irregular</b> que no segueix la terminació regular (-at, -ut, -it):</p>
+      <div class="table-scroll">
+        <table class="conj">
+          <thead><tr><th>Infinitiu</th><th>Participi</th></tr></thead>
+          <tbody>
+            <tr><td class="inf">fer</td><td class="part">fet</td></tr>
+            <tr><td class="inf">dir</td><td class="part">dit</td></tr>
+            <tr><td class="inf">veure</td><td class="part">vist</td></tr>
+            <tr><td class="inf">escriure</td><td class="part">escrit</td></tr>
+            <tr><td class="inf">obrir / cobrir / descobrir</td><td class="part">obert / cobert / descobert</td></tr>
+            <tr><td class="inf">resoldre</td><td class="part">resolt</td></tr>
+            <tr><td class="inf">prendre</td><td class="part">pres</td></tr>
+            <tr><td class="inf">náixer</td><td class="part">nascut</td></tr>
+            <tr><td class="inf">imprimir</td><td class="part">imprés</td></tr>
+            <tr><td class="inf">satisfer</td><td class="part">satisfet</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><b>Compte amb el parany:</b> quan el participi funciona com un adjectiu (amb <i>ser</i>, <i>estar</i> o <i>quedar</i>), sí que concorda en gènere i nombre: <i>la finestra ha quedat <b>oberta</b></i>, <i>els ordinadors estan <b>trencats</b></i>. Amb <i>haver</i>, en canvi, es queda sempre igual: <i>hem <b>obert</b> la finestra</i> (no "hem obertes").</p>
+    </div>
+  </section>
+
+  <section id="act1">
+    <span class="step-num">Activitat 1 · Omplir buits</span>
+    <h2>El claustre d'informàtica</h2>
+    <p class="lead">Escriu el participi correcte del verb entre parèntesis. L'auxiliar <i>haver</i> ja està conjugat a la frase.</p>
+    <div class="card" id="act1-card"></div>
+    <button class="check-btn" onclick="checkActivity(1)">Comprova les respostes</button>
+    <div class="activity-score" id="act1-score"></div>
+  </section>
+
+  <section id="act2">
+    <span class="step-num">Activitat 2 · Tipus test</span>
+    <h2>Quin temps i quina forma?</h2>
+    <p class="lead">Tria l'opció correcta. Fixa't en si el participi va amb <i>haver</i> (invariable) o amb <i>quedar/estar</i> (concorda com un adjectiu).</p>
+    <div class="card" id="act2-card"></div>
+    <button class="check-btn" onclick="checkActivity(2)">Comprova les respostes</button>
+    <div class="activity-score" id="act2-score"></div>
+  </section>
+
+  <section id="act3">
+    <span class="step-num">Activitat 3 · Taula de conjugació</span>
+    <h2>Del laboratori a la base de dades</h2>
+    <p class="lead">Completa el participi de cada verb i escriu-lo dins de la frase del departament d'informàtica.</p>
+    <div class="card" id="act3-card"></div>
+    <button class="check-btn" onclick="checkActivity(3)">Comprova les respostes</button>
+    <div class="activity-score" id="act3-score"></div>
+  </section>
+
+  <section id="act4">
+    <span class="step-num">Activitat 4 · Mini-diàleg</span>
+    <h2>Reunió al departament</h2>
+    <p class="lead">El cap de departament i el professor parlen de la programació del curs. Tria la forma correcta per a cada buit.</p>
+    <div class="card">
+      <div id="act4-card"></div>
+    </div>
+    <button class="check-btn" onclick="checkActivity(4)">Comprova les respostes</button>
+    <div class="activity-score" id="act4-score"></div>
+  </section>
+
+  <section id="act5">
+    <span class="step-num">Activitat 5 · Vocabulari</span>
+    <h2>Digitalització: maquinari i xarxes</h2>
+    <p class="lead">Relaciona cada terme valencià amb la seua traducció al castellà.</p>
+    <div class="card" id="act5-card"></div>
+    <button class="check-btn" onclick="checkActivity(5)">Comprova les respostes</button>
+    <div class="activity-score" id="act5-score"></div>
+  </section>
+
+  <section>
+    <details class="solutions">
+      <summary>Veure totes les solucions i explicacions</summary>
+      <div id="solutionsBody"></div>
+    </details>
+  </section>
+
+  <footer class="note">Exercici diari de valencià oral · àmbit educatiu-informàtic · IES Jorge Juan, Alacant</footer>
+</div>
+
+<script>
+(function(){
+
+  // ---------- DADES ----------
+
+  const act1 = [
+    { pre:"Esta setmana he ", blank:"fet", post:" totes les proves de Scratch amb els alumnes de 1r d'ESO.", hint:"fer", exp:"\"fer\" té un participi totalment irregular: fet." },
+    { pre:"Encara no s'ha ", blank:"resolt", post:" l'error de connexió a la xarxa sense fil del laboratori.", hint:"resoldre", exp:"\"resoldre\" fa el participi en -olt: resolt." },
+    { pre:"El tècnic ha ", blank:"descobert", post:" un problema en un component físic de l'ordinador portàtil.", hint:"descobrir", exp:"Com \"obrir\" i \"cobrir\", \"descobrir\" fa el participi en -ert: descobert." },
+    { pre:"Per fi hem ", blank:"escrit", post:" tot el codi en Python per al projecte de robòtica.", hint:"escriure", exp:"\"escriure\" fa el participi en -it amb canvi de radical: escrit." },
+    { pre:"Qui ha ", blank:"obert", post:" la finestra de XAMPP sense tancar el servidor?", hint:"obrir", exp:"\"obrir\" fa el participi irregular: obert." },
+    { pre:"L'alumne ha ", blank:"pres", post:" nota de les instruccions per a instal·lar WordPress.", hint:"prendre", exp:"\"prendre\" fa el participi: pres (no \"prengut\")." },
+  ];
+
+  const act2 = [
+    { q:"Quan ha telefonat la directora, nosaltres ja _____ la programació del curs amb els blocs de Scratch. (completar)",
+      opts:["havíem completat","hem completat","haurem completat","hauríem completat"], correct:0,
+      exp:"Una acció anterior a una altra acció passada ('quan ha telefonat') demana el plusquamperfet: havíem completat." },
+    { q:"Quan vam arribar al departament, el tècnic ja _____ l'error del router. (resoldre)",
+      opts:["ha resolt","havia resolt","hauria resolt","haja resolt"], correct:1,
+      exp:"Acció acabada abans d'un moment passat ('quan vam arribar') → plusquamperfet: havia resolt." },
+    { q:"La sessió de XAMPP ha quedat _____ tota la nit perquè ningú l'ha tancada. (obrir)",
+      opts:["obert","oberta","obrida","ubert"], correct:1,
+      exp:"Amb \"quedar\" el participi funciona com un adjectiu i concorda amb \"la sessió\" (femení): oberta." },
+    { q:"Hem _____ que l'alumnat ha fet proves amb Teachable Machine abans d'hora. (veure)",
+      opts:["vist","vigut","veut","vèiem"], correct:0,
+      exp:"\"veure\" té un participi totalment irregular: vist." },
+    { q:"No crec que mai _____ un error tan estrany en la configuració de la màquina virtual. (veure)",
+      opts:["ha vist","havia vist","haja vist","hauria vist"], correct:2,
+      exp:"\"No crec que...\" exigeix subjuntiu; en compost és haja + participi: haja vist." },
+  ];
+
+  const act3 = [
+    { inf:"dir", pre:"Això ja t'ho he ", blank:"dit", post:" mil vegades a classe.", exp:"dir → dit." },
+    { inf:"náixer", pre:"Este projecte ha ", blank:"nascut", post:" d'una idea d'un alumne de batxillerat.", exp:"náixer → nascut." },
+    { inf:"imprimir", pre:"Hem ", blank:"imprés", post:" els exàmens per a tot el departament.", exp:"imprimir → imprés." },
+    { inf:"morir", pre:"El servidor vell finalment ha ", blank:"mort", post:" després de deu anys de servei.", exp:"morir → mort." },
+    { inf:"omplir", pre:"Hem ", blank:"omplit", post:" el formulari de sol·licitud de llicència de programari.", exp:"omplir → omplit (també s'accepta \"omplert\")." , alt:["omplert"]},
+    { inf:"tindre", pre:"Mai no havíem ", blank:"tingut", post:" tants problemes amb la xarxa cablejada.", exp:"tindre → tingut." },
+  ];
+
+  const act4lines = [
+    { who:"CAP DE DEPARTAMENT", pre:"Bon dia! Com va la programació amb Microbit en 2n d'ESO?" },
+    { who:"PROFESSOR", pre:"Molt bé, ja ", blank:true, post:" totes les pràctiques de MakeCode amb els sensors de distància.",
+      opts:["hem fet","havem fet","hem fatut"], correct:0, hint:"fer", exp:"fer → fet; auxiliar nosaltres: hem fet." },
+    { who:"CAP DE DEPARTAMENT", pre:"Genial. I l'alumnat ja ", blank:true, post:" el codi en Python per al robot?",
+      opts:["ha escrivit","ha escrit","ha escrigut"], correct:1, hint:"escriure", exp:"escriure → escrit." },
+    { who:"PROFESSOR", pre:"Alguns grups ", blank:true, post:" els primers exercicis, però altres encara depuren errors amb VirtualBox.",
+      opts:["han resoldut","han resolgut","han resolt"], correct:2, hint:"resoldre", exp:"resoldre → resolt." },
+    { who:"CAP DE DEPARTAMENT", pre:"I la base de dades amb SQL i XAMPP?" },
+    { who:"PROFESSOR", pre:"Ja ", blank:true, post:" l'entorn XAMPP i hem escrit les primeres consultes SQL.",
+      opts:["hem obrit","hem obert","hem obrigut"], correct:1, hint:"obrir", exp:"obrir → obert." },
+    { who:"PROFESSOR", pre:"Encara no ", blank:true, post:" el problema del servidor de correu, per cert.",
+      opts:["hem resolt","havem resolt","hem resolgut"], correct:0, hint:"resoldre", exp:"resoldre → resolt; auxiliar nosaltres: hem resolt." },
+    { who:"CAP DE DEPARTAMENT", pre:"Perfecte. I el lloc de WordPress del departament, l'heu actualitzat?" },
+    { who:"PROFESSOR", pre:"Sí, i també ", blank:true, post:" el manual d'ús de Microsoft 365 per al claustre.",
+      opts:["hem imprés","havem imprimit","hem imprimit"], correct:0, hint:"imprimir", exp:"imprimir → imprés." },
+  ];
+
+  const act5 = [
+    { term:"maquinari", opts:["hardware","software","periférico","red cableada"], correct:0 },
+    { term:"programari", opts:["componente físico","software","firma digital","servidor web"], correct:1 },
+    { term:"component físic", opts:["componente físico","hardware","realidad virtual","licencia de software"], correct:0 },
+    { term:"perifèric", opts:["red inalámbrica","internet de las cosas","periférico","comercio electrónico"], correct:2 },
+    { term:"xarxa cablejada", opts:["red cableada","red inalámbrica","gestor de contenidos","servidor web"], correct:0 },
+    { term:"xarxa sense fil", opts:["red cableada","red inalámbrica","firma digital","hardware"], correct:1 },
+    { term:"internet de les coses", opts:["realidad aumentada","internet de las cosas","comercio electrónico","software"], correct:1 },
+    { term:"gestor de continguts", opts:["gestor de contenidos","servidor web","componente físico","licencia de software"], correct:0 },
+    { term:"realitat augmentada", opts:["realidad virtual","realidad aumentada","firma digital","periférico"], correct:1 },
+    { term:"signatura digital", opts:["comercio electrónico","servidor web","firma digital","red cableada"], correct:2 },
+  ];
+
+  // ---------- RENDER ----------
+
+  function norm(s){
+    return s.toString().trim().toLowerCase()
+      .replace(/[.,;!?]+$/,'')
+      .normalize('NFD').replace(/[̀-ͯ]/g,''); // ignora accents per a comparar
+  }
+
+  const act1Card = document.getElementById('act1-card');
+  act1.forEach((it,i)=>{
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `<p class="q">${it.pre}<input type="text" id="a1-${i}" autocomplete="off">${it.post}</p>
+      <p class="hint">infinitiu: ${it.hint}</p>
+      <span id="a1-${i}-fb"></span>`;
+    act1Card.appendChild(div);
+  });
+
+  const act2Card = document.getElementById('act2-card');
+  act2.forEach((it,i)=>{
+    const div = document.createElement('div');
+    div.className = 'item';
+    let optsHtml = `<option value="">-- tria --</option>` + it.opts.map((o,j)=>`<option value="${j}">${o}</option>`).join('');
+    div.innerHTML = `<p class="q">${it.q}</p>
+      <select id="a2-${i}">${optsHtml}</select>
+      <span id="a2-${i}-fb" class="feedback" style="display:none"></span>`;
+    act2Card.appendChild(div);
+  });
+
+  const act3Card = document.getElementById('act3-card');
+  act3.forEach((it,i)=>{
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `<p class="q"><span class="mono" style="color:var(--ink-soft)">${it.inf} →</span> ${it.pre}<input type="text" id="a3-${i}" autocomplete="off">${it.post}</p>
+      <span id="a3-${i}-fb"></span>`;
+    act3Card.appendChild(div);
+  });
+
+  const act4Card = document.getElementById('act4-card');
+  let blankIdx4 = 0;
+  act4lines.forEach((ln)=>{
+    const div = document.createElement('div');
+    div.className = 'dialog-line';
+    if(ln.blank){
+      const i = blankIdx4++;
+      let optsHtml = `<option value="">-- tria --</option>` + ln.opts.map((o,j)=>`<option value="${j}">${o}</option>`).join('');
+      div.innerHTML = `<b>${ln.who}</b>${ln.pre}<select id="a4-${i}">${optsHtml}</select>${ln.post}
+        <span id="a4-${i}-fb" class="feedback" style="display:none"></span>`;
+    } else {
+      div.innerHTML = `<b>${ln.who}</b>${ln.pre}`;
+    }
+    act4Card.appendChild(div);
+  });
+  const act4items = act4lines.filter(l=>l.blank);
+
+  const act5Card = document.getElementById('act5-card');
+  act5.forEach((it,i)=>{
+    const div = document.createElement('div');
+    div.className = 'item';
+    let optsHtml = `<option value="">-- tria --</option>` + it.opts.map((o,j)=>`<option value="${j}">${o}</option>`).join('');
+    div.innerHTML = `<p class="q"><b class="mono">${it.term}</b></p>
+      <select id="a5-${i}">${optsHtml}</select>
+      <span id="a5-${i}-fb" class="feedback" style="display:none"></span>`;
+    act5Card.appendChild(div);
+  });
+
+  // ---------- SCORING ----------
+
+  const scores = {1:null,2:null,3:null,4:null,5:null};
+  const maxPerAct = {1:act1.length,2:act2.length,3:act3.length,4:act4items.length,5:act5.length};
+
+  function updateTotal(){
+    let total=0, max=0;
+    Object.keys(maxPerAct).forEach(k=>{
+      max += maxPerAct[k];
+      if(scores[k]!==null) total += scores[k];
+    });
+    document.getElementById('totalScore').textContent = total;
+    document.getElementById('totalMax').textContent = max;
+  }
+
+  window.checkActivity = function(n){
+    let correct=0, max=0;
+    if(n===1){
+      act1.forEach((it,i)=>{
+        max++;
+        const el = document.getElementById(`a1-${i}`);
+        const fb = document.getElementById(`a1-${i}-fb`);
+        const ok = norm(el.value)===norm(it.blank);
+        if(ok) correct++;
+        fb.innerHTML = ok ? `<span class="feedback ok">✓ correcte</span>` : `<span class="feedback no">✗ era: ${it.blank}</span>`;
+      });
+    }
+    if(n===2){
+      act2.forEach((it,i)=>{
+        max++;
+        const el = document.getElementById(`a2-${i}`);
+        const fb = document.getElementById(`a2-${i}-fb`);
+        const val = el.value;
+        const ok = val!=="" && parseInt(val,10)===it.correct;
+        if(ok) correct++;
+        fb.style.display='inline-block';
+        fb.className = 'feedback ' + (ok?'ok':'no');
+        fb.textContent = ok ? '✓ correcte' : `✗ era: ${it.opts[it.correct]}`;
+      });
+    }
+    if(n===3){
+      act3.forEach((it,i)=>{
+        max++;
+        const el = document.getElementById(`a3-${i}`);
+        const fb = document.getElementById(`a3-${i}-fb`);
+        const accepted = [it.blank].concat(it.alt||[]).map(norm);
+        const ok = accepted.includes(norm(el.value));
+        if(ok) correct++;
+        fb.innerHTML = ok ? `<span class="feedback ok">✓ correcte</span>` : `<span class="feedback no">✗ era: ${it.blank}</span>`;
+      });
+    }
+    if(n===4){
+      act4items.forEach((it,i)=>{
+        max++;
+        const el = document.getElementById(`a4-${i}`);
+        const fb = document.getElementById(`a4-${i}-fb`);
+        const val = el.value;
+        const ok = val!=="" && parseInt(val,10)===it.correct;
+        if(ok) correct++;
+        fb.style.display='inline-block';
+        fb.className = 'feedback ' + (ok?'ok':'no');
+        fb.textContent = ok ? '✓ correcte' : `✗ era: ${it.opts[it.correct]}`;
+      });
+    }
+    if(n===5){
+      act5.forEach((it,i)=>{
+        max++;
+        const el = document.getElementById(`a5-${i}`);
+        const fb = document.getElementById(`a5-${i}-fb`);
+        const val = el.value;
+        const ok = val!=="" && parseInt(val,10)===it.correct;
+        if(ok) correct++;
+        fb.style.display='inline-block';
+        fb.className = 'feedback ' + (ok?'ok':'no');
+        fb.textContent = ok ? '✓ correcte' : `✗ era: ${it.opts[it.correct]}`;
+      });
+    }
+    scores[n]=correct;
+    document.getElementById(`act${n}-score`).textContent = `Puntuació d'esta activitat: ${correct} / ${max}`;
+    updateTotal();
+  };
+
+  updateTotal();
+
+  // ---------- SOLUCIONS ----------
+
+  const solBody = document.getElementById('solutionsBody');
+  let html = '';
+
+  html += `<div class="sol-block"><h3>Activitat 1 · El claustre d'informàtica</h3>`;
+  act1.forEach((it,i)=>{ html += `<div class="sol-item"><b>${i+1}. ${it.blank}</b> — ${it.exp}</div>`; });
+  html += `</div>`;
+
+  html += `<div class="sol-block"><h3>Activitat 2 · Quin temps i quina forma?</h3>`;
+  act2.forEach((it,i)=>{ html += `<div class="sol-item"><b>${i+1}. ${it.opts[it.correct]}</b> — ${it.exp}</div>`; });
+  html += `</div>`;
+
+  html += `<div class="sol-block"><h3>Activitat 3 · Del laboratori a la base de dades</h3>`;
+  act3.forEach((it,i)=>{ html += `<div class="sol-item"><b>${i+1}. ${it.blank}</b> — ${it.exp}</div>`; });
+  html += `</div>`;
+
+  html += `<div class="sol-block"><h3>Activitat 4 · Reunió al departament</h3>`;
+  act4items.forEach((it,i)=>{ html += `<div class="sol-item"><b>${i+1}. ${it.opts[it.correct]}</b> — ${it.exp}</div>`; });
+  html += `</div>`;
+
+  html += `<div class="sol-block"><h3>Activitat 5 · Vocabulari: digitalització</h3>`;
+  act5.forEach((it,i)=>{ html += `<div class="sol-item"><b>${it.term} → ${it.opts[it.correct]}</b></div>`; });
+  html += `</div>`;
+
+  solBody.innerHTML = html;
+
+})();
+</script>
+
+</body></html>

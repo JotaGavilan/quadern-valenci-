@@ -1,0 +1,762 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Que puga, que vulga</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    --bg:#f6f1fa;
+    --surface:#ffffff;
+    --surface-2:#ece0f7;
+    --ink:#241c35;
+    --ink-soft:#665a83;
+    --accent:#6d3fa0;
+    --accent-ink:#ffffff;
+    --accent-soft:#e4d5f5;
+    --accent-soft-ink:#4a2a72;
+    --line:#ddc9ef;
+    --good:#2f7d5c;
+    --good-bg:#dcefe4;
+    --bad:#ae3b3b;
+    --bad-bg:#f7dede;
+    --shadow: 0 1px 2px rgba(36,28,53,.08), 0 10px 24px -14px rgba(36,28,53,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:#181322;
+      --surface:#211a30;
+      --surface-2:#2a2140;
+      --ink:#ede7f7;
+      --ink-soft:#b6a8d1;
+      --accent:#b48eea;
+      --accent-ink:#1c1430;
+      --accent-soft:#332756;
+      --accent-soft-ink:#d9c4f7;
+      --line:#3c2f5c;
+      --good:#7cd9a5;
+      --good-bg:#1d3a2c;
+      --bad:#e88a8a;
+      --bad-bg:#3c2020;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#181322;
+    --surface:#211a30;
+    --surface-2:#2a2140;
+    --ink:#ede7f7;
+    --ink-soft:#b6a8d1;
+    --accent:#b48eea;
+    --accent-ink:#1c1430;
+    --accent-soft:#332756;
+    --accent-soft-ink:#d9c4f7;
+    --line:#3c2f5c;
+    --good:#7cd9a5;
+    --good-bg:#1d3a2c;
+    --bad:#e88a8a;
+    --bad-bg:#3c2020;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 24px -14px rgba(0,0,0,.6);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.55;
+    padding-inline:20px;
+    padding-block:22px 60px;
+    max-width:880px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+  a{ color:var(--accent); }
+
+  .backlink{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+    border:1px solid var(--line);
+  }
+  .backlink:hover{ background:var(--line); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:26px 26px 24px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.88;
+    margin-bottom:10px;
+  }
+  header.top h1{ font-size:clamp(1.9rem, 6vw, 2.6rem); font-weight:600; font-style:italic; }
+  header.top p{ margin:12px 0 0; max-width:58ch; opacity:.94; font-size:.96rem; }
+  .badge-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .badge{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.3);
+  }
+
+  .score-panel{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 18px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+  }
+  .score-panel .label{ font-size:.86rem; color:var(--ink-soft); }
+  .score-panel .value{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:1.3rem;
+    font-weight:600;
+    color:var(--accent);
+  }
+  .score-bar{
+    flex:1 1 160px;
+    min-width:120px;
+    height:8px;
+    border-radius:999px;
+    background:var(--surface-2);
+    overflow:hidden;
+  }
+  .score-bar-fill{
+    height:100%;
+    width:0%;
+    background:var(--accent);
+    transition:width .4s ease;
+  }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 24px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card > h2{
+    font-size:1.25rem;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  section.card > .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:6px;
+    display:block;
+  }
+  section.card > p.intro{ color:var(--ink-soft); margin:8px 0 16px; font-size:.92rem; max-width:65ch; }
+
+  .theory-grid{ display:flex; flex-direction:column; gap:14px; }
+  .theory-grid p{ margin:0; max-width:68ch; }
+  .rule-box{
+    background:var(--surface-2);
+    border-left:3px solid var(--accent);
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:.92rem;
+  }
+  .rule-box b{ color:var(--accent); }
+
+  .table-scroll{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin-top:6px; }
+  table.conj{ border-collapse:collapse; width:100%; min-width:620px; font-size:.88rem; }
+  table.conj th, table.conj td{ padding:9px 12px; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap; }
+  table.conj thead th{
+    background:var(--surface-2);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+  }
+  table.conj tbody tr:last-child td{ border-bottom:none; }
+  table.conj td.inf{ font-weight:600; color:var(--accent); }
+  table.conj input{
+    width:100%;
+    min-width:88px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.86rem;
+    padding:6px 8px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+  }
+  table.conj td.given{ font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); }
+
+  .q-item{
+    border-top:1px solid var(--line);
+    padding-block:16px;
+  }
+  .q-item:first-of-type{ border-top:none; padding-top:0; }
+  .q-item .q-text{ font-size:.95rem; margin-bottom:10px; }
+  .q-text .verb{ font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); font-size:.82rem; }
+  .fill-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .fill-row input{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.92rem;
+    padding:8px 10px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+    min-width:140px;
+  }
+  .fill-row input:focus, table.conj input:focus, select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .mc-options{ display:flex; flex-direction:column; gap:8px; }
+  .mc-option{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:.92rem;
+    padding:7px 10px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    cursor:pointer;
+  }
+  .mc-option:hover{ background:var(--surface-2); }
+  .mc-option input{ accent-color:var(--accent); }
+
+  .vocab-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+    border-top:1px solid var(--line);
+    padding-block:14px;
+  }
+  .vocab-item:first-of-type{ border-top:none; padding-top:0; }
+  .vocab-item .term{ font-weight:600; font-size:.96rem; }
+  .vocab-item select{
+    font-family:'Inter', sans-serif;
+    font-size:.9rem;
+    padding:8px 10px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+    min-width:220px;
+  }
+
+  .feedback{
+    margin-top:8px;
+    font-size:.85rem;
+    font-family:'IBM Plex Mono', monospace;
+    padding:6px 10px;
+    border-radius:8px;
+    display:none;
+  }
+  .feedback.ok{ display:inline-block; background:var(--good-bg); color:var(--good); }
+  .feedback.bad{ display:inline-block; background:var(--bad-bg); color:var(--bad); }
+  .cell-ok{ outline:2px solid var(--good) !important; }
+  .cell-bad{ outline:2px solid var(--bad) !important; }
+
+  .check-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.86rem;
+    font-weight:600;
+    color:var(--accent-ink);
+    background:var(--accent);
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  .check-btn:hover{ opacity:.92; }
+  .subtotal{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.84rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+  .subtotal b{ color:var(--accent); }
+
+  .solutions-section h2{ font-size:1.3rem; margin-bottom:14px; }
+  .sol-group{ margin-bottom:18px; }
+  .sol-group h3{ font-size:.95rem; font-weight:600; color:var(--accent); margin-bottom:8px; }
+  .sol-list{ display:flex; flex-direction:column; gap:6px; }
+  .sol-list div{ font-size:.86rem; border-top:1px solid var(--line); padding-top:6px; }
+  .sol-list div:first-child{ border-top:none; padding-top:0; }
+  .sol-list b.ans{ color:var(--good); font-family:'IBM Plex Mono', monospace; }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:26px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:22px 18px 20px; }
+    section.card{ padding:18px 16px 20px; }
+    .vocab-item{ flex-direction:column; align-items:flex-start; }
+    .vocab-item select{ width:100%; }
+  }
+</style>
+
+<a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · Oral en valencià</div>
+    <h1>Que puga, que vulga</h1>
+    <p>Exercici diari per a practicar l'expressió oral en valencià a l'aula d'informàtica: hui treballem el present de subjuntiu dels verbs irregulars, amb vocabulari tècnic de programació i xarxes.</p>
+    <div class="badge-row">
+      <span class="badge">📘 Tema: Present de subjuntiu dels irregulars</span>
+      <span class="badge">💻 Vocabulari: PRSI I i II · programació i xarxes (Batxillerat)</span>
+    </div>
+  </div>
+</header>
+
+<div class="score-panel">
+  <div>
+    <div class="label">Puntuació global</div>
+    <div class="value"><span id="globalScore">0</span> / 23</div>
+  </div>
+  <div class="score-bar"><div class="score-bar-fill" id="globalBar"></div></div>
+</div>
+
+<section class="card">
+  <span class="kicker">Teoria</span>
+  <h2>El present de subjuntiu dels verbs irregulars</h2>
+  <div class="theory-grid">
+    <p>En valencià, el present de subjuntiu de la majoria dels verbs irregulars es forma a partir de l'arrel irregular de la primera persona del present d'indicatiu (la forma "jo"), a la qual s'afigen les desinències pròpies del subjuntiu: <span class="mono">-a, -es, -a, -em, -eu, -en</span>. Per això molts d'aquests verbs presenten el mateix reforç consonàntic que ja coneixem del present d'indicatiu (dic→diga, puc→puga, vull→vulga, tinc→tinga) o de l'imperatiu.</p>
+    <div class="rule-box">
+      <b>Regla pràctica:</b> si saps la primera persona del present d'indicatiu d'un verb irregular, sovint ja tens l'arrel del subjuntiu. Excepcions destacades: <span class="mono">ser→siga</span>, <span class="mono">estar→estiga</span>, <span class="mono">anar→vaja</span> i <span class="mono">saber→sàpia</span>, que no deriven directament de la forma "jo" de l'indicatiu (só/estic/vaig/sé).
+    </div>
+    <p>El subjuntiu s'usa típicament després d'expressions de voluntat, necessitat, dubte o sentiment: <span class="mono">espere que…</span>, <span class="mono">vull que…</span>, <span class="mono">cal que…</span>, <span class="mono">és important que…</span>, <span class="mono">no crec que…</span> — estructures molt útils per a donar instruccions i parlar amb l'alumnat.</p>
+    <div class="table-scroll">
+      <table class="conj">
+        <thead>
+          <tr><th>Infinitiu</th><th>jo</th><th>tu</th><th>ell/ella</th><th>nosaltres</th><th>vosaltres</th><th>ells/elles</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="inf">ser</td><td>siga</td><td>sigues</td><td>siga</td><td>siguem</td><td>sigueu</td><td>siguen</td></tr>
+          <tr><td class="inf">estar</td><td>estiga</td><td>estigues</td><td>estiga</td><td>estiguem</td><td>estigueu</td><td>estiguen</td></tr>
+          <tr><td class="inf">haver</td><td>haja</td><td>hages</td><td>haja</td><td>hàgem</td><td>hàgeu</td><td>hagen</td></tr>
+          <tr><td class="inf">anar</td><td>vaja</td><td>vages</td><td>vaja</td><td>vagem</td><td>vageu</td><td>vagen</td></tr>
+          <tr><td class="inf">fer</td><td>faça</td><td>faces</td><td>faça</td><td>fem</td><td>feu</td><td>facen</td></tr>
+          <tr><td class="inf">dir</td><td>diga</td><td>digues</td><td>diga</td><td>diguem</td><td>digueu</td><td>diguen</td></tr>
+          <tr><td class="inf">poder</td><td>puga</td><td>pugues</td><td>puga</td><td>puguem</td><td>pugueu</td><td>puguen</td></tr>
+          <tr><td class="inf">voler</td><td>vulga</td><td>vulgues</td><td>vulga</td><td>vulguem</td><td>vulgueu</td><td>vulguen</td></tr>
+          <tr><td class="inf">saber</td><td>sàpia</td><td>sàpies</td><td>sàpia</td><td>sapiem</td><td>sapieu</td><td>sàpien</td></tr>
+          <tr><td class="inf">eixir</td><td>isca</td><td>isques</td><td>isca</td><td>isquem</td><td>isqueu</td><td>isquen</td></tr>
+          <tr><td class="inf">tindre</td><td>tinga</td><td>tingues</td><td>tinga</td><td>tinguem</td><td>tingueu</td><td>tinguen</td></tr>
+          <tr><td class="inf">vindre</td><td>vinga</td><td>vingues</td><td>vinga</td><td>vinguem</td><td>vingueu</td><td>vinguen</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="act1">
+  <span class="kicker">Activitat 1 · 5 preguntes</span>
+  <h2>Omple els buits</h2>
+  <p class="intro">Escriu la forma correcta del present de subjuntiu del verb indicat entre parèntesis.</p>
+
+  <div class="q-item">
+    <div class="q-text">1. Espere que tots els alumnes <span class="verb">(saber)</span> obrir bé el projecte de Scratch abans de començar la classe.</div>
+    <div class="fill-row"><input type="text" id="f1" placeholder="forma verbal"><span class="feedback" id="f1-fb"></span></div>
+  </div>
+  <div class="q-item">
+    <div class="q-text">2. És necessari que cada grup <span class="verb">(tindre)</span> el seu compte de Microsoft 365 activat abans de la pràctica.</div>
+    <div class="fill-row"><input type="text" id="f2" placeholder="forma verbal"><span class="feedback" id="f2-fb"></span></div>
+  </div>
+  <div class="q-item">
+    <div class="q-text">3. Vull que <span class="verb">(vindre, tu)</span> puntual demà al laboratori, per favor.</div>
+    <div class="fill-row"><input type="text" id="f3" placeholder="forma verbal"><span class="feedback" id="f3-fb"></span></div>
+  </div>
+  <div class="q-item">
+    <div class="q-text">4. No crec que <span class="verb">(poder, ells)</span> acabar l'exercici de Python sense ajuda del professor.</div>
+    <div class="fill-row"><input type="text" id="f4" placeholder="forma verbal"><span class="feedback" id="f4-fb"></span></div>
+  </div>
+  <div class="q-item">
+    <div class="q-text">5. Cal que <span class="verb">(fer, vosaltres)</span> una còpia de seguretat de la base de dades abans d'actualitzar el WordPress del departament.</div>
+    <div class="fill-row"><input type="text" id="f5" placeholder="forma verbal"><span class="feedback" id="f5-fb"></span></div>
+  </div>
+
+  <button class="check-btn" onclick="checkAct1()">Comprova les respostes</button>
+  <div class="subtotal" id="act1-subtotal"></div>
+</section>
+
+<section class="card" id="act2">
+  <span class="kicker">Activitat 2 · 4 preguntes</span>
+  <h2>Tria l'opció correcta</h2>
+  <p class="intro">Selecciona la forma de subjuntiu adequada per a cada frase.</p>
+
+  <div class="q-item">
+    <div class="q-text">1. És important que l'alumnat <span class="verb">(saber)</span> bé les normes d'ús dels ordinadors del laboratori.</div>
+    <div class="mc-options">
+      <label class="mc-option"><input type="radio" name="m1" value="sap"> sap</label>
+      <label class="mc-option"><input type="radio" name="m1" value="sàpia"> sàpia</label>
+      <label class="mc-option"><input type="radio" name="m1" value="sapiga"> sapiga</label>
+      <label class="mc-option"><input type="radio" name="m1" value="sabria"> sabria</label>
+    </div>
+    <span class="feedback" id="m1-fb"></span>
+  </div>
+
+  <div class="q-item">
+    <div class="q-text">2. No vull que ningú <span class="verb">(eixir)</span> del laboratori sense guardar la pràctica en el servidor.</div>
+    <div class="mc-options">
+      <label class="mc-option"><input type="radio" name="m2" value="ix"> ix</label>
+      <label class="mc-option"><input type="radio" name="m2" value="isca"> isca</label>
+      <label class="mc-option"><input type="radio" name="m2" value="eixirà"> eixirà</label>
+      <label class="mc-option"><input type="radio" name="m2" value="eixira"> eixira</label>
+    </div>
+    <span class="feedback" id="m2-fb"></span>
+  </div>
+
+  <div class="q-item">
+    <div class="q-text">3. Cal que hi <span class="verb">(haver)</span> bona coordinació entre els departaments abans del claustre.</div>
+    <div class="mc-options">
+      <label class="mc-option"><input type="radio" name="m3" value="ha"> ha</label>
+      <label class="mc-option"><input type="radio" name="m3" value="haja"> haja</label>
+      <label class="mc-option"><input type="radio" name="m3" value="havia"> havia</label>
+      <label class="mc-option"><input type="radio" name="m3" value="haguera"> haguera</label>
+    </div>
+    <span class="feedback" id="m3-fb"></span>
+  </div>
+
+  <div class="q-item">
+    <div class="q-text">4. Espere que la direcció <span class="verb">(estar)</span> d'acord amb la nova programació de PRSI.</div>
+    <div class="mc-options">
+      <label class="mc-option"><input type="radio" name="m4" value="està"> està</label>
+      <label class="mc-option"><input type="radio" name="m4" value="estiga"> estiga</label>
+      <label class="mc-option"><input type="radio" name="m4" value="estava"> estava</label>
+      <label class="mc-option"><input type="radio" name="m4" value="estaria"> estaria</label>
+    </div>
+    <span class="feedback" id="m4-fb"></span>
+  </div>
+
+  <button class="check-btn" onclick="checkAct2()">Comprova les respostes</button>
+  <div class="subtotal" id="act2-subtotal"></div>
+</section>
+
+<section class="card" id="act3">
+  <span class="kicker">Activitat 3 · 6 buits</span>
+  <h2>Completa la taula de conjugació</h2>
+  <p class="intro">Algunes formes ja estan donades. Completa les caselles buides dels verbs <b>dir</b> i <b>poder</b>.</p>
+
+  <div class="table-scroll">
+    <table class="conj">
+      <thead>
+        <tr><th>Infinitiu</th><th>jo</th><th>tu</th><th>ell/ella</th><th>nosaltres</th><th>vosaltres</th><th>ells/elles</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="inf">dir</td>
+          <td class="given">diga</td>
+          <td><input type="text" id="t1"></td>
+          <td class="given">diga</td>
+          <td><input type="text" id="t2"></td>
+          <td class="given">digueu</td>
+          <td><input type="text" id="t3"></td>
+        </tr>
+        <tr>
+          <td class="inf">poder</td>
+          <td><input type="text" id="t4"></td>
+          <td class="given">pugues</td>
+          <td><input type="text" id="t5"></td>
+          <td class="given">puguem</td>
+          <td><input type="text" id="t6"></td>
+          <td class="given">puguen</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="check-btn" onclick="checkAct3()">Comprova les respostes</button>
+  <div class="subtotal" id="act3-subtotal"></div>
+</section>
+
+<section class="card" id="act4">
+  <span class="kicker">Activitat 4 · Vocabulari · 8 termes</span>
+  <h2>PRSI I i II: relaciona cada terme amb la seua traducció</h2>
+  <p class="intro">Vocabulari de programació, sistemes i xarxes (Batxillerat). Selecciona la traducció al castellà de cada terme valencià.</p>
+
+  <div class="vocab-item">
+    <span class="term">llenguatge de programació</span>
+    <select id="v1">
+      <option value="">— tria una opció —</option>
+      <option value="lenguaje de programación">lenguaje de programación</option>
+      <option value="sistema operativo">sistema operativo</option>
+      <option value="protocolo de comunicación">protocolo de comunicación</option>
+      <option value="base de datos relacional">base de datos relacional</option>
+    </select>
+  </div>
+  <div class="vocab-item">
+    <span class="term">funció</span>
+    <select id="v2">
+      <option value="">— tria una opció —</option>
+      <option value="variable">variable</option>
+      <option value="función">función</option>
+      <option value="consulta">consulta</option>
+      <option value="cifrado">cifrado</option>
+    </select>
+  </div>
+  <div class="vocab-item">
+    <span class="term">base de dades relacional</span>
+    <select id="v3">
+      <option value="">— tria una opció —</option>
+      <option value="máquina virtual">máquina virtual</option>
+      <option value="servidor de correo">servidor de correo</option>
+      <option value="base de datos relacional">base de datos relacional</option>
+      <option value="certificado digital">certificado digital</option>
+    </select>
+  </div>
+  <div class="vocab-item">
+    <span class="term">màquina virtual</span>
+    <select id="v4">
+      <option value="">— tria una opció —</option>
+      <option value="sistema operativo">sistema operativo</option>
+      <option value="máquina virtual">máquina virtual</option>
+      <option value="enrutador / router">enrutador / router</option>
+      <option value="copia de seguridad">copia de seguridad</option>
+    </select>
+  </div>
+  <div class="vocab-item">
+    <span class="term">encaminador</span>
+    <select id="v5">
+      <option value="">— tria una opció —</option>
+      <option value="gestor de bases de datos">gestor de bases de datos</option>
+      <option value="protocolo de comunicación">protocolo de comunicación</option>
+      <option value="cifrado">cifrado</option>
+      <option value="enrutador / router">enrutador / router</option>
+    </select>
+  </div>
+  <div class="vocab-item">
+    <span class="term">xifratge</span>
+    <select id="v6">
+      <option value="">— tria una opció —</option>
+      <option value="consulta">consulta</option>
+      <option value="certificado digital">certificado digital</option>
+      <option value="cifrado">cifrado</option>
+      <option value="copia de seguridad">copia de seguridad</option>
+    </select>
+  </div>
+  <div class="vocab-item">
+    <span class="term">servidor de correu</span>
+    <select id="v7">
+      <option value="">— tria una opció —</option>
+      <option value="base de datos relacional">base de datos relacional</option>
+      <option value="lenguaje de programación">lenguaje de programación</option>
+      <option value="servidor de correo">servidor de correo</option>
+      <option value="variable">variable</option>
+    </select>
+  </div>
+  <div class="vocab-item">
+    <span class="term">còpia de seguretat</span>
+    <select id="v8">
+      <option value="">— tria una opció —</option>
+      <option value="certificado digital">certificado digital</option>
+      <option value="máquina virtual">máquina virtual</option>
+      <option value="función">función</option>
+      <option value="copia de seguridad">copia de seguridad</option>
+    </select>
+  </div>
+
+  <button class="check-btn" onclick="checkAct4()">Comprova les respostes</button>
+  <div class="subtotal" id="act4-subtotal"></div>
+</section>
+
+<section class="card solutions-section">
+  <h2>Solucions i explicacions</h2>
+
+  <div class="sol-group">
+    <h3>Activitat 1 · Omple els buits</h3>
+    <div class="sol-list">
+      <div>1. <b class="ans">sàpien</b> — "els alumnes" (ells) + saber → arrel irregular sàpi-, no de la forma "jo" (sé).</div>
+      <div>2. <b class="ans">tinga</b> — "cada grup" (ell/ella) + tindre → tinc → tinga.</div>
+      <div>3. <b class="ans">vingues</b> — (tu) + vindre → vinc → vingues.</div>
+      <div>4. <b class="ans">puguen</b> — (ells) + poder → puc → puguen.</div>
+      <div>5. <b class="ans">feu</b> — (vosaltres) + fer → la forma de vosaltres coincideix amb la de l'indicatiu.</div>
+    </div>
+  </div>
+
+  <div class="sol-group">
+    <h3>Activitat 2 · Tria l'opció correcta</h3>
+    <div class="sol-list">
+      <div>1. <b class="ans">sàpia</b> — "sap" és indicatiu; "sapiga" i "sabria" no són formes normatives valencianes.</div>
+      <div>2. <b class="ans">isca</b> — "ix" és indicatiu; "eixirà" és futur; "eixira" és imperfet de subjuntiu.</div>
+      <div>3. <b class="ans">haja</b> — construcció impersonal "cal que hi haja…"; "ha" és indicatiu, "havia" imperfet, "haguera" imperfet de subjuntiu.</div>
+      <div>4. <b class="ans">estiga</b> — "està" indicatiu present; "estava" i "estaria" no expressen subjuntiu.</div>
+    </div>
+  </div>
+
+  <div class="sol-group">
+    <h3>Activitat 3 · Taula de conjugació</h3>
+    <div class="sol-list">
+      <div>dir → tu: <b class="ans">digues</b></div>
+      <div>dir → nosaltres: <b class="ans">diguem</b></div>
+      <div>dir → ells/elles: <b class="ans">diguen</b></div>
+      <div>poder → jo: <b class="ans">puga</b></div>
+      <div>poder → ell/ella: <b class="ans">puga</b></div>
+      <div>poder → vosaltres: <b class="ans">pugueu</b></div>
+    </div>
+  </div>
+
+  <div class="sol-group">
+    <h3>Activitat 4 · Vocabulari (PRSI I i II)</h3>
+    <div class="sol-list">
+      <div>llenguatge de programació → <b class="ans">lenguaje de programación</b></div>
+      <div>funció → <b class="ans">función</b></div>
+      <div>base de dades relacional → <b class="ans">base de datos relacional</b></div>
+      <div>màquina virtual → <b class="ans">máquina virtual</b></div>
+      <div>encaminador → <b class="ans">enrutador / router</b></div>
+      <div>xifratge → <b class="ans">cifrado</b></div>
+      <div>servidor de correu → <b class="ans">servidor de correo</b></div>
+      <div>còpia de seguretat → <b class="ans">copia de seguridad</b></div>
+    </div>
+  </div>
+</section>
+
+<footer class="note">IES Jorge Juan, Alacant · Departament d'Informàtica · Exercici oral diari de valencià</footer>
+
+<script>
+(function(){
+  var scores = { act1:0, act2:0, act3:0, act4:0 };
+  var MAX = 23;
+
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase().replace(/\s+/g,' ');
+  }
+
+  function setFb(id, ok, correctText){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    el.textContent = ok ? '✓ correcte' : ('✗ la forma correcta és: ' + correctText);
+  }
+
+  function updateGlobal(){
+    var total = scores.act1 + scores.act2 + scores.act3 + scores.act4;
+    document.getElementById('globalScore').textContent = total;
+    document.getElementById('globalBar').style.width = Math.round((total/MAX)*100) + '%';
+  }
+
+  window.checkAct1 = function(){
+    var answers = {
+      f1:['sàpien'],
+      f2:['tinga'],
+      f3:['vingues'],
+      f4:['puguen'],
+      f5:['feu']
+    };
+    var correct = 0;
+    Object.keys(answers).forEach(function(id){
+      var val = norm(document.getElementById(id).value);
+      var ok = answers[id].some(function(a){ return norm(a) === val; });
+      if(ok) correct++;
+      setFb(id+'-fb', ok, answers[id][0]);
+    });
+    scores.act1 = correct;
+    document.getElementById('act1-subtotal').innerHTML = 'Encertades: <b>' + correct + ' / 5</b>';
+    updateGlobal();
+  };
+
+  window.checkAct2 = function(){
+    var answers = { m1:'sàpia', m2:'isca', m3:'haja', m4:'estiga' };
+    var correct = 0;
+    Object.keys(answers).forEach(function(name){
+      var chosen = document.querySelector('input[name="'+name+'"]:checked');
+      var ok = chosen && chosen.value === answers[name];
+      if(ok) correct++;
+      setFb(name+'-fb', ok, answers[name]);
+    });
+    scores.act2 = correct;
+    document.getElementById('act2-subtotal').innerHTML = 'Encertades: <b>' + correct + ' / 4</b>';
+    updateGlobal();
+  };
+
+  window.checkAct3 = function(){
+    var answers = { t1:'digues', t2:'diguem', t3:'diguen', t4:'puga', t5:'puga', t6:'pugueu' };
+    var correct = 0;
+    Object.keys(answers).forEach(function(id){
+      var input = document.getElementById(id);
+      var ok = norm(input.value) === norm(answers[id]);
+      if(ok){ correct++; input.classList.remove('cell-bad'); input.classList.add('cell-ok'); }
+      else { input.classList.remove('cell-ok'); input.classList.add('cell-bad'); }
+    });
+    scores.act3 = correct;
+    document.getElementById('act3-subtotal').innerHTML = 'Encertades: <b>' + correct + ' / 6</b>';
+    updateGlobal();
+  };
+
+  window.checkAct4 = function(){
+    var answers = {
+      v1:'lenguaje de programación',
+      v2:'función',
+      v3:'base de datos relacional',
+      v4:'máquina virtual',
+      v5:'enrutador / router',
+      v6:'cifrado',
+      v7:'servidor de correo',
+      v8:'copia de seguridad'
+    };
+    var correct = 0;
+    Object.keys(answers).forEach(function(id){
+      var sel = document.getElementById(id);
+      var ok = sel.value === answers[id];
+      if(ok){ correct++; sel.classList.remove('cell-bad'); sel.classList.add('cell-ok'); }
+      else { sel.classList.remove('cell-ok'); sel.classList.add('cell-bad'); }
+    });
+    scores.act4 = correct;
+    document.getElementById('act4-subtotal').innerHTML = 'Encertades: <b>' + correct + ' / 8</b>';
+    updateGlobal();
+  };
+})();
+</script>
+
+</body></html>

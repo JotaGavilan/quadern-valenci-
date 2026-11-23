@@ -1,0 +1,709 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Vaig programar en valencià</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f2f0e6;
+    --surface:#ffffff;
+    --surface-2:#eae6d9;
+    --ink:#1f2b28;
+    --ink-soft:#47554f;
+    --accent:#2f6f62;
+    --accent-strong:#1f4d43;
+    --accent-2:#c1440e;
+    --good:#2f7d46;
+    --good-bg:#e5f3e6;
+    --bad:#b3261e;
+    --bad-bg:#fbe6e4;
+    --border:#d8d2c0;
+    --mono-bg:#16211d;
+    --mono-ink:#d9e6d9;
+    --chip:#fbeecb;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121b19;
+      --surface:#182420;
+      --surface-2:#1f2e29;
+      --ink:#eef1ea;
+      --ink-soft:#b9c4bd;
+      --accent:#6fbfae;
+      --accent-strong:#8fd3c3;
+      --accent-2:#e2884f;
+      --good:#7ed99a;
+      --good-bg:#1d3324;
+      --bad:#f18a83;
+      --bad-bg:#3a1f1e;
+      --border:#2b3a35;
+      --mono-bg:#0d1512;
+      --mono-ink:#bfe3c9;
+      --chip:#2a2214;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121b19;
+    --surface:#182420;
+    --surface-2:#1f2e29;
+    --ink:#eef1ea;
+    --ink-soft:#b9c4bd;
+    --accent:#6fbfae;
+    --accent-strong:#8fd3c3;
+    --accent-2:#e2884f;
+    --good:#7ed99a;
+    --good-bg:#1d3324;
+    --bad:#f18a83;
+    --bad-bg:#3a1f1e;
+    --border:#2b3a35;
+    --mono-bg:#0d1512;
+    --mono-ink:#bfe3c9;
+    --chip:#2a2214;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans',system-ui,sans-serif;
+    padding-inline:16px;
+    padding-block:0 32px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif;text-wrap:balance;margin:0;}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
+
+  /* Header */
+  header.board{
+    background:var(--accent-strong);
+    color:#f4f7ec;
+    margin:0 -16px;
+    padding:20px 16px 22px;
+    border-radius:0 0 18px 18px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.board::after{
+    content:"";
+    position:absolute;inset:0;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 26px);
+    pointer-events:none;
+  }
+  .board-inner{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+    color:#cfe9dd;opacity:.9;margin-bottom:8px;
+  }
+  header.board h1{font-size:1.5rem;font-weight:600;color:#fefdf6;line-height:1.25;}
+  header.board .sub{font-size:.92rem;color:#d7ebe1;margin-top:6px;font-style:italic;font-family:'Fraunces',serif;}
+  .scorebar{
+    margin-top:16px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:rgba(0,0,0,.18);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:12px;
+    padding:10px 14px;
+    flex-wrap:wrap;
+  }
+  .scorebar .label{font-size:.78rem;color:#d7ebe1;}
+  .scorebar .score{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:#fefdf6;}
+
+  main{padding-top:22px;display:flex;flex-direction:column;gap:26px;}
+
+  section.theory{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px 18px 20px;
+  }
+  section.theory h2{font-size:1.15rem;color:var(--accent-strong);margin-bottom:10px;}
+  section.theory p{line-height:1.55;margin:0 0 10px;color:var(--ink);}
+  section.theory .tip{
+    background:var(--surface-2);
+    border-left:3px solid var(--accent-2);
+    padding:10px 12px;
+    border-radius:0 8px 8px 0;
+    font-size:.92rem;
+    color:var(--ink-soft);
+  }
+
+  table.conj{width:100%;border-collapse:collapse;margin:14px 0;font-size:.92rem;}
+  table.conj th,table.conj td{border:1px solid var(--border);padding:7px 9px;text-align:left;}
+  table.conj th{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.02em;color:var(--ink-soft);text-transform:uppercase;}
+  table.conj td.ex{font-style:italic;color:var(--ink-soft);}
+  .tblwrap{overflow-x:auto;}
+  .aux{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent-strong);}
+
+  /* Exercise cards -> editor tab style */
+  .exercise{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .tab{
+    display:flex;align-items:center;gap:8px;
+    background:var(--mono-bg);
+    color:var(--mono-ink);
+    padding:9px 14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.8rem;
+  }
+  .tab .dot{width:9px;height:9px;border-radius:50%;background:var(--accent-2);flex:none;}
+  .tab .fname{opacity:.75;}
+  .ebody{padding:16px 18px 18px;}
+  .ebody p.instr{margin:0 0 14px;color:var(--ink-soft);font-size:.92rem;}
+  .item{margin-bottom:14px;line-height:1.75;}
+  .item:last-child{margin-bottom:0;}
+  .qnum{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:700;margin-right:4px;}
+
+  input.fill{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.95rem;
+    border:none;
+    border-bottom:2px solid var(--border);
+    background:transparent;
+    color:var(--ink);
+    padding:2px 4px;
+    min-width:120px;
+    outline:none;
+  }
+  input.fill:focus{border-bottom-color:var(--accent);}
+  input.fill.ok{border-bottom-color:var(--good);background:var(--good-bg);}
+  input.fill.bad{border-bottom-color:var(--bad);background:var(--bad-bg);}
+
+  select.vocab, select.fillselect{
+    font-family:'Work Sans',sans-serif;
+    font-size:.92rem;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+    padding:5px 8px;
+  }
+  select.vocab.ok, select.fillselect.ok{border-color:var(--good);background:var(--good-bg);}
+  select.vocab.bad, select.fillselect.bad{border-color:var(--bad);background:var(--bad-bg);}
+
+  .mcq-block{margin-bottom:16px;}
+  .mcq-block:last-child{margin-bottom:0;}
+  .mcq-q{margin-bottom:6px;}
+  .mcq-opts{display:flex;flex-direction:column;gap:6px;padding-left:2px;}
+  .mcq-opts label{
+    display:flex;align-items:center;gap:8px;
+    font-size:.92rem;
+    padding:5px 8px;border-radius:8px;
+    border:1px solid transparent;
+    cursor:pointer;
+  }
+  .mcq-opts label:hover{background:var(--surface-2);}
+  .mcq-opts label.ok{background:var(--good-bg);border-color:var(--good);}
+  .mcq-opts label.bad{background:var(--bad-bg);border-color:var(--bad);}
+  .mcq-opts input{accent-color:var(--accent);}
+
+  .fb{font-size:.82rem;margin-left:8px;font-weight:600;}
+  .fb.good{color:var(--good);}
+  .fb.bad{color:var(--bad);}
+
+  .vocabrow{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;flex-wrap:wrap;
+    padding:9px 0;
+    border-bottom:1px dashed var(--border);
+  }
+  .vocabrow:last-child{border-bottom:none;}
+  .vocabrow .term{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent-strong);}
+
+  table.fillconj{width:100%;border-collapse:collapse;margin-top:6px;font-size:.92rem;}
+  table.fillconj th,table.fillconj td{border:1px solid var(--border);padding:6px 8px;}
+  table.fillconj th{background:var(--surface-2);font-family:'JetBrains Mono',monospace;font-size:.78rem;text-transform:uppercase;color:var(--ink-soft);}
+  table.fillconj td.person{font-size:.88rem;color:var(--ink-soft);white-space:nowrap;}
+  table.fillconj input.fill{width:100%;min-width:70px;}
+
+  .dialogue p{margin:0 0 10px;line-height:1.8;}
+  .dialogue .who{font-weight:700;color:var(--accent-strong);}
+
+  .checkbar{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    justify-content:center;
+    padding:6px 0 4px;
+  }
+  button.check, button.reset{
+    font-family:'Work Sans',sans-serif;
+    font-weight:600;font-size:.95rem;
+    padding:11px 22px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+  }
+  button.check{background:var(--accent);color:#0d1512;}
+  button.check:hover{background:var(--accent-strong);color:#fefdf6;}
+  button.reset{background:transparent;color:var(--ink-soft);border:1px solid var(--border);}
+  button.reset:hover{border-color:var(--ink-soft);}
+
+  .resultbanner{
+    text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.95rem;
+    color:var(--ink-soft);
+    margin-top:-4px;
+  }
+
+  details.solutions{
+    background:var(--mono-bg);
+    color:var(--mono-ink);
+    border-radius:14px;
+    padding:2px 18px 4px;
+  }
+  details.solutions summary{
+    cursor:pointer;
+    padding:14px 0;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:.95rem;
+    color:var(--mono-ink);
+  }
+  details.solutions .solblock{margin-bottom:16px;}
+  details.solutions h3{
+    font-family:'JetBrains Mono',monospace;
+    color:#9fd8bd;
+    font-size:.82rem;
+    text-transform:uppercase;letter-spacing:.05em;
+    margin-bottom:8px;
+  }
+  details.solutions ol, details.solutions ul{margin:0 0 4px;padding-left:20px;}
+  details.solutions li{margin-bottom:6px;line-height:1.5;font-size:.88rem;}
+  details.solutions .ans{color:#9fd8bd;font-weight:700;}
+  details.solutions p.explain{margin:2px 0 0;color:#b9c4bd;font-size:.82rem;}
+
+  footer.pagefoot{
+    text-align:center;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    padding-top:6px;
+  }
+
+  @media (max-width:480px){
+    header.board{border-radius:0 0 14px 14px;}
+    .ebody{padding:14px 14px 16px;}
+    .vocabrow{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+
+<div class="wrap">
+  
+<p style="max-width:820px;margin:0 auto 12px;padding-inline:4px;font-family:inherit;font-size:.82rem;"><a href="../index.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor;">&larr; Quadern de valencià (totes les lliçons)</a></p>
+<header class="board">
+    <div class="board-inner">
+      <div class="eyebrow">IES Jorge Juan · Alacant — Exercici diari de valencià</div>
+      <h1>Dimecres, 16 de setembre de 2026</h1>
+      <div class="sub">Tema gramatical d'avui: el pretèrit perfet perifràstic (<span class="mono">vaig&nbsp;+&nbsp;infinitiu</span>)</div>
+      <div class="scorebar">
+        <span class="label">Puntuació acumulada</span>
+        <span class="score"><span id="scoreNow">0</span> / <span id="scoreMax">0</span></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="theory">
+      <h2>📘 Teoria: el pretèrit perfet perifràstic</h2>
+      <p>En valencià, per a parlar d'accions acabades en el passat es pot fer servir el <strong>pretèrit perfet simple</strong> (jo parlí, tu explicares...) o, molt més habitual en la llengua oral, el <strong>pretèrit perfet perifràstic</strong>: es forma amb el verb <strong>anar</strong> conjugat en present —però amb valor de passat— seguit de l'<strong>infinitiu</strong> del verb principal.</p>
+
+      <div class="tblwrap">
+        <table class="conj">
+          <tr><th>Persona</th><th>Anar (auxiliar)</th><th>+ infinitiu</th><th>Exemple</th></tr>
+          <tr><td>jo</td><td class="aux">vaig</td><td class="mono">parlar</td><td class="ex">vaig parlar amb el cap d'estudis</td></tr>
+          <tr><td>tu</td><td class="aux">vas</td><td class="mono">fer</td><td class="ex">vas fer la programació de l'aula</td></tr>
+          <tr><td>ell/ella, vosté</td><td class="aux">va</td><td class="mono">eixir</td><td class="ex">va eixir tard del laboratori</td></tr>
+          <tr><td>nosaltres</td><td class="aux">vam <span class="mono" style="font-weight:400;color:var(--ink-soft)">(vàrem)</span></td><td class="mono">dir</td><td class="ex">vam dir la veritat a l'alumnat</td></tr>
+          <tr><td>vosaltres</td><td class="aux">vau <span class="mono" style="font-weight:400;color:var(--ink-soft)">(vàreu)</span></td><td class="mono">vindre</td><td class="ex">vau vindre prompte a classe</td></tr>
+          <tr><td>ells/elles, vostés</td><td class="aux">van <span class="mono" style="font-weight:400;color:var(--ink-soft)">(varen)</span></td><td class="mono">tindre</td><td class="ex">van tindre un problema amb la xarxa</td></tr>
+        </table>
+      </div>
+
+      <p class="tip">💡 El truc: l'infinitiu <strong>mai canvia</strong>, encara que el verb siga irregularíssim (fer, dir, vindre, eixir, saber, poder, dur...). Només cal recordar sis paraules —<span class="mono">vaig / vas / va / vam / vau / van</span>— i s'apliquen a qualsevol verb. Compte a no confondre-ho amb "anar" de moviment: "hui vaig al departament d'informàtica" (present, moviment) davant "ahir vaig anar al departament" (passat, l'acció d'anar-hi ja s'ha acabat) — el context ho aclareix sempre.</p>
+    </section>
+
+    <!-- ACTIVITAT 1 -->
+    <section class="exercise" id="act1">
+      <div class="tab"><span class="dot"></span><span>activitat_1.val</span><span class="fname">— omplir buits</span></div>
+      <div class="ebody">
+        <p class="instr">Escriu la forma completa del pretèrit perfet perifràstic (auxiliar + infinitiu) per al verb indicat entre parèntesis.</p>
+
+        <div class="item"><span class="qnum">1.</span> Ahir (jo / explicar) <input type="text" class="fill" data-answer="vaig explicar" id="a1-1" size="16"> als alumnes com instal·lar Python al laboratori. <span class="fb" id="fb-a1-1"></span></div>
+
+        <div class="item"><span class="qnum">2.</span> (Tu / connectar) <input type="text" class="fill" data-answer="vas connectar" id="a1-2" size="16"> l'ordinador del professor al projector abans de començar? <span class="fb" id="fb-a1-2"></span></div>
+
+        <div class="item"><span class="qnum">3.</span> Al claustre, la directora (dir) <input type="text" class="fill" data-answer="va dir" id="a1-3" size="14"> que calia actualitzar tots els equips del centre. <span class="fb" id="fb-a1-3"></span></div>
+
+        <div class="item"><span class="qnum">4.</span> (Nosaltres / fer) <input type="text" class="fill" data-answer="vam fer" data-alt="vàrem fer" id="a1-4" size="14"> una còpia de seguretat abans de començar la pràctica de bases de dades. <span class="fb" id="fb-a1-4"></span></div>
+
+        <div class="item"><span class="qnum">5.</span> (Vosaltres / eixir) <input type="text" class="fill" data-answer="vau eixir" data-alt="vàreu eixir" id="a1-5" size="16"> tard del laboratori d'informàtica dijous passat. <span class="fb" id="fb-a1-5"></span></div>
+
+        <div class="item"><span class="qnum">6.</span> Els alumnes de Batxillerat (tindre) <input type="text" class="fill" data-answer="van tindre" data-alt="varen tindre" id="a1-6" size="16"> problemes per a connectar-se a la xarxa sense fil. <span class="fb" id="fb-a1-6"></span></div>
+      </div>
+    </section>
+
+    <!-- ACTIVITAT 2 -->
+    <section class="exercise" id="act2">
+      <div class="tab"><span class="dot"></span><span>activitat_2.val</span><span class="fname">— tria l'opció correcta</span></div>
+      <div class="ebody">
+        <p class="instr">Situacions de departament: selecciona la forma verbal correcta.</p>
+
+        <div class="mcq-block" data-correct="a">
+          <div class="mcq-q"><span class="qnum">1.</span> «María, tu ahir <em>(vindre)</em> a la reunió del departament d'informàtica?»</div>
+          <div class="mcq-opts">
+            <label><input type="radio" name="a2-1" value="a"> vas vindre</label>
+            <label><input type="radio" name="a2-1" value="b"> va vindre</label>
+            <label><input type="radio" name="a2-1" value="c"> vau vindre</label>
+          </div>
+        </div>
+
+        <div class="mcq-block" data-correct="a">
+          <div class="mcq-q"><span class="qnum">2.</span> En la classe de PIAR, els alumnes <em>(programar)</em> un robot amb la placa Microbit.</div>
+          <div class="mcq-opts">
+            <label><input type="radio" name="a2-2" value="a"> van programar</label>
+            <label><input type="radio" name="a2-2" value="b"> vam programar</label>
+            <label><input type="radio" name="a2-2" value="c"> vas programar</label>
+          </div>
+        </div>
+
+        <div class="mcq-block" data-correct="a">
+          <div class="mcq-q"><span class="qnum">3.</span> Jo no <em>(saber)</em> què respondre quan l'alumne em va preguntar per l'error del programa.</div>
+          <div class="mcq-opts">
+            <label><input type="radio" name="a2-3" value="a"> vaig saber</label>
+            <label><input type="radio" name="a2-3" value="b"> vas saber</label>
+            <label><input type="radio" name="a2-3" value="c"> va saber</label>
+          </div>
+        </div>
+
+        <div class="mcq-block" data-correct="b">
+          <div class="mcq-q"><span class="qnum">4.</span> Nosaltres <em>(poder)</em> arreglar el servidor abans que acabara la classe.</div>
+          <div class="mcq-opts">
+            <label><input type="radio" name="a2-4" value="a"> van poder</label>
+            <label><input type="radio" name="a2-4" value="b"> vam poder</label>
+            <label><input type="radio" name="a2-4" value="c"> vau poder</label>
+          </div>
+        </div>
+
+        <div class="mcq-block" data-correct="a">
+          <div class="mcq-q"><span class="qnum">5.</span> El tècnic <em>(dir)</em> que el problema era de la xarxa cablejada, no del sistema operatiu.</div>
+          <div class="mcq-opts">
+            <label><input type="radio" name="a2-5" value="a"> va dir</label>
+            <label><input type="radio" name="a2-5" value="b"> vaig dir</label>
+            <label><input type="radio" name="a2-5" value="c"> vam dir</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVITAT 3 -->
+    <section class="exercise" id="act3">
+      <div class="tab"><span class="dot"></span><span>activitat_3.val</span><span class="fname">— completa la taula</span></div>
+      <div class="ebody">
+        <p class="instr">Completa només l'auxiliar (vaig / vas / va / vam / vau / van) per a cada persona. Fixa't que és el <strong>mateix auxiliar</strong> per a qualsevol verb, encara que siga tan irregular com "dir" o "vindre".</p>
+
+        <div class="tblwrap">
+        <table class="fillconj">
+          <tr><th>Persona</th><th>dir</th><th>vindre</th></tr>
+          <tr><td class="person">jo</td><td><input type="text" class="fill" data-answer="vaig" id="a3-1"> dir</td><td><input type="text" class="fill" data-answer="vaig" id="a3-2"> vindre</td></tr>
+          <tr><td class="person">tu</td><td><input type="text" class="fill" data-answer="vas" id="a3-3"> dir</td><td><input type="text" class="fill" data-answer="vas" id="a3-4"> vindre</td></tr>
+          <tr><td class="person">ell/ella, vosté</td><td><input type="text" class="fill" data-answer="va" id="a3-5"> dir</td><td><input type="text" class="fill" data-answer="va" id="a3-6"> vindre</td></tr>
+          <tr><td class="person">nosaltres</td><td><input type="text" class="fill" data-answer="vam" data-alt="vàrem" id="a3-7"> dir</td><td><input type="text" class="fill" data-answer="vam" data-alt="vàrem" id="a3-8"> vindre</td></tr>
+          <tr><td class="person">vosaltres</td><td><input type="text" class="fill" data-answer="vau" data-alt="vàreu" id="a3-9"> dir</td><td><input type="text" class="fill" data-answer="vau" data-alt="vàreu" id="a3-10"> vindre</td></tr>
+          <tr><td class="person">ells/elles, vostés</td><td><input type="text" class="fill" data-answer="van" data-alt="varen" id="a3-11"> dir</td><td><input type="text" class="fill" data-answer="van" data-alt="varen" id="a3-12"> vindre</td></tr>
+        </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVITAT 4 -->
+    <section class="exercise" id="act4">
+      <div class="tab"><span class="dot"></span><span>activitat_4.val</span><span class="fname">— mini-diàleg al departament</span></div>
+      <div class="ebody">
+        <p class="instr">Omple els buits del diàleg entre el cap de departament i el professor d'informàtica.</p>
+
+        <div class="dialogue">
+          <p><span class="who">Cap de departament:</span> Bon dia! <em>(Tu / rebre)</em> <input type="text" class="fill" data-answer="vas rebre" id="a4-1" size="14"> el correu sobre l'actualització de Microsoft 365?</p>
+
+          <p><span class="who">Professor:</span> Sí, el <em>(jo / llegir)</em> <input type="text" class="fill" data-answer="vaig llegir" id="a4-2" size="16"> ahir a la nit. També <em>(jo / instal·lar)</em> <input type="text" class="fill" data-answer="vaig instal·lar" id="a4-3" size="18"> l'actualització als ordinadors del laboratori 2.</p>
+
+          <p><span class="who">Cap de departament:</span> Perfecte. I els alumnes, <em>(ells / poder)</em> <input type="text" class="fill" data-answer="van poder" id="a4-4" size="14"> acabar la pràctica de bases de dades amb XAMPP?</p>
+
+          <p><span class="who">Professor:</span> La majoria sí, encara que dos alumnes <em>(tindre)</em> <input type="text" class="fill" data-answer="van tindre" data-alt="varen tindre" id="a4-5" size="16"> problemes amb la connexió a la xarxa sense fil.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVITAT 5: VOCABULARI -->
+    <section class="exercise" id="act5">
+      <div class="tab"><span class="dot"></span><span>activitat_5.val</span><span class="fname">— vocabulari PRSI (Batxillerat)</span></div>
+      <div class="ebody">
+        <p class="instr">Tria la traducció correcta al castellà de cada terme tècnic (Programació, Sistemes Informàtics i Xarxes).</p>
+
+        <div class="vocabrow">
+          <span class="term">llenguatge de programació</span>
+          <select class="vocab" data-answer="lenguaje de programación" id="v-1">
+            <option value="">— tria —</option>
+            <option>lenguaje de programación</option>
+            <option>lenguaje de máquina</option>
+            <option>lenguaje natural</option>
+            <option>lenguaje de marcado</option>
+          </select>
+        </div>
+
+        <div class="vocabrow">
+          <span class="term">base de dades relacional</span>
+          <select class="vocab" data-answer="base de datos relacional" id="v-2">
+            <option value="">— tria —</option>
+            <option>base de datos documental</option>
+            <option>base de datos relacional</option>
+            <option>hoja de cálculo</option>
+            <option>archivo de configuración</option>
+          </select>
+        </div>
+
+        <div class="vocabrow">
+          <span class="term">màquina virtual</span>
+          <select class="vocab" data-answer="máquina virtual" id="v-3">
+            <option value="">— tria —</option>
+            <option>servidor físico</option>
+            <option>equipo de escritorio</option>
+            <option>máquina virtual</option>
+            <option>máquina física</option>
+          </select>
+        </div>
+
+        <div class="vocabrow">
+          <span class="term">encaminador</span>
+          <select class="vocab" data-answer="enrutador (router)" id="v-4">
+            <option value="">— tria —</option>
+            <option>conmutador (switch)</option>
+            <option>concentrador (hub)</option>
+            <option>enrutador (router)</option>
+            <option>repetidor</option>
+          </select>
+        </div>
+
+        <div class="vocabrow">
+          <span class="term">xifratge</span>
+          <select class="vocab" data-answer="cifrado" id="v-5">
+            <option value="">— tria —</option>
+            <option>compresión</option>
+            <option>autenticación</option>
+            <option>copia de seguridad</option>
+            <option>cifrado</option>
+          </select>
+        </div>
+
+        <div class="vocabrow">
+          <span class="term">còpia de seguretat</span>
+          <select class="vocab" data-answer="copia de seguridad" id="v-6">
+            <option value="">— tria —</option>
+            <option>copia impresa</option>
+            <option>copia en la nube</option>
+            <option>copia de seguridad</option>
+            <option>copia temporal</option>
+          </select>
+        </div>
+
+        <div class="vocabrow">
+          <span class="term">protocol de comunicació</span>
+          <select class="vocab" data-answer="protocolo de comunicación" id="v-7">
+            <option value="">— tria —</option>
+            <option>certificado digital</option>
+            <option>sistema operativo</option>
+            <option>protocolo de comunicación</option>
+            <option>lenguaje de programación</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <div class="checkbar">
+      <button class="check" id="checkBtn">✅ Comprova les respostes</button>
+      <button class="reset" id="resetBtn">↺ Reiniciar</button>
+    </div>
+    <div class="resultbanner" id="resultBanner"></div>
+
+    <details class="solutions" id="solutions">
+      <summary>📗 Veure totes les solucions i explicacions</summary>
+
+      <div class="solblock">
+        <h3>Activitat 1 — omplir buits</h3>
+        <ol>
+          <li><span class="ans">vaig explicar</span><p class="explain">Jo → vaig + infinitiu "explicar" (verb regular, però l'auxiliar és el mateix per a tots).</p></li>
+          <li><span class="ans">vas connectar</span><p class="explain">Tu → vas + infinitiu.</p></li>
+          <li><span class="ans">va dir</span><p class="explain">Ell/ella → va + infinitiu "dir" (l'infinitiu irregular no canvia mai en la perífrasi).</p></li>
+          <li><span class="ans">vam fer</span> <span style="opacity:.7">(o vàrem fer)</span><p class="explain">Nosaltres → vam/vàrem + infinitiu "fer".</p></li>
+          <li><span class="ans">vau eixir</span> <span style="opacity:.7">(o vàreu eixir)</span><p class="explain">Vosaltres → vau/vàreu + infinitiu "eixir".</p></li>
+          <li><span class="ans">van tindre</span> <span style="opacity:.7">(o varen tindre)</span><p class="explain">Ells/elles → van/varen + infinitiu "tindre".</p></li>
+        </ol>
+      </div>
+
+      <div class="solblock">
+        <h3>Activitat 2 — opció correcta</h3>
+        <ol>
+          <li><span class="ans">vas vindre</span><p class="explain">"Tu" exigeix l'auxiliar "vas", no "va" (3a persona) ni "vau" (vosaltres).</p></li>
+          <li><span class="ans">van programar</span><p class="explain">Subjecte "els alumnes" = 3a persona plural → van.</p></li>
+          <li><span class="ans">vaig saber</span><p class="explain">"Jo" → vaig, encara que el verb siga irregular en altres temps (present: sé, saps, sap...).</p></li>
+          <li><span class="ans">vam poder</span><p class="explain">"Nosaltres" → vam (no "van", que és per a ells/elles).</p></li>
+          <li><span class="ans">va dir</span><p class="explain">"El tècnic" = 3a persona singular → va.</p></li>
+        </ol>
+      </div>
+
+      <div class="solblock">
+        <h3>Activitat 3 — taula de conjugació</h3>
+        <p class="explain">L'auxiliar és idèntic per a qualsevol verb: vaig / vas / va / vam (vàrem) / vau (vàreu) / van (varen). Ho pots comprovar en la columna "dir" i en la columna "vindre": els sis auxiliars són exactament els mateixos, encara que els dos verbs siguen ben irregulars en altres temps.</p>
+      </div>
+
+      <div class="solblock">
+        <h3>Activitat 4 — mini-diàleg</h3>
+        <ol>
+          <li><span class="ans">vas rebre</span></li>
+          <li><span class="ans">vaig llegir</span></li>
+          <li><span class="ans">vaig instal·lar</span></li>
+          <li><span class="ans">van poder</span></li>
+          <li><span class="ans">van tindre</span> <span style="opacity:.7">(o varen tindre)</span></li>
+        </ol>
+        <p class="explain">Diàleg típic de departament: cada verb porta l'auxiliar que correspon a la persona indicada entre parèntesis.</p>
+      </div>
+
+      <div class="solblock">
+        <h3>Activitat 5 — vocabulari PRSI</h3>
+        <ul>
+          <li><span class="ans">llenguatge de programació</span> → lenguaje de programación</li>
+          <li><span class="ans">base de dades relacional</span> → base de datos relacional</li>
+          <li><span class="ans">màquina virtual</span> → máquina virtual</li>
+          <li><span class="ans">encaminador</span> → enrutador (router)</li>
+          <li><span class="ans">xifratge</span> → cifrado</li>
+          <li><span class="ans">còpia de seguretat</span> → copia de seguridad</li>
+          <li><span class="ans">protocol de comunicació</span> → protocolo de comunicación</li>
+        </ul>
+        <p class="explain">Vocabulari de PRSI I i II (Batxillerat): sistemes, xarxes i bases de dades — termes que apareixen sovint en les pràctiques amb VirtualBox, XAMPP i SQL.</p>
+      </div>
+    </details>
+
+    <footer class="pagefoot">Exercici diari de valencià · IES Jorge Juan, Alacant · Departament d'Informàtica</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  function normalize(s){
+    if(!s) return "";
+    return s.toString()
+      .trim()
+      .toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g,"")
+      .replace(/\s+/g," ");
+  }
+
+  var fillInputs = Array.prototype.slice.call(document.querySelectorAll("input.fill"));
+  var vocabSelects = Array.prototype.slice.call(document.querySelectorAll("select.vocab"));
+  var mcqBlocks = Array.prototype.slice.call(document.querySelectorAll(".mcq-block"));
+
+  var totalItems = fillInputs.length + vocabSelects.length + mcqBlocks.length;
+  document.getElementById("scoreMax").textContent = totalItems;
+
+  function clearMcqStyles(block){
+    var labels = block.querySelectorAll(".mcq-opts label");
+    labels.forEach(function(l){ l.classList.remove("ok","bad"); });
+  }
+
+  function checkAll(){
+    var score = 0;
+
+    fillInputs.forEach(function(inp){
+      var fb = document.getElementById("fb-" + inp.id);
+      var correct = normalize(inp.getAttribute("data-answer"));
+      var alt = inp.getAttribute("data-alt");
+      var val = normalize(inp.value);
+      var isRight = val !== "" && (val === correct || (alt && val === normalize(alt)));
+      inp.classList.remove("ok","bad");
+      if(isRight){
+        inp.classList.add("ok");
+        score++;
+        if(fb){ fb.textContent = "✓ Correcte"; fb.className = "fb good"; }
+      } else {
+        inp.classList.add("bad");
+        if(fb){ fb.textContent = "✗ Resposta: " + inp.getAttribute("data-answer"); fb.className = "fb bad"; }
+      }
+    });
+
+    vocabSelects.forEach(function(sel){
+      var correct = normalize(sel.getAttribute("data-answer"));
+      var val = normalize(sel.value);
+      sel.classList.remove("ok","bad");
+      if(val !== "" && val === correct){
+        sel.classList.add("ok");
+        score++;
+      } else {
+        sel.classList.add("bad");
+      }
+    });
+
+    mcqBlocks.forEach(function(block){
+      clearMcqStyles(block);
+      var correctVal = block.getAttribute("data-correct");
+      var name = block.querySelector("input[type=radio]").name;
+      var checked = block.querySelector("input[name='" + name + "']:checked");
+      var labels = block.querySelectorAll(".mcq-opts label");
+      var isRight = checked && checked.value === correctVal;
+      if(isRight) score++;
+      labels.forEach(function(l){
+        var radio = l.querySelector("input");
+        if(radio.value === correctVal){
+          l.classList.add("ok");
+        } else if(checked && radio.value === checked.value && !isRight){
+          l.classList.add("bad");
+        }
+      });
+    });
+
+    document.getElementById("scoreNow").textContent = score;
+    var pct = totalItems ? Math.round((score/totalItems)*100) : 0;
+    var banner = document.getElementById("resultBanner");
+    var msg;
+    if(pct === 100){ msg = "🏆 Perfecte! " + score + "/" + totalItems + " (" + pct + "%)"; }
+    else if(pct >= 70){ msg = "💪 Molt bé! " + score + "/" + totalItems + " (" + pct + "%)"; }
+    else if(pct >= 40){ msg = "🙂 Vas pel bon camí: " + score + "/" + totalItems + " (" + pct + "%)"; }
+    else { msg = "📖 Repassa la teoria: " + score + "/" + totalItems + " (" + pct + "%)"; }
+    banner.textContent = msg;
+  }
+
+  function resetAll(){
+    fillInputs.forEach(function(inp){
+      inp.value = "";
+      inp.classList.remove("ok","bad");
+      var fb = document.getElementById("fb-" + inp.id);
+      if(fb){ fb.textContent = ""; }
+    });
+    vocabSelects.forEach(function(sel){ sel.value = ""; sel.classList.remove("ok","bad"); });
+    mcqBlocks.forEach(function(block){
+      var radios = block.querySelectorAll("input[type=radio]");
+      radios.forEach(function(r){ r.checked = false; });
+      clearMcqStyles(block);
+    });
+    document.getElementById("scoreNow").textContent = "0";
+    document.getElementById("resultBanner").textContent = "";
+  }
+
+  document.getElementById("checkBtn").addEventListener("click", checkAll);
+  document.getElementById("resetBtn").addEventListener("click", resetAll);
+})();
+</script>
+
+
+</body></html>

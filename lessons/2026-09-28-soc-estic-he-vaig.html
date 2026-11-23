@@ -1,0 +1,736 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<title>Sóc, estic, he, vaig</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --bg:#eef2f4;
+    --surface:#ffffff;
+    --surface-2:#e2e9ec;
+    --ink:#182226;
+    --ink-soft:#55676e;
+    --accent:#b5563c;
+    --accent-ink:#ffffff;
+    --accent-soft:#f5e1d8;
+    --accent-soft-ink:#8a3d29;
+    --line:#d6dee1;
+    --good:#2f7d5a;
+    --good-bg:#e1f0e6;
+    --bad:#b3413a;
+    --bad-bg:#f7e2df;
+    --shadow: 0 1px 2px rgba(24,34,38,.06), 0 10px 26px -14px rgba(24,34,38,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:#12181b;
+      --surface:#1a2226;
+      --surface-2:#212b30;
+      --ink:#e9eef0;
+      --ink-soft:#9db0b6;
+      --accent:#e2896a;
+      --accent-ink:#1a0f08;
+      --accent-soft:#3a2419;
+      --accent-soft-ink:#f0c4ac;
+      --line:#2c373c;
+      --good:#74d1a2;
+      --good-bg:#173229;
+      --bad:#e58880;
+      --bad-bg:#3a2320;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#12181b;
+    --surface:#1a2226;
+    --surface-2:#212b30;
+    --ink:#e9eef0;
+    --ink-soft:#9db0b6;
+    --accent:#e2896a;
+    --accent-ink:#1a0f08;
+    --accent-soft:#3a2419;
+    --accent-soft-ink:#f0c4ac;
+    --line:#2c373c;
+    --good:#74d1a2;
+    --good-bg:#173229;
+    --bad:#e58880;
+    --bad-bg:#3a2320;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-inline:18px;
+    padding-block:22px 64px;
+    max-width:760px;
+    margin:0 auto;
+  }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0 0 .35em; color:var(--ink); }
+  h1{ font-size:clamp(1.7rem,5vw,2.3rem); font-weight:600; }
+  h2{ font-size:1.3rem; font-weight:600; margin-top:2.2em; }
+  h3{ font-size:1.02rem; font-weight:600; }
+  p{ margin:.6em 0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a{ color:var(--accent); }
+
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    text-decoration:none;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  .back-link:hover{ text-decoration:underline; }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:24px 24px 22px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.88;
+    margin-bottom:8px;
+  }
+  header.top h1{ margin:0; }
+  header.top p{ margin:10px 0 0; max-width:56ch; opacity:.94; font-size:.95rem; }
+  .topic-pill{
+    display:inline-block;
+    margin-top:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.76rem;
+    background:rgba(255,255,255,.18);
+    padding:5px 11px;
+    border-radius:999px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px 22px 22px;
+    box-shadow:var(--shadow);
+    margin-bottom:18px;
+  }
+
+  .conj-table-wrap{ overflow-x:auto; margin:14px 0 6px; }
+  table.conj-table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:460px;
+    font-size:.93rem;
+  }
+  table.conj-table th, table.conj-table td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+  }
+  table.conj-table thead th{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    background:var(--surface-2);
+  }
+  table.conj-table tbody th{
+    font-weight:600;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    background:var(--surface-2);
+  }
+  table.conj-table td{ font-family:'IBM Plex Mono', monospace; }
+  table.conj-table tbody tr:last-child td, table.conj-table tbody tr:last-child th{ border-bottom:none; }
+
+  .usage-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:16px;
+  }
+  @media (max-width:560px){ .usage-grid{ grid-template-columns:1fr; } }
+  .usage-box{
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:13px 15px;
+    font-size:.9rem;
+  }
+  .usage-box b{ display:block; margin-bottom:4px; font-family:'Fraunces', serif; font-size:1rem; }
+  .usage-box .ex{ color:var(--ink-soft); font-size:.86rem; margin-top:4px; }
+
+  .note{
+    background:var(--accent-soft);
+    color:var(--accent-soft-ink);
+    border-radius:12px;
+    padding:12px 15px;
+    font-size:.88rem;
+    margin-top:14px;
+  }
+
+  section.activity{ margin-top:26px; }
+  .activity-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .activity-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    background:var(--accent-soft);
+    border-radius:999px;
+    padding:2px 9px;
+    flex:none;
+  }
+  .activity-instructions{ color:var(--ink-soft); font-size:.9rem; margin:0 0 14px; }
+
+  .item{
+    padding:12px 0;
+    border-top:1px solid var(--line);
+  }
+  .item:first-of-type{ border-top:none; padding-top:2px; }
+  .item .prompt{ font-size:.96rem; margin-bottom:6px; }
+  .item .prompt .hint{ color:var(--ink-soft); font-style:italic; }
+
+  input.check, select.check{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.92rem;
+    padding:7px 10px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    min-width:150px;
+  }
+  input.check:focus, select.check:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  input.check.is-correct, select.check.is-correct{ border-color:var(--good); background:var(--good-bg); }
+  input.check.is-incorrect, select.check.is-incorrect{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .feedback{
+    display:block;
+    font-size:.82rem;
+    margin-top:5px;
+    font-family:'IBM Plex Mono', monospace;
+    min-height:1.1em;
+  }
+  .feedback.ok{ color:var(--good); }
+  .feedback.bad{ color:var(--bad); }
+
+  .dialogue-line{ display:flex; gap:8px; margin-bottom:10px; align-items:flex-start; flex-wrap:wrap; }
+  .dialogue-line .who{ font-weight:600; flex:none; min-width:78px; font-family:'Fraunces',serif; }
+  .dialogue-line .say{ flex:1; min-width:200px; }
+
+  .table-fill-wrap{ overflow-x:auto; margin-top:10px; }
+  table.fill-table{ border-collapse:collapse; width:100%; min-width:480px; font-size:.9rem; }
+  table.fill-table th, table.fill-table td{ padding:8px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
+  table.fill-table thead th{
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); background:var(--surface-2);
+  }
+  table.fill-table tbody th{ font-weight:600; color:var(--ink-soft); white-space:nowrap; background:var(--surface-2); }
+  table.fill-table input.check{ width:100%; min-width:88px; }
+  table.fill-table .ref{ font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); }
+
+  .vocab-grid{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+  .vocab-item{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--surface-2); border-radius:10px; padding:10px 14px;
+    flex-wrap:wrap;
+  }
+  .vocab-item .term{ font-weight:600; font-family:'Fraunces',serif; }
+  .vocab-item .term .es{ font-weight:400; color:var(--ink-soft); font-size:.82rem; }
+
+  .score-bar{
+    position:sticky;
+    bottom:calc(env(safe-area-inset-bottom,0px) + 12px);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background:var(--surface);
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    box-shadow:var(--shadow);
+    margin-top:26px;
+    flex-wrap:wrap;
+  }
+  #scoreBox{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:.95rem;
+  }
+  button.check-btn{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:.92rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:10px;
+    padding:11px 20px;
+    cursor:pointer;
+  }
+  button.check-btn:hover{ filter:brightness(1.06); }
+  button.check-btn:active{ transform:translateY(1px); }
+
+  details.solutions{
+    margin-top:28px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:6px 22px 18px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.1rem;
+    padding:14px 0;
+  }
+  .sol-group{ margin-top:10px; }
+  .sol-group h4{ font-family:'IBM Plex Mono',monospace; font-size:.76rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin:16px 0 6px; }
+  .sol-item{ font-size:.88rem; padding:6px 0; border-top:1px solid var(--line); }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item b{ font-family:'IBM Plex Mono',monospace; color:var(--good); }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:26px;
+  }
+</style>
+
+<a class="back-link" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · Exercici oral diari</div>
+    <h1>Sóc, estic, he, vaig</h1>
+    <p>Quatre dels verbs més irregulars i més usats del valencià — imprescindibles per a qualsevol frase que digues a classe.</p>
+    <span class="topic-pill">Tema gramatical d'avui: Ser / estar / haver / anar en diversos temps</span>
+  </div>
+</header>
+
+<div class="card">
+  <h2 style="margin-top:0">Quatre verbs, una sola classe</h2>
+  <p>Cap altre grup de verbs apareix tant en una hora de classe com <b>ser</b>, <b>estar</b>, <b>haver</b> i <b>anar</b>: identifiquen qui ets, on estàs, què has fet i cap on vas. Els quatre són fortament irregulars i no segueixen cap patró comú entre ells, així que cal memoritzar-los com a blocs independents.</p>
+
+  <div class="conj-table-wrap">
+    <table class="conj-table">
+      <thead>
+        <tr><th></th><th>ser</th><th>estar</th><th>haver</th><th>anar</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>jo</th><td>sóc</td><td>estic</td><td>he</td><td>vaig</td></tr>
+        <tr><th>tu</th><td>ets</td><td>estàs</td><td>has</td><td>vas</td></tr>
+        <tr><th>ell / ella</th><td>és</td><td>està</td><td>ha</td><td>va</td></tr>
+        <tr><th>nosaltres</th><td>som</td><td>estem</td><td>hem</td><td>anem</td></tr>
+        <tr><th>vosaltres</th><td>sou</td><td>esteu</td><td>heu</td><td>aneu</td></tr>
+        <tr><th>ells / elles</th><td>són</td><td>estan</td><td>han</td><td>van</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="margin-top:16px"><b>A l'imperfet d'indicatiu</b> la sorpresa és agradable: només <b>ser</b> és irregular (arrel <span class="mono">er-</span>: era, eres, era, érem, éreu, eren). Els altres tres es conjuguen de manera regular sobre la seua arrel: <span class="mono">estava, havia, anava</span>.</p>
+
+  <div class="usage-grid">
+    <div class="usage-box">
+      <b>ser</b> — identitat, hora i lloc d'un esdeveniment
+      <div class="ex">"El claustre és a les 16:30." · "Sóc el tutor de 3r B."</div>
+    </div>
+    <div class="usage-box">
+      <b>estar</b> — estat temporal i ubicació de persones o llocs físics
+      <div class="ex">"El projector està espatllat." · "L'IES està a Alacant."</div>
+    </div>
+    <div class="usage-box">
+      <b>haver</b> — auxiliar dels temps compostos i "haver de" (obligació)
+      <div class="ex">"Hem instal·lat XAMPP." · "Has d'entregar la pràctica."</div>
+    </div>
+    <div class="usage-box">
+      <b>anar</b> — moviment, i auxiliar del pretèrit perifràstic (vaig fer)
+      <div class="ex">"Vaig a l'aula 3." · "Ahir vaig configurar el router."</div>
+    </div>
+  </div>
+
+  <div class="note">Compte amb l'error més comú: per a dir que <i>existeix</i> alguna cosa s'usa la forma impersonal <b>hi ha</b> (no "és" ni "està"). "Hi ha un ordinador nou al laboratori", mai "és un ordinador nou".</div>
+</div>
+
+<section class="activity">
+  <div class="activity-head"><span class="activity-num">1</span><h3 style="margin:0">Omplir buits — present d'indicatiu</h3></div>
+  <p class="activity-instructions">Escriu la forma correcta del verb indicat entre parèntesis.</p>
+
+  <div class="item">
+    <p class="prompt">Jo <input type="text" class="check" id="a1-1" data-answer="sóc" autocomplete="off" spellcheck="false"> <span class="hint">(ser)</span> el professor del departament d'informàtica.</p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">Nosaltres <input type="text" class="check" id="a1-2" data-answer="estem" autocomplete="off" spellcheck="false"> <span class="hint">(estar)</span> al laboratori 2 per a la classe de PRSI.</p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">Els alumnes ja <input type="text" class="check" id="a1-3" data-answer="han" autocomplete="off" spellcheck="false"> <span class="hint">(haver)</span> obert l'XAMPP en l'ordinador.</p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">Ara jo <input type="text" class="check" id="a1-4" data-answer="vaig" autocomplete="off" spellcheck="false"> <span class="hint">(anar)</span> a mostrar-vos com es configura una màquina virtual amb VirtualBox.</p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">Vosaltres <input type="text" class="check" id="a1-5" data-answer="sou" autocomplete="off" spellcheck="false"> <span class="hint">(ser)</span> els encarregats d'actualitzar el WordPress del departament esta setmana.</p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">Tu <input type="text" class="check" id="a1-6" data-answer="has" autocomplete="off" spellcheck="false"> <span class="hint">(haver)</span> d'entregar la pràctica de Teachable Machine abans de divendres.</p>
+    <span class="feedback"></span>
+  </div>
+</section>
+
+<section class="activity">
+  <div class="activity-head"><span class="activity-num">2</span><h3 style="margin:0">Tria l'opció correcta — ser, estar o hi ha</h3></div>
+  <p class="activity-instructions">Selecciona la forma que encaixa en cada frase.</p>
+
+  <div class="item">
+    <p class="prompt">La reunió de claustre d'este trimestre
+      <select class="check" id="a2-1" data-answer="és">
+        <option value="">— tria —</option>
+        <option>és</option><option>està</option><option>hi ha</option>
+      </select> a les 16:30, a la sala de professors.
+    </p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">El projector de l'aula d'informàtica
+      <select class="check" id="a2-2" data-answer="està">
+        <option value="">— tria —</option>
+        <option>és</option><option>està</option><option>hi ha</option>
+      </select> espatllat, hem d'avisar a manteniment.
+    </p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">
+      <select class="check" id="a2-3" data-answer="hi ha">
+        <option value="">— tria —</option>
+        <option>és</option><option>està</option><option>hi ha</option>
+      </select> un ordinador nou al laboratori 3 per a fer les pràctiques de SQL.
+    </p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">El nostre alumne Marc
+      <select class="check" id="a2-4" data-answer="està">
+        <option value="">— tria —</option>
+        <option>és</option><option>està</option><option>hi ha</option>
+      </select> molt content perquè ha aprovat l'examen de Python.
+    </p>
+    <span class="feedback"></span>
+  </div>
+  <div class="item">
+    <p class="prompt">L'IES Jorge Juan
+      <select class="check" id="a2-5" data-answer="està">
+        <option value="">— tria —</option>
+        <option>és</option><option>està</option><option>hi ha</option>
+      </select> a Alacant, prop de la platja.
+    </p>
+    <span class="feedback"></span>
+  </div>
+</section>
+
+<section class="activity">
+  <div class="activity-head"><span class="activity-num">3</span><h3 style="margin:0">Completa la taula — imperfet d'indicatiu</h3></div>
+  <p class="activity-instructions">Les files de "jo", "ell/ella", "vosaltres" i "ells/elles" ja estan fetes com a referència. Completa les files de "tu" i "nosaltres".</p>
+  <div class="table-fill-wrap">
+    <table class="fill-table">
+      <thead><tr><th></th><th>ser</th><th>estar</th><th>haver</th><th>anar</th></tr></thead>
+      <tbody>
+        <tr><th>jo</th><td class="ref">era</td><td class="ref">estava</td><td class="ref">havia</td><td class="ref">anava</td></tr>
+        <tr>
+          <th>tu</th>
+          <td><input type="text" class="check" id="a3-tu-ser" data-answer="eres" autocomplete="off" spellcheck="false"></td>
+          <td><input type="text" class="check" id="a3-tu-estar" data-answer="estaves" autocomplete="off" spellcheck="false"></td>
+          <td><input type="text" class="check" id="a3-tu-haver" data-answer="havies" autocomplete="off" spellcheck="false"></td>
+          <td><input type="text" class="check" id="a3-tu-anar" data-answer="anaves" autocomplete="off" spellcheck="false"></td>
+        </tr>
+        <tr><th>ell / ella</th><td class="ref">era</td><td class="ref">estava</td><td class="ref">havia</td><td class="ref">anava</td></tr>
+        <tr>
+          <th>nosaltres</th>
+          <td><input type="text" class="check" id="a3-nos-ser" data-answer="érem" autocomplete="off" spellcheck="false"></td>
+          <td><input type="text" class="check" id="a3-nos-estar" data-answer="estàvem" autocomplete="off" spellcheck="false"></td>
+          <td><input type="text" class="check" id="a3-nos-haver" data-answer="havíem" autocomplete="off" spellcheck="false"></td>
+          <td><input type="text" class="check" id="a3-nos-anar" data-answer="anàvem" autocomplete="off" spellcheck="false"></td>
+        </tr>
+        <tr><th>vosaltres</th><td class="ref">éreu</td><td class="ref">estàveu</td><td class="ref">havíeu</td><td class="ref">anàveu</td></tr>
+        <tr><th>ells / elles</th><td class="ref">eren</td><td class="ref">estaven</td><td class="ref">havien</td><td class="ref">anaven</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <span class="feedback" style="margin-top:8px"></span>
+</section>
+
+<section class="activity">
+  <div class="activity-head"><span class="activity-num">4</span><h3 style="margin:0">Mini-diàleg al laboratori d'informàtica</h3></div>
+  <p class="activity-instructions">Completa el diàleg amb la forma correcta del verb indicat. Practica'l en veu alta amb algun company o companya.</p>
+
+  <div class="dialogue-line">
+    <span class="who">Professor:</span>
+    <span class="say">Bon dia a tots! Hui nosaltres <input type="text" class="check" id="a4-1" data-answer="anem" autocomplete="off" spellcheck="false"> <span class="hint">(anar)</span> a treballar amb MakeCode per a programar la placa Microbit.</span>
+  </div>
+  <div class="dialogue-line">
+    <span class="who">Alumna:</span>
+    <span class="say">Professor, jo no <input type="text" class="check" id="a4-2" data-answer="he" autocomplete="off" spellcheck="false"> <span class="hint">(haver)</span> portat l'ordinador portàtil, me l'he deixat a casa.</span>
+  </div>
+  <div class="dialogue-line">
+    <span class="who">Professor:</span>
+    <span class="say">No et preocupes, <input type="text" class="check" id="a4-3" data-answer="hi ha" autocomplete="off" spellcheck="false"> <span class="hint">(haver-hi)</span> ordinadors de recanvi a l'armari del laboratori.</span>
+  </div>
+  <div class="dialogue-line">
+    <span class="who">Alumne:</span>
+    <span class="say">Val, gràcies! On <input type="text" class="check" id="a4-4" data-answer="és" autocomplete="off" spellcheck="false"> <span class="hint">(ser)</span> l'armari?</span>
+  </div>
+  <div class="dialogue-line">
+    <span class="who">Professor:</span>
+    <span class="say"><input type="text" class="check" id="a4-5" data-answer="està" autocomplete="off" spellcheck="false"> <span class="hint">(estar)</span> al costat de la pissarra digital, a mà esquerra.</span>
+  </div>
+  <div class="dialogue-line">
+    <span class="who">Alumna:</span>
+    <span class="say">Perfecte. I per a hui, quin <input type="text" class="check" id="a4-6" data-answer="és" autocomplete="off" spellcheck="false"> <span class="hint">(ser)</span> l'objectiu de la sessió?</span>
+  </div>
+  <div class="dialogue-line">
+    <span class="who">Professor:</span>
+    <span class="say">L'objectiu és que cada grup entrene un xicotet model amb Teachable Machine i el connecte amb la placa.</span>
+  </div>
+  <span class="feedback" style="margin-top:4px"></span>
+</section>
+
+<section class="activity">
+  <div class="activity-head"><span class="activity-num">5</span><h3 style="margin:0">Vocabulari — RDR: Relacions Digitals Responsables (1r ESO)</h3></div>
+  <p class="activity-instructions">Relaciona cada terme valencià amb la seua traducció al castellà.</p>
+
+  <div class="vocab-grid">
+    <div class="vocab-item">
+      <span class="term">dispositiu mòbil</span>
+      <select class="check" id="v1" data-answer="dispositivo móvil">
+        <option value="">— tria —</option>
+        <option>dispositivo móvil</option><option>red social</option><option>huella digital</option><option>nomofobia</option>
+      </select>
+    </div>
+    <div class="vocab-item">
+      <span class="term">xarxa social</span>
+      <select class="check" id="v2" data-answer="red social">
+        <option value="">— tria —</option>
+        <option>red social</option><option>dispositivo móvil</option><option>ciberacoso</option><option>brecha digital</option>
+      </select>
+    </div>
+    <div class="vocab-item">
+      <span class="term">petjada digital</span>
+      <select class="check" id="v3" data-answer="huella digital">
+        <option value="">— tria —</option>
+        <option>huella digital</option><option>etiqueta digital (netiqueta)</option><option>desinformación</option><option>alias</option>
+      </select>
+    </div>
+    <div class="vocab-item">
+      <span class="term">ciberassetjament</span>
+      <select class="check" id="v4" data-answer="ciberacoso">
+        <option value="">— tria —</option>
+        <option>ciberacoso</option><option>ciberconvivencia</option><option>discurso de odio</option><option>bulo</option>
+      </select>
+    </div>
+    <div class="vocab-item">
+      <span class="term">nomofòbia</span>
+      <select class="check" id="v5" data-answer="nomofobia">
+        <option value="">— tria —</option>
+        <option>nomofobia</option><option>ludopatía</option><option>dispositivo móvil</option><option>brecha digital</option>
+      </select>
+    </div>
+    <div class="vocab-item">
+      <span class="term">etiqueta digital</span>
+      <select class="check" id="v6" data-answer="etiqueta digital (netiqueta)">
+        <option value="">— tria —</option>
+        <option>etiqueta digital (netiqueta)</option><option>consentimiento</option><option>huella digital</option><option>alias</option>
+      </select>
+    </div>
+    <div class="vocab-item">
+      <span class="term">bretxa digital</span>
+      <select class="check" id="v7" data-answer="brecha digital">
+        <option value="">— tria —</option>
+        <option>brecha digital</option><option>desinformación</option><option>red social</option><option>ciberacoso</option>
+      </select>
+    </div>
+    <div class="vocab-item">
+      <span class="term">discurs d'odi</span>
+      <select class="check" id="v8" data-answer="discurso de odio">
+        <option value="">— tria —</option>
+        <option>discurso de odio</option><option>bulo</option><option>ciberacoso</option><option>nomofobia</option>
+      </select>
+    </div>
+  </div>
+  <span class="feedback" style="margin-top:8px"></span>
+</section>
+
+<div class="score-bar">
+  <span id="scoreBox">Puntuació: — / 33</span>
+  <button class="check-btn" id="checkBtn">Comprova les respostes</button>
+</div>
+
+<details class="solutions">
+  <summary>Solucionari complet i explicacions</summary>
+
+  <div class="sol-group">
+    <h4>1 · Present d'indicatiu</h4>
+    <div class="sol-item"><b>sóc</b> — 1a persona del present de "ser".</div>
+    <div class="sol-item"><b>estem</b> — 1a persona plural de "estar".</div>
+    <div class="sol-item"><b>han</b> — 3a persona plural de "haver" com a auxiliar (han obert).</div>
+    <div class="sol-item"><b>vaig</b> — 1a persona de "anar", amb valor de moviment/futur immediat.</div>
+    <div class="sol-item"><b>sou</b> — 2a persona plural de "ser".</div>
+    <div class="sol-item"><b>has</b> — 2a persona de "haver" en la perífrasi "haver de" (obligació).</div>
+  </div>
+
+  <div class="sol-group">
+    <h4>2 · Ser, estar o hi ha</h4>
+    <div class="sol-item"><b>és</b> — per a situar un esdeveniment en el temps i el lloc s'usa "ser".</div>
+    <div class="sol-item"><b>està</b> — "estar" expressa el resultat d'una acció o un estat temporal.</div>
+    <div class="sol-item"><b>hi ha</b> — per a expressar l'existència d'alguna cosa s'usa sempre la forma impersonal "hi ha".</div>
+    <div class="sol-item"><b>està</b> — els estats d'ànim s'expressen amb "estar".</div>
+    <div class="sol-item"><b>està</b> — la ubicació d'un lloc físic (un edifici, una ciutat) s'expressa amb "estar".</div>
+  </div>
+
+  <div class="sol-group">
+    <h4>3 · Imperfet d'indicatiu</h4>
+    <div class="sol-item"><b>eres · estaves · havies · anaves</b> — 2a persona singular.</div>
+    <div class="sol-item"><b>érem · estàvem · havíem · anàvem</b> — 1a persona plural.</div>
+    <div class="sol-item">Nota: "ser" és l'únic irregular a l'imperfet (arrel <i>er-</i>); els altres tres segueixen la seua pròpia arrel de manera regular.</div>
+  </div>
+
+  <div class="sol-group">
+    <h4>4 · Mini-diàleg</h4>
+    <div class="sol-item"><b>anem</b> — 1a persona plural de "anar".</div>
+    <div class="sol-item"><b>he</b> — 1a persona de "haver" (no he portat).</div>
+    <div class="sol-item"><b>hi ha</b> — existència impersonal.</div>
+    <div class="sol-item"><b>és</b> — localització d'un esdeveniment/pregunta sobre un fet ("on és l'armari" funciona com a localització coneguda, no física temporal).</div>
+    <div class="sol-item"><b>està</b> — ubicació física de l'armari.</div>
+    <div class="sol-item"><b>és</b> — identificació ("quin és l'objectiu").</div>
+  </div>
+
+  <div class="sol-group">
+    <h4>5 · Vocabulari RDR</h4>
+    <div class="sol-item"><b>dispositiu mòbil</b> = dispositivo móvil</div>
+    <div class="sol-item"><b>xarxa social</b> = red social</div>
+    <div class="sol-item"><b>petjada digital</b> = huella digital</div>
+    <div class="sol-item"><b>ciberassetjament</b> = ciberacoso</div>
+    <div class="sol-item"><b>nomofòbia</b> = nomofobia (dependència del mòbil)</div>
+    <div class="sol-item"><b>etiqueta digital</b> = etiqueta digital / netiqueta</div>
+    <div class="sol-item"><b>bretxa digital</b> = brecha digital</div>
+    <div class="sol-item"><b>discurs d'odi</b> = discurso de odio</div>
+  </div>
+</details>
+
+<footer class="note">Exercici generat automàticament · Valencià per a l'àmbit educatiu-informàtic · IES Jorge Juan, Alacant</footer>
+
+<script>
+(function(){
+  function normalize(s){
+    return (s || '').toString().trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+  var btn = document.getElementById('checkBtn');
+  var scoreBox = document.getElementById('scoreBox');
+  btn.addEventListener('click', function(){
+    var items = document.querySelectorAll('.check');
+    var correct = 0;
+    items.forEach(function(el){
+      var val = normalize(el.value);
+      var ans = normalize(el.getAttribute('data-answer'));
+      el.classList.remove('is-correct', 'is-incorrect');
+      var container = el.closest('.item') || el.closest('.dialogue-line') || el.closest('td') || el.closest('.vocab-item') || el.parentElement;
+      var fb = null;
+      var sectionFb = el.closest('section');
+      if(container){ fb = container.querySelector('.feedback'); }
+      if(!fb && sectionFb){ fb = sectionFb.querySelector('.feedback'); }
+      var isRight = (val !== '' && val === ans);
+      if(isRight){
+        correct++;
+        el.classList.add('is-correct');
+      } else {
+        el.classList.add('is-incorrect');
+      }
+    });
+
+    document.querySelectorAll('section.activity').forEach(function(sec){
+      var secItems = sec.querySelectorAll('.check');
+      var wrongAnswers = [];
+      secItems.forEach(function(el){
+        if(el.classList.contains('is-incorrect')){
+          wrongAnswers.push(el.getAttribute('data-answer'));
+        }
+      });
+      var fb = sec.querySelector('.feedback');
+      if(fb){
+        if(secItems.length === 0){ return; }
+        if(wrongAnswers.length === 0){
+          fb.textContent = '✓ Tot correcte en esta activitat.';
+          fb.className = 'feedback ok';
+        } else {
+          fb.textContent = '✗ Revisa-ho. Respostes correctes que falten: ' + wrongAnswers.join(', ');
+          fb.className = 'feedback bad';
+        }
+      }
+    });
+
+    document.querySelectorAll('.item').forEach(function(it){
+      var el = it.querySelector('.check');
+      var fb = it.querySelector('.feedback');
+      if(!el || !fb) return;
+      if(el.classList.contains('is-correct')){
+        fb.textContent = '✓ Correcte';
+        fb.className = 'feedback ok';
+      } else if(el.classList.contains('is-incorrect')){
+        fb.textContent = '✗ Resposta correcta: ' + el.getAttribute('data-answer');
+        fb.className = 'feedback bad';
+      }
+    });
+
+    var total = items.length;
+    scoreBox.textContent = 'Puntuació: ' + correct + ' / ' + total;
+  });
+})();
+</script>
+
+</body></html>

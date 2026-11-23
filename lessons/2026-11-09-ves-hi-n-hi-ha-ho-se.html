@@ -1,0 +1,731 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Vés-hi, n'hi ha, ho sé</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Petrona:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Figtree:wght@400;500;600;700&family=Fira+Code:wght@500;600&display=swap');
+
+  /*
+    Disseny: "ganxets invisibles" — hi, en i ho són paraules menudes que
+    s'agafen a una idea que ja ha aparegut abans a la frase, com un ganxet
+    que no es veu però sosté el pes. Cada pronom té el seu color-ganxet
+    i les frases d'exemple mostren, amb una fletxa punteja, d'on "pengen".
+  */
+  :root{
+    color-scheme:light;
+    --bg:#eef2ea;
+    --surface:#ffffff;
+    --surface-2:#dfe6d7;
+    --ink:#20281c;
+    --ink-soft:#5c6753;
+    --accent:#6b3fa0;
+    --accent-ink:#ffffff;
+    --accent-soft:#ece1f5;
+    --accent-soft-ink:#4a2a74;
+    --line:#cdd6c1;
+    --good:#2f7d52;
+    --good-bg:#dcece0;
+    --bad:#b23b35;
+    --bad-bg:#f6dcda;
+    --verbbox:#2f5d50;
+    --verbbox-bg:#dde9e3;
+    --verbbox-ink:#17382f;
+    --hi:#6b3fa0; --hi-bg:#ece1f5;
+    --en:#9a6a1f; --en-bg:#f4e6cc;
+    --ho:#2a6e7a; --ho-bg:#dbebee;
+    --shadow:0 1px 2px rgba(32,40,28,.08), 0 10px 26px -14px rgba(32,40,28,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --bg:#171c15;
+      --surface:#1f251c;
+      --surface-2:#272e22;
+      --ink:#e7ecdf;
+      --ink-soft:#a3af97;
+      --accent:#b793e0;
+      --accent-ink:#2a1540;
+      --accent-soft:#352548;
+      --accent-soft-ink:#dcc6f2;
+      --line:#38412f;
+      --good:#82d4a4;
+      --good-bg:#1f3527;
+      --bad:#e8958f;
+      --bad-bg:#3a201e;
+      --verbbox:#8fc9b5;
+      --verbbox-bg:#1d342c;
+      --verbbox-ink:#cdeadd;
+      --hi:#cdabed; --hi-bg:#372648;
+      --en:#e3bb6c; --en-bg:#3c2d14;
+      --ho:#8fd0dc; --ho-bg:#1c3338;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#171c15;
+    --surface:#1f251c;
+    --surface-2:#272e22;
+    --ink:#e7ecdf;
+    --ink-soft:#a3af97;
+    --accent:#b793e0;
+    --accent-ink:#2a1540;
+    --accent-soft:#352548;
+    --accent-soft-ink:#dcc6f2;
+    --line:#38412f;
+    --good:#82d4a4;
+    --good-bg:#1f3527;
+    --bad:#e8958f;
+    --bad-bg:#3a201e;
+    --verbbox:#8fc9b5;
+    --verbbox-bg:#1d342c;
+    --verbbox-ink:#cdeadd;
+    --hi:#cdabed; --hi-bg:#372648;
+    --en:#e3bb6c; --en-bg:#3c2d14;
+    --ho:#8fd0dc; --ho-bg:#1c3338;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Figtree', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:26px;
+    padding-bottom:60px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page{ max-width:780px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Petrona', Georgia, serif; text-wrap:balance; margin:0; font-weight:600; }
+  .mono{ font-family:'Fira Code', ui-monospace, monospace; }
+
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'Fira Code', monospace;
+    font-size:.76rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .back-link:hover{ text-decoration:underline; }
+
+  header.top{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:26px 26px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:6px;
+    background-image: repeating-linear-gradient(90deg, var(--hi) 0 10px, var(--en) 10px 20px, var(--ho) 20px 30px, transparent 30px 36px);
+  }
+  .eyebrow{
+    font-family:'Fira Code', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  header.top h1{ font-size:clamp(1.9rem, 6vw, 2.6rem); font-style:italic; color:var(--accent); }
+  header.top p{ margin:12px 0 0; max-width:60ch; color:var(--ink-soft); font-size:.95rem; }
+  .pill-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .pill{
+    font-family:'Fira Code', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:var(--surface-2);
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  .pill.verb{ background:var(--verbbox-bg); color:var(--verbbox-ink); }
+
+  .score-bar{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:5;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    box-shadow:var(--shadow);
+    flex-wrap:wrap;
+  }
+  .score-bar .label{ font-size:.86rem; color:var(--ink-soft); }
+  .score-bar .score{
+    font-family:'Fira Code', monospace;
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .score-bar button{
+    font-family:'Figtree', sans-serif;
+    font-weight:700;
+    font-size:.88rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+  }
+  .score-bar button:hover{ opacity:.9; }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  section.card::before{
+    content:"";
+    position:absolute; top:0; left:22px; right:22px; height:3px;
+    background-image: repeating-linear-gradient(90deg, var(--hi) 0 8px, transparent 8px 14px);
+  }
+  section.card h2{ font-size:1.3rem; margin-bottom:4px; }
+  section.card .kicker{
+    font-family:'Fira Code', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--accent);
+    margin-bottom:6px;
+    display:block;
+  }
+  section.card p.intro{ color:var(--ink-soft); font-size:.92rem; margin:8px 0 16px; max-width:62ch; }
+
+  section.verbbox{
+    background:var(--verbbox-bg);
+    border:1px solid var(--verbbox);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.verbbox h2{ font-size:1.2rem; margin-bottom:4px; color:var(--verbbox-ink); }
+  section.verbbox .kicker{
+    font-family:'Fira Code', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--verbbox);
+    margin-bottom:6px;
+    display:block;
+  }
+  section.verbbox p.intro{ color:var(--verbbox-ink); opacity:.85; font-size:.92rem; margin:8px 0 16px; max-width:62ch; }
+
+  .theory-table{ width:100%; margin:14px 0; overflow-x:auto; }
+  .theory-table table{ width:100%; border-collapse:collapse; min-width:600px; font-size:.88rem; }
+  .theory-table thead th{
+    background:var(--surface-2);
+    font-family:'Fira Code', monospace;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+  }
+  .theory-table tbody td{
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  .theory-table .form{ font-weight:700; font-family:'Fira Code', monospace; white-space:nowrap; }
+  .theory-table .form.hi{ color:var(--hi); }
+  .theory-table .form.en{ color:var(--en); }
+  .theory-table .form.ho{ color:var(--ho); }
+
+  .qblock{ padding:14px 0; border-top:1px solid var(--line); }
+  .qblock:first-of-type{ border-top:none; padding-top:4px; }
+  .qnum{ font-family:'Fira Code', monospace; font-size:.76rem; color:var(--ink-soft); margin-right:4px; }
+  .qtext{ font-size:.96rem; }
+
+  select.blank{
+    font-family:'Figtree', sans-serif;
+    font-weight:700;
+    font-size:.9rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    background:var(--surface);
+    color:var(--ink);
+    margin:0 4px;
+  }
+  select.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  input[type="text"].blank{
+    font-family:'Fira Code', monospace;
+    font-size:.9rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    width:100px;
+    background:var(--surface);
+    color:var(--ink);
+    margin:0 4px;
+  }
+  input[type="text"].blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .mc-options{ display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+  .mc-options label{
+    display:flex; align-items:center; gap:8px;
+    font-size:.92rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+  }
+  .mc-options label:hover{ background:var(--surface-2); }
+  .mc-options input{ accent-color:var(--accent); }
+
+  .feedback{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:.84rem;
+    font-weight:700;
+    margin-left:8px;
+    padding:2px 9px;
+    border-radius:999px;
+  }
+  .feedback.ok{ background:var(--good-bg); color:var(--good); }
+  .feedback.bad{ background:var(--bad-bg); color:var(--bad); }
+  .feedback[hidden]{ display:none !important; }
+
+  .rule-table{ width:100%; margin-top:10px; overflow-x:auto; }
+  .rule-table table{ width:100%; border-collapse:collapse; min-width:540px; }
+  .rule-table th{
+    background:var(--surface-2); text-align:left; font-size:.72rem;
+    font-family:'Fira Code', monospace; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); padding:8px 12px; border-bottom:1px solid var(--line);
+  }
+  .rule-table td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:.88rem; }
+
+  .solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-top:26px;
+    box-shadow:var(--shadow);
+  }
+  .solutions h2{ font-size:1.25rem; margin-bottom:6px; }
+  .solutions .sol-item{ padding:10px 0; border-top:1px solid var(--line); font-size:.9rem; }
+  .solutions .sol-item:first-of-type{ border-top:none; }
+  .solutions .sol-item .ans{ color:var(--accent); font-weight:700; font-family:'Fira Code', monospace; }
+  .solutions details{ margin-top:16px; }
+  .solutions summary{
+    cursor:pointer;
+    font-family:'Fira Code', monospace;
+    font-size:.8rem;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:26px; }
+
+  @media (max-width:480px){
+    header.top{ padding:22px 18px 20px; }
+    section.card, section.verbbox{ padding:18px 16px 20px; }
+  }
+</style>
+
+<div class="page">
+
+<a class="back-link" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 9 de novembre de 2026</div>
+    <h1>Vés-hi, n'hi ha, ho sé</h1>
+    <p>Tema d'avui: <strong>els pronoms hi, en i ho</strong>. Són tres paraules menudes sense traducció fixa al castellà: s'agafen a una idea que ja ha aparegut abans a la frase, com un ganxet invisible que en sosté el pes. Dominar-les és el que fa que una explicació a classe sone fluida, sense haver de repetir cada vegada tot el que ja s'ha dit.</p>
+    <div class="pill-row">
+      <span class="pill" style="background:var(--hi-bg);color:var(--hi)">hi</span>
+      <span class="pill" style="background:var(--en-bg);color:var(--en)">en</span>
+      <span class="pill" style="background:var(--ho-bg);color:var(--ho)">ho</span>
+      <span class="pill verb">Verb del dia: present de subjuntiu dels irregulars</span>
+    </div>
+  </div>
+</header>
+
+<div class="score-bar">
+  <span class="label">Puntuació acumulada</span>
+  <span class="score"><span id="scoreVal">0</span> / <span id="scoreMax">20</span></span>
+  <button id="checkBtn">Comprova les respostes</button>
+</div>
+
+<section class="card">
+  <span class="kicker">Teoria</span>
+  <h2>Tres ganxets que no es tradueixen</h2>
+  <p class="intro">El castellà no té cap paraula fixa per a estes tres funcions: sovint les omet o les reemplaça per "eso/ahí/de eso", cosa que en valencià sona estrany. Cada pronom "s'agafa" a un tipus concret d'informació ja esmentada:</p>
+  <div class="theory-table">
+    <table>
+      <thead><tr><th>Pronom</th><th>Reemplaça</th><th>Normalment ve introduït per</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="form hi">hi</td><td>un lloc, o un complement amb idea ja esmentada</td><td><span class="mono">a, en, amb, sobre, davant...</span></td><td><strong>Vés-hi</strong> tu, a secretaria, que jo no puc.</td></tr>
+        <tr><td class="form en">en</td><td>un complement introduït per "de", o una quantitat</td><td><span class="mono">de + nom/idea</span></td><td>De l'examen, encara no <strong>en</strong> sé la nota.</td></tr>
+        <tr><td class="form ho">ho</td><td>tota una idea, una frase sencera o un "allò" neutre</td><td>(objecte directe sense gènere)</td><td>Si el projector no funciona, <strong>ho</strong> dius al conserge.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="intro" style="margin-bottom:0">Pista ràpida: si en castellà la frase sona bé sense cap pronom ("ve", "sé", "dices"), en valencià sovint falta un <span class="mono">hi</span>, <span class="mono">en</span> o <span class="mono">ho</span> que el castellà ha deixat caure. Dir-ho sense el pronom és el calc més habitual dels valencianoparlants que pensen en castellà.</p>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 1 · Tria el pronom</span>
+  <h2>A classe i al departament</h2>
+  <p class="intro">Selecciona el pronom (hi, en o ho) que completa correctament cada frase.</p>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">— On és l'aula d'informàtica 3? — No ho sé, mai no
+      <select class="blank" id="a1q1" data-answer="hi">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      he entrat.</span>
+    <span class="feedback" id="fb-a1q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">De llicències de programari lliure, el departament
+      <select class="blank" id="a1q2" data-answer="en">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      té moltes instal·lades.</span>
+    <span class="feedback" id="fb-a1q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">— Cal actualitzar el WordPress del departament hui mateix. — D'acord,
+      <select class="blank" id="a1q3" data-answer="ho">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      faré a la primera hora lliure.</span>
+    <span class="feedback" id="fb-a1q3" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext">Al claustre d'ahir es va parlar del nou protocol de xarxa, però jo no
+      <select class="blank" id="a1q4" data-answer="hi">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      vaig poder assistir.</span>
+    <span class="feedback" id="fb-a1q4" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">5.</span>
+    <span class="qtext">— Quants ordinadors portàtils queden al carro de l'aula? — Ja no
+      <select class="blank" id="a1q5" data-answer="en">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      queda cap, estan tots agafats.</span>
+    <span class="feedback" id="fb-a1q5" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">6.</span>
+    <span class="qtext">— El sensor de la placa Microbit no respon bé. — Sí,
+      <select class="blank" id="a1q6" data-answer="ho">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      he notat jo també este matí.</span>
+    <span class="feedback" id="fb-a1q6" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 2 · Tipus test</span>
+  <h2>La regla i la frase correcta</h2>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">Quin pronom reemplaça un complement introduït per la preposició "de" (com una quantitat o un tema)?</span>
+    <div class="mc-options" data-qid="a2q1" data-answer="en">
+      <label><input type="radio" name="a2q1" value="hi"> hi</label>
+      <label><input type="radio" name="a2q1" value="en"> en</label>
+      <label><input type="radio" name="a2q1" value="ho"> ho</label>
+    </div>
+    <span class="feedback" id="fb-a2q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">Quina frase és la correcta per a dir que algú ha d'anar al laboratori de robòtica?</span>
+    <div class="mc-options" data-qid="a2q2" data-answer="a">
+      <label><input type="radio" name="a2q2" value="a"> Vés-hi tu, al laboratori, que jo encara estic al despatx.</label>
+      <label><input type="radio" name="a2q2" value="b"> Ves-en tu, al laboratori, que jo encara estic al despatx.</label>
+      <label><input type="radio" name="a2q2" value="c"> Vés-ho tu, al laboratori, que jo encara estic al despatx.</label>
+      <label><input type="radio" name="a2q2" value="d"> Vés tu, al laboratori, que jo encara estic al despatx.</label>
+    </div>
+    <span class="feedback" id="fb-a2q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">Un alumne pregunta si cal entregar el treball d'intel·ligència artificial avui. Quina resposta és correcta en valencià natural?</span>
+    <div class="mc-options" data-qid="a2q3" data-answer="b">
+      <label><input type="radio" name="a2q3" value="a"> Sí, cal entregar avui.</label>
+      <label><input type="radio" name="a2q3" value="b"> Sí, ho cal entregar avui.</label>
+      <label><input type="radio" name="a2q3" value="c"> Sí, hi cal entregar avui.</label>
+      <label><input type="radio" name="a2q3" value="d"> Sí, en cal entregar avui.</label>
+    </div>
+    <span class="feedback" id="fb-a2q3" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext">Quin pronom falta en esta frase calcada del castellà: "D'exercicis de Python ja __ he corregit uns quants"?</span>
+    <div class="mc-options" data-qid="a2q4" data-answer="en">
+      <label><input type="radio" name="a2q4" value="hi"> hi</label>
+      <label><input type="radio" name="a2q4" value="en"> en</label>
+      <label><input type="radio" name="a2q4" value="ho"> ho</label>
+    </div>
+    <span class="feedback" id="fb-a2q4" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 3 · Completa la frase</span>
+  <h2>Escriu el pronom que falta</h2>
+  <p class="intro">Escriu hi, en o ho segons el que reemplace cada pronom (fixa't en la pista de la columna esquerra).</p>
+  <div class="rule-table">
+    <table>
+      <thead><tr><th>Reemplaça</th><th>Frase a completar</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>lloc: "a l'aula de PRSI"</td>
+          <td>Els de Batxillerat ja <input type="text" class="blank" id="a3q1" data-answer="hi" autocomplete="off"> són, a l'aula de PRSI. <span class="feedback" id="fb-a3q1" hidden></span></td>
+        </tr>
+        <tr>
+          <td>quantitat: "de bases de dades relacionals"</td>
+          <td>De bases de dades relacionals, en PRSI II <input type="text" class="blank" id="a3q2" data-answer="en" autocomplete="off"> veuran dos o tres models diferents. <span class="feedback" id="fb-a3q2" hidden></span></td>
+        </tr>
+        <tr>
+          <td>idea sencera: "que l'examen és demà"</td>
+          <td>Encara no he dit als alumnes que l'examen és demà; <input type="text" class="blank" id="a3q3" data-answer="ho" autocomplete="off"> diré a l'última classe. <span class="feedback" id="fb-a3q3" hidden></span></td>
+        </tr>
+        <tr>
+          <td>lloc amb preposició "en": "en el núvol (Microsoft 365)"</td>
+          <td>Els documents del departament ja estan penjats en el núvol; tothom <input type="text" class="blank" id="a3q4" data-answer="hi" autocomplete="off"> pot accedir des de qualsevol ordinador. <span class="feedback" id="fb-a3q4" hidden></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 4 · Mini-diàleg al departament</span>
+  <h2>Abans del claustre</h2>
+  <p class="intro">Completa cada intervenció amb el pronom correcte.</p>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">— No trobe l'informe de la reunió passada. — Jo
+      <select class="blank" id="a4q1" data-answer="en">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      tinc una còpia, de l'informe; te la passo ara.</span>
+    <span class="feedback" id="fb-a4q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">— Has anat ja a la reunió de coordinació de 4t ESO? — Encara no
+      <select class="blank" id="a4q2" data-answer="hi">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      he anat, però vaig cap allà ara mateix.</span>
+    <span class="feedback" id="fb-a4q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">— Cal avisar tot el claustre del canvi d'horari del dijous. — Tranquil,
+      <select class="blank" id="a4q3" data-answer="ho">
+        <option value="">— tria —</option>
+        <option value="hi">hi</option>
+        <option value="en">en</option>
+        <option value="ho">ho</option>
+      </select>
+      faig saber per Microsoft 365 abans de la una.</span>
+    <span class="feedback" id="fb-a4q3" hidden></span>
+  </div>
+</section>
+
+<section class="verbbox">
+  <span class="kicker">Verb del dia · repàs breu</span>
+  <h2>Present de subjuntiu dels irregulars</h2>
+  <p class="intro">Tres formes de subjuntiu irregular, freqüents quan expressem desig o necessitat davant de l'alumnat.</p>
+  <div class="qblock" style="border-top:none;padding-top:0">
+    <span class="qnum">1.</span>
+    <span class="qtext">Cal que cada alumne <input type="text" class="blank" id="v1" data-answer="puga" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(poder, ell/ella)</span> accedir a l'aula virtual abans de l'examen. <span class="feedback" id="fb-v1" hidden></span></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">Espere que Marc <input type="text" class="blank" id="v2" data-answer="vinga" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(venir, ell)</span> abans que comence la pràctica de xarxes. <span class="feedback" id="fb-v2" hidden></span></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">No vull que ningú <input type="text" class="blank" id="v3" data-answer="isca|ixca" autocomplete="off"> <span style="color:var(--verbbox-ink);opacity:.7;font-size:.85rem">(eixir, ell/ella)</span> de classe sense guardar el treball de Scratch. <span class="feedback" id="fb-v3" hidden></span></span>
+  </div>
+</section>
+
+<div class="solutions">
+  <h2>Solucions i explicacions</h2>
+  <details>
+    <summary>Mostra totes les solucions</summary>
+
+    <div class="sol-item"><strong>Activitat 1.1</strong> — <span class="ans">hi</span>. Reemplaça "a l'aula d'informàtica 3" (lloc).</div>
+    <div class="sol-item"><strong>Activitat 1.2</strong> — <span class="ans">en</span>. Reemplaça "de llicències de programari lliure" (quantitat/tema introduït per "de").</div>
+    <div class="sol-item"><strong>Activitat 1.3</strong> — <span class="ans">ho</span>. Reemplaça tota la idea "actualitzar el WordPress del departament".</div>
+    <div class="sol-item"><strong>Activitat 1.4</strong> — <span class="ans">hi</span>. Reemplaça "al claustre" (lloc/esdeveniment on es parla).</div>
+    <div class="sol-item"><strong>Activitat 1.5</strong> — <span class="ans">en</span>. Reemplaça "d'ordinadors portàtils" (quantitat).</div>
+    <div class="sol-item"><strong>Activitat 1.6</strong> — <span class="ans">ho</span>. Reemplaça tota la idea "que el sensor no respon bé".</div>
+
+    <div class="sol-item"><strong>Activitat 2.1</strong> — <span class="ans">en</span>. "En" substitueix complements introduïts per "de".</div>
+    <div class="sol-item"><strong>Activitat 2.2</strong> — <span class="ans">Vés-hi tu, al laboratori...</span> "Hi" reemplaça el lloc "al laboratori"; cal el guionet darrere de l'imperatiu.</div>
+    <div class="sol-item"><strong>Activitat 2.3</strong> — <span class="ans">Sí, ho cal entregar avui.</span> "Ho" reemplaça la idea "entregar el treball"; en castellà sovint es calla, però en valencià cal dir-lo.</div>
+    <div class="sol-item"><strong>Activitat 2.4</strong> — <span class="ans">en</span>. "D'exercicis de Python" és un complement amb "de" → "en".</div>
+
+    <div class="sol-item"><strong>Activitat 3</strong> — <span class="ans">hi</span> (lloc, "a l'aula de PRSI"), <span class="ans">en</span> (quantitat, "de bases de dades"), <span class="ans">ho</span> (idea sencera, "que l'examen és demà"), <span class="ans">hi</span> (lloc, "en el núvol").</div>
+
+    <div class="sol-item"><strong>Activitat 4.1</strong> — <span class="ans">en</span>. "Una còpia de l'informe" → "en" tinc una còpia.</div>
+    <div class="sol-item"><strong>Activitat 4.2</strong> — <span class="ans">hi</span>. Reemplaça "a la reunió" (lloc).</div>
+    <div class="sol-item"><strong>Activitat 4.3</strong> — <span class="ans">ho</span>. Reemplaça la idea "avisar el claustre del canvi d'horari".</div>
+
+    <div class="sol-item"><strong>Verb del dia 1</strong> — <span class="ans">puga</span>. De <em>poder</em>: present de subjuntiu irregular (puga, pugues, puga, puguem, pugueu, puguen).</div>
+    <div class="sol-item"><strong>Verb del dia 2</strong> — <span class="ans">vinga</span>. De <em>venir</em>: present de subjuntiu irregular (vinga, vingues, vinga, vinguem, vingueu, vinguen).</div>
+    <div class="sol-item"><strong>Verb del dia 3</strong> — <span class="ans">isca</span> (també s'accepta <em>ixca</em>). De <em>eixir</em>: present de subjuntiu irregular (isca, isques, isca, eixim/isquem, eixiu/isqueu, isquen).</div>
+  </details>
+</div>
+
+<footer class="note">IES Jorge Juan, Alacant · Quadern de valencià oral per al professorat d'informàtica</footer>
+
+</div>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase();
+  }
+
+  function checkTextInput(id){
+    var el = document.getElementById(id);
+    var fb = document.getElementById('fb-' + id);
+    if(!el || !fb) return false;
+    var raw = el.getAttribute('data-answer') || '';
+    var accepted = raw.split('|').map(norm);
+    var val = norm(el.value);
+    var ok = val.length > 0 && accepted.indexOf(val) !== -1;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  function checkSelect(id){
+    var el = document.getElementById(id);
+    var fb = document.getElementById('fb-' + id);
+    if(!el || !fb) return false;
+    var answer = norm(el.getAttribute('data-answer'));
+    var val = norm(el.value);
+    var ok = val.length > 0 && val === answer;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  function checkMC(qid){
+    var group = document.querySelector('.mc-options[data-qid="' + qid + '"]');
+    var fb = document.getElementById('fb-' + qid);
+    if(!group || !fb) return false;
+    var answer = group.getAttribute('data-answer');
+    var checked = group.querySelector('input[type="radio"]:checked');
+    var ok = !!checked && checked.value === answer;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  var selectIds = ['a1q1','a1q2','a1q3','a1q4','a1q5','a1q6','a4q1','a4q2','a4q3'];
+  var mcIds = ['a2q1','a2q2','a2q3','a2q4'];
+  var textIds = ['a3q1','a3q2','a3q3','a3q4','v1','v2','v3'];
+
+  var total = selectIds.length + mcIds.length + textIds.length;
+  document.getElementById('scoreMax').textContent = total;
+
+  function runCheck(){
+    var score = 0;
+    selectIds.forEach(function(id){ if(checkSelect(id)) score++; });
+    mcIds.forEach(function(id){ if(checkMC(id)) score++; });
+    textIds.forEach(function(id){ if(checkTextInput(id)) score++; });
+    document.getElementById('scoreVal').textContent = score;
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', runCheck);
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,736 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<!-- Lesson: Ser / estar / haver / anar en diversos temps (futur i condicional) + vocabulari PRSI I i II -->
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Seré... o seria?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout: a terminal-like "sessió de claustre" card stack — header, theory table,
+     four graded activities, vocabulary matcher, collapsible answer key — on a cool
+     teal/slate palette that echoes the PRSI (Batxillerat programming/networks) block. */
+  :root{
+    --bg:#eef4f4;
+    --surface:#ffffff;
+    --surface-2:#e2ecee;
+    --ink:#132226;
+    --ink-soft:#4e6a70;
+    --accent:#2d5f6b;
+    --accent-ink:#ffffff;
+    --accent-soft:#d9e6e8;
+    --accent-soft-ink:#1c4650;
+    --line:#cbdde0;
+    --good:#2f7d5a;
+    --good-bg:#e1f0e7;
+    --bad:#b23b3b;
+    --bad-bg:#f6e2e2;
+    --shadow: 0 1px 2px rgba(19,34,38,.07), 0 10px 26px -14px rgba(19,34,38,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1b1e;
+      --surface:#15252a;
+      --surface-2:#1c2f34;
+      --ink:#e6f1f2;
+      --ink-soft:#8fadb2;
+      --accent:#7fd4df;
+      --accent-ink:#0b2328;
+      --accent-soft:#1d3a40;
+      --accent-soft-ink:#bdeaf0;
+      --line:#2b434a;
+      --good:#6fd6a0;
+      --good-bg:#163127;
+      --bad:#e38a8a;
+      --bad-bg:#3a2020;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1b1e;
+    --surface:#15252a;
+    --surface-2:#1c2f34;
+    --ink:#e6f1f2;
+    --ink-soft:#8fadb2;
+    --accent:#7fd4df;
+    --accent-ink:#0b2328;
+    --accent-soft:#1d3a40;
+    --accent-soft-ink:#bdeaf0;
+    --line:#2b434a;
+    --good:#6fd6a0;
+    --good-bg:#163127;
+    --bad:#e38a8a;
+    --bad-bg:#3a2020;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.55;
+    padding-top:1.6rem;
+    padding-bottom:3.5rem;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+  }
+  .wrap{ max-width:760px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Space Grotesk', ui-sans-serif, sans-serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  .backlink{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:6px 12px;
+    border-radius:999px;
+    text-decoration:none;
+    margin-bottom:14px;
+  }
+  .backlink:hover{ filter:brightness(1.05); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:22px 22px 20px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.06) 0 2px, transparent 2px 22px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    opacity:.88;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.7rem, 5vw, 2.3rem); font-weight:700; }
+  header.top p{ margin:10px 0 0; max-width:58ch; opacity:.95; font-size:.95rem; }
+
+  .score-bar{
+    position:sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index:5;
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.84rem;
+  }
+  .score-bar b{ font-size:1.05rem; color:var(--accent); }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 20px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{
+    font-size:1.12rem;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:4px;
+  }
+  .step-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.7rem;
+    background:var(--accent-soft);
+    color:var(--accent-soft-ink);
+    padding:3px 9px;
+    border-radius:999px;
+    flex:none;
+  }
+  .card .intro{ color:var(--ink-soft); font-size:.88rem; margin:8px 0 16px; }
+
+  table.conj{
+    border-collapse:collapse;
+    width:100%;
+    font-size:.88rem;
+    margin:10px 0 4px;
+  }
+  table.conj caption{ text-align:left; font-size:.78rem; color:var(--ink-soft); margin-bottom:6px; font-style:italic;}
+  table.conj th, table.conj td{
+    border:1px solid var(--line);
+    padding:8px 10px;
+    text-align:center;
+  }
+  table.conj th{ background:var(--surface-2); font-family:'IBM Plex Mono', monospace; font-size:.76rem; }
+  table.conj td.pron{ text-align:left; font-weight:600; background:var(--surface-2); }
+  .wrap-table{ overflow-x:auto; }
+  .irregular{ color:var(--accent); font-weight:700; }
+
+  .item{
+    padding:12px 0;
+    border-top:1px solid var(--line);
+  }
+  .item:first-of-type{ border-top:none; padding-top:0; }
+  .item p.q{ margin:0 0 8px; font-size:.95rem; }
+  .item input[type=text]{
+    font:inherit;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.92rem;
+    width:150px;
+    padding:6px 9px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  .item input[type=text]:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .item select{
+    font:inherit;
+    font-size:.88rem;
+    padding:6px 9px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--bg);
+    color:var(--ink);
+    max-width:100%;
+  }
+  .options{ display:flex; flex-direction:column; gap:7px; }
+  .options label{
+    display:flex; align-items:center; gap:8px;
+    font-size:.92rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+  }
+  .options label:hover{ background:var(--surface-2); }
+  .fb{
+    display:inline-block;
+    margin-left:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.82rem;
+    font-weight:600;
+  }
+  .fb.ok{ color:var(--good); }
+  .fb.no{ color:var(--bad); }
+  .vocab-row{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:10px 0;
+    border-top:1px solid var(--line);
+  }
+  .vocab-row:first-of-type{ border-top:none; padding-top:0; }
+  .vocab-term{ font-weight:600; min-width:170px; flex:none; }
+
+  button.check{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:.92rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check:hover{ filter:brightness(1.08); }
+  button.check:active{ transform:translateY(1px); }
+  .result-line{
+    margin-top:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.84rem;
+    color:var(--ink-soft);
+  }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px 20px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{
+    cursor:pointer;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:1.05rem;
+  }
+  .sol-block{ margin-top:16px; }
+  .sol-block h3{
+    font-size:.92rem;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+  .sol-item{ font-size:.86rem; padding:6px 0; border-top:1px solid var(--line); }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item b{ font-family:'IBM Plex Mono', monospace; }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.78rem;
+    margin-top:26px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:18px 16px 18px; }
+    .item input[type=text]{ width:130px; }
+    .vocab-term{ min-width:140px; }
+  }
+</style>
+
+<div class="wrap">
+
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · Oral diari</div>
+      <h1>Seré... o seria?</h1>
+      <p>Tema d'avui: <strong>Ser / estar / haver / anar en diversos temps</strong> — hui ens centrem en el futur i el condicional d'estos quatre verbs, imprescindibles per a parlar de plans de classe i de situacions hipotètiques al departament.</p>
+    </div>
+  </header>
+
+  <div class="score-bar">
+    <span>Puntuació acumulada</span>
+    <span><b id="scoreTotal">0</b> / <span id="scoreMax">34</span></span>
+  </div>
+
+  <section class="card">
+    <h2><span class="step-tag">TEORIA</span> Futur i condicional de ser, estar, haver, anar</h2>
+    <p class="intro">En futur i condicional, <em>ser</em> i <em>estar</em> es comporten de manera "regular": l'arrel és l'infinitiu complet (ser-, estar-) més la terminació. En canvi, <em>haver</em> i <em>anar</em> tenen una arrel pròpia i irregular: <span class="irregular">haur-</span> i <span class="irregular">anir-</span>, que no es pot deduir de l'infinitiu. El condicional es forma sempre sobre la mateixa arrel del futur, afegint-hi -ia, -ies, -ia, -íem, -íeu, -ien.</p>
+    <div class="wrap-table">
+      <table class="conj">
+        <caption>Futur</caption>
+        <thead><tr><th>Pronom</th><th>ser</th><th>estar</th><th>haver</th><th>anar</th></tr></thead>
+        <tbody>
+          <tr><td class="pron">jo</td><td>seré</td><td>estaré</td><td class="irregular">hauré</td><td class="irregular">aniré</td></tr>
+          <tr><td class="pron">tu</td><td>seràs</td><td>estaràs</td><td class="irregular">hauràs</td><td class="irregular">aniràs</td></tr>
+          <tr><td class="pron">ell / ella</td><td>serà</td><td>estarà</td><td class="irregular">haurà</td><td class="irregular">anirà</td></tr>
+          <tr><td class="pron">nosaltres</td><td>serem</td><td>estarem</td><td class="irregular">haurem</td><td class="irregular">anirem</td></tr>
+          <tr><td class="pron">vosaltres</td><td>sereu</td><td>estareu</td><td class="irregular">haureu</td><td class="irregular">anireu</td></tr>
+          <tr><td class="pron">ells / elles</td><td>seran</td><td>estaran</td><td class="irregular">hauran</td><td class="irregular">aniran</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="wrap-table">
+      <table class="conj">
+        <caption>Condicional</caption>
+        <thead><tr><th>Pronom</th><th>ser</th><th>estar</th><th>haver</th><th>anar</th></tr></thead>
+        <tbody>
+          <tr><td class="pron">jo</td><td>seria</td><td>estaria</td><td class="irregular">hauria</td><td class="irregular">aniria</td></tr>
+          <tr><td class="pron">tu</td><td>series</td><td>estaries</td><td class="irregular">hauries</td><td class="irregular">aniries</td></tr>
+          <tr><td class="pron">ell / ella</td><td>seria</td><td>estaria</td><td class="irregular">hauria</td><td class="irregular">aniria</td></tr>
+          <tr><td class="pron">nosaltres</td><td>seríem</td><td>estaríem</td><td class="irregular">hauríem</td><td class="irregular">aniríem</td></tr>
+          <tr><td class="pron">vosaltres</td><td>seríeu</td><td>estaríeu</td><td class="irregular">hauríeu</td><td class="irregular">aniríeu</td></tr>
+          <tr><td class="pron">ells / elles</td><td>serien</td><td>estarien</td><td class="irregular">haurien</td><td class="irregular">anirien</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ACTIVITAT 1: omplir buits -->
+  <section class="card" id="act1">
+    <h2><span class="step-tag">1</span> Omple el buit</h2>
+    <p class="intro">Escriu la forma correcta del verb indicat, en el temps que s'assenyala.</p>
+
+    <div class="item" data-ans="seré">
+      <p class="q">1. Demà jo <input type="text" aria-label="resposta 1"> (ser, futur) el tutor de guàrdia a l'aula d'informàtica.<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="estaria">
+      <p class="q">2. Si el projector s'espatllara, jo <input type="text" aria-label="resposta 2"> (estar, condicional) encantat d'ajudar amb un portàtil de reserva.<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="haurem">
+      <p class="q">3. Quan acabe el claustre, ja <input type="text" aria-label="resposta 3"> (haver, futur, nosaltres) decidit el nou horari de les pràctiques.<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="anirem">
+      <p class="q">4. La setmana que ve <input type="text" aria-label="resposta 4"> (anar, futur, nosaltres) al laboratori per a instal·lar Python a tots els equips.<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="estarien">
+      <p class="q">5. Si no funcionara la xarxa, els alumnes <input type="text" aria-label="resposta 5"> (estar, condicional, ells) sense accés a l'aula virtual.<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="series">
+      <p class="q">6. Tu <input type="text" aria-label="resposta 6"> (ser, condicional) la persona encarregada de revisar les còpies de seguretat este trimestre.<span class="fb"></span></p>
+    </div>
+
+    <button class="check" onclick="checkFill('act1')">Comprova les respostes</button>
+    <div class="result-line" id="act1-result"></div>
+  </section>
+
+  <!-- ACTIVITAT 2: test -->
+  <section class="card" id="act2">
+    <h2><span class="step-tag">2</span> Tria l'opció correcta</h2>
+    <p class="intro">Selecciona la forma verbal adequada per a cada frase.</p>
+
+    <div class="item" data-ans="serà">
+      <p class="q">1. Demà <b>___</b> el torn d'Elena per a explicar el projecte de Scratch.</p>
+      <div class="options">
+        <label><input type="radio" name="q2-1" value="serà"> serà</label>
+        <label><input type="radio" name="q2-1" value="sirà"> sirà</label>
+        <label><input type="radio" name="q2-1" value="es"> es</label>
+        <label><input type="radio" name="q2-1" value="seràs"> seràs</label>
+      </div>
+      <span class="fb"></span>
+    </div>
+    <div class="item" data-ans="aniria">
+      <p class="q">2. Si poguera, <b>___</b> al departament abans de les huit per a preparar l'aula.</p>
+      <div class="options">
+        <label><input type="radio" name="q2-2" value="anaria"> anaria</label>
+        <label><input type="radio" name="q2-2" value="iria"> iria</label>
+        <label><input type="radio" name="q2-2" value="aniria"> aniria</label>
+        <label><input type="radio" name="q2-2" value="anirè"> anirè</label>
+      </div>
+      <span class="fb"></span>
+    </div>
+    <div class="item" data-ans="haurem">
+      <p class="q">3. Quan entregueu l'informe final, ja <b>___</b> decidit qui fa la correcció de les pràctiques.</p>
+      <div class="options">
+        <label><input type="radio" name="q2-3" value="havrem"> havrem</label>
+        <label><input type="radio" name="q2-3" value="haurem"> haurem</label>
+        <label><input type="radio" name="q2-3" value="heurem"> heurem</label>
+        <label><input type="radio" name="q2-3" value="aurem"> aurem</label>
+      </div>
+      <span class="fb"></span>
+    </div>
+    <div class="item" data-ans="estarà">
+      <p class="q">4. Ella <b>___</b> molt ocupada esta setmana corregint els exàmens de SQL.</p>
+      <div class="options">
+        <label><input type="radio" name="q2-4" value="estarà"> estarà</label>
+        <label><input type="radio" name="q2-4" value="estaria"> estaria</label>
+        <label><input type="radio" name="q2-4" value="estarrà"> estarrà</label>
+        <label><input type="radio" name="q2-4" value="està"> està</label>
+      </div>
+      <span class="fb"></span>
+    </div>
+    <div class="item" data-ans="seríem">
+      <p class="q">5. Si ixquera prompte l'autobús, nosaltres <b>___</b> puntuals a la reunió del departament.</p>
+      <div class="options">
+        <label><input type="radio" name="q2-5" value="seriem"> seriem</label>
+        <label><input type="radio" name="q2-5" value="serem"> serem</label>
+        <label><input type="radio" name="q2-5" value="seríem"> seríem</label>
+        <label><input type="radio" name="q2-5" value="serim"> serim</label>
+      </div>
+      <span class="fb"></span>
+    </div>
+
+    <button class="check" onclick="checkRadio('act2')">Comprova les respostes</button>
+    <div class="result-line" id="act2-result"></div>
+  </section>
+
+  <!-- ACTIVITAT 3: taula de conjugació -->
+  <section class="card" id="act3">
+    <h2><span class="step-tag">3</span> Completa la taula</h2>
+    <p class="intro">Escriu el futur de <em>haver</em> i el condicional de <em>anar</em> per a cada pronom.</p>
+    <div class="wrap-table">
+      <table class="conj" id="act3-table">
+        <thead><tr><th>Pronom</th><th>Futur de haver</th><th>Condicional de anar</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="pron">jo</td>
+            <td><input type="text" data-ans="hauré" aria-label="futur haver jo"></td>
+            <td><input type="text" data-ans="aniria" aria-label="condicional anar jo"></td>
+          </tr>
+          <tr>
+            <td class="pron">tu</td>
+            <td><input type="text" data-ans="hauràs" aria-label="futur haver tu"></td>
+            <td><input type="text" data-ans="aniries" aria-label="condicional anar tu"></td>
+          </tr>
+          <tr>
+            <td class="pron">ell / ella</td>
+            <td><input type="text" data-ans="haurà" aria-label="futur haver ell"></td>
+            <td><input type="text" data-ans="aniria" aria-label="condicional anar ell"></td>
+          </tr>
+          <tr>
+            <td class="pron">nosaltres</td>
+            <td><input type="text" data-ans="haurem" aria-label="futur haver nosaltres"></td>
+            <td><input type="text" data-ans="aniríem" aria-label="condicional anar nosaltres"></td>
+          </tr>
+          <tr>
+            <td class="pron">vosaltres</td>
+            <td><input type="text" data-ans="haureu" aria-label="futur haver vosaltres"></td>
+            <td><input type="text" data-ans="aniríeu" aria-label="condicional anar vosaltres"></td>
+          </tr>
+          <tr>
+            <td class="pron">ells / elles</td>
+            <td><input type="text" data-ans="hauran" aria-label="futur haver ells"></td>
+            <td><input type="text" data-ans="anirien" aria-label="condicional anar ells"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button class="check" onclick="checkTable('act3')">Comprova la taula</button>
+    <div class="result-line" id="act3-result"></div>
+  </section>
+
+  <!-- ACTIVITAT 4: mini-diàleg -->
+  <section class="card" id="act4">
+    <h2><span class="step-tag">4</span> Mini-diàleg al departament</h2>
+    <p class="intro">Completa la conversa entre el cap de departament i un professor amb la forma verbal correcta.</p>
+
+    <div class="item" data-ans="haurem">
+      <p class="q"><b>Cap de departament:</b> Bon dia a tots. Demà <input type="text" aria-label="dialeg 1"> (haver, futur, nosaltres) de decidir quin programari instal·larem als portàtils nous.<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="seríem">
+      <p class="q"><b>Professor/a:</b> Jo pense que si tinguérem més temps, <input type="text" aria-label="dialeg 2"> (ser, condicional, nosaltres) més eficients provant-ho primer amb una màquina virtual a VirtualBox.<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="aniré">
+      <p class="q"><b>Cap de departament:</b> Bona idea. La setmana que ve <input type="text" aria-label="dialeg 3"> (anar, futur, jo) a configurar un servidor de prova amb XAMPP per a fer les consultes SQL.<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="estarà">
+      <p class="q"><b>Professor/a:</b> Perfecte. I si falla la connexió, qui <input type="text" aria-label="dialeg 4"> (estar, futur) disponible per a ajudar al laboratori?<span class="fb"></span></p>
+    </div>
+    <div class="item" data-ans="seran">
+      <p class="q"><b>Cap de departament:</b> Segurament <input type="text" aria-label="dialeg 5"> (ser, futur, ells) els alumnes de Batxillerat, que ja coneixen bé el sistema.<span class="fb"></span></p>
+    </div>
+
+    <button class="check" onclick="checkFill('act4')">Comprova les respostes</button>
+    <div class="result-line" id="act4-result"></div>
+  </section>
+
+  <!-- ACTIVITAT 5: vocabulari -->
+  <section class="card" id="act5">
+    <h2><span class="step-tag">5 · VOCABULARI</span> PRSI I i II — programació i xarxes</h2>
+    <p class="intro">Relaciona cada terme valencià amb la seua traducció correcta al castellà.</p>
+
+    <div class="vocab-row" data-ans="lenguaje de programación">
+      <span class="vocab-term">llenguatge de programació</span>
+      <select aria-label="traducció 1">
+        <option value="">— tria —</option>
+        <option>lenguaje de programación</option>
+        <option>lenguaje de marcado</option>
+        <option>lenguaje máquina</option>
+      </select>
+      <span class="fb"></span>
+    </div>
+    <div class="vocab-row" data-ans="base de datos relacional">
+      <span class="vocab-term">base de dades relacional</span>
+      <select aria-label="traducció 2">
+        <option value="">— tria —</option>
+        <option>base de datos relacional</option>
+        <option>base de datos documental</option>
+        <option>base de datos en memoria</option>
+      </select>
+      <span class="fb"></span>
+    </div>
+    <div class="vocab-row" data-ans="enrutador/router">
+      <span class="vocab-term">encaminador</span>
+      <select aria-label="traducció 3">
+        <option value="">— tria —</option>
+        <option>enrutador/router</option>
+        <option>conmutador/switch</option>
+        <option>repetidor de señal</option>
+      </select>
+      <span class="fb"></span>
+    </div>
+    <div class="vocab-row" data-ans="cifrado">
+      <span class="vocab-term">xifratge</span>
+      <select aria-label="traducció 4">
+        <option value="">— tria —</option>
+        <option>cifrado</option>
+        <option>descifrado</option>
+        <option>compresión de datos</option>
+      </select>
+      <span class="fb"></span>
+    </div>
+    <div class="vocab-row" data-ans="certificado digital">
+      <span class="vocab-term">certificat digital</span>
+      <select aria-label="traducció 5">
+        <option value="">— tria —</option>
+        <option>certificado digital</option>
+        <option>firma manuscrita</option>
+        <option>contraseña maestra</option>
+      </select>
+      <span class="fb"></span>
+    </div>
+    <div class="vocab-row" data-ans="copia de seguridad">
+      <span class="vocab-term">còpia de seguretat</span>
+      <select aria-label="traducció 6">
+        <option value="">— tria —</option>
+        <option>copia de seguridad</option>
+        <option>copia impresa</option>
+        <option>copia temporal en caché</option>
+      </select>
+      <span class="fb"></span>
+    </div>
+
+    <button class="check" onclick="checkVocab('act5')">Comprova les respostes</button>
+    <div class="result-line" id="act5-result"></div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-block">
+      <h3>1 · Omple el buit</h3>
+      <div class="sol-item">1. <b>seré</b> — futur de "ser", 1a persona singular: infinitiu + é.</div>
+      <div class="sol-item">2. <b>estaria</b> — condicional de "estar": infinitiu + ia.</div>
+      <div class="sol-item">3. <b>haurem</b> — futur de "haver", arrel irregular "haur-" + em.</div>
+      <div class="sol-item">4. <b>anirem</b> — futur de "anar", arrel irregular "anir-" + em.</div>
+      <div class="sol-item">5. <b>estarien</b> — condicional de "estar", 3a persona plural: estar + ien.</div>
+      <div class="sol-item">6. <b>series</b> — condicional de "ser", 2a persona singular: ser + ies.</div>
+    </div>
+
+    <div class="sol-block">
+      <h3>2 · Tria l'opció correcta</h3>
+      <div class="sol-item">1. <b>serà</b> — "sirà" i "es" no existeixen amb este valor; "seràs" és 2a persona, ací cal 3a.</div>
+      <div class="sol-item">2. <b>aniria</b> — l'arrel del condicional de "anar" és "anir-", mai "an-" ni "ir-".</div>
+      <div class="sol-item">3. <b>haurem</b> — l'arrel és "haur-"; "havrem", "heurem" i "aurem" són incorrectes.</div>
+      <div class="sol-item">4. <b>estarà</b> — futur regular de "estar"; "estarrà" té una r de més.</div>
+      <div class="sol-item">5. <b>seríem</b> — condicional, 1a persona plural, amb accent a la í: ser + íem.</div>
+    </div>
+
+    <div class="sol-block">
+      <h3>3 · Completa la taula</h3>
+      <div class="sol-item"><b>Futur de haver:</b> hauré, hauràs, haurà, haurem, haureu, hauran.</div>
+      <div class="sol-item"><b>Condicional de anar:</b> aniria, aniries, aniria, aniríem, aniríeu, anirien.</div>
+    </div>
+
+    <div class="sol-block">
+      <h3>4 · Mini-diàleg al departament</h3>
+      <div class="sol-item">1. <b>haurem</b> — futur de "haver" (nosaltres).</div>
+      <div class="sol-item">2. <b>seríem</b> — condicional de "ser" (nosaltres), en una frase hipotètica amb "si".</div>
+      <div class="sol-item">3. <b>aniré</b> — futur de "anar" (jo).</div>
+      <div class="sol-item">4. <b>estarà</b> — futur de "estar" (ell/ella, concordant amb "qui").</div>
+      <div class="sol-item">5. <b>seran</b> — futur de "ser" (ells), per a una predicció probable.</div>
+    </div>
+
+    <div class="sol-block">
+      <h3>5 · Vocabulari PRSI I i II</h3>
+      <div class="sol-item"><b>llenguatge de programació</b> = lenguaje de programación.</div>
+      <div class="sol-item"><b>base de dades relacional</b> = base de datos relacional.</div>
+      <div class="sol-item"><b>encaminador</b> = enrutador/router.</div>
+      <div class="sol-item"><b>xifratge</b> = cifrado.</div>
+      <div class="sol-item"><b>certificat digital</b> = certificado digital.</div>
+      <div class="sol-item"><b>còpia de seguretat</b> = copia de seguridad.</div>
+    </div>
+  </details>
+
+  <footer class="note">Quadern de valencià oral · IES Jorge Juan, Alacant</footer>
+</div>
+
+<script>
+(function(){
+  var sectionScores = {}; // id -> {correct, total}
+
+  function norm(s){
+    return (s || '').trim().toLowerCase()
+      .replace(/·/g,'')
+      .normalize('NFD').replace(/[̀-ͯ]/g,''); // accent-insensitive compare
+  }
+
+  function updateTotal(){
+    var sum=0;
+    for (var k in sectionScores){ sum += sectionScores[k].correct; }
+    document.getElementById('scoreTotal').textContent = sum;
+  }
+
+  window.checkFill = function(sectionId){
+    var section = document.getElementById(sectionId);
+    var items = section.querySelectorAll('.item');
+    var correct=0, total=items.length;
+    items.forEach(function(item){
+      var input = item.querySelector('input[type=text]');
+      var fb = item.querySelector('.fb');
+      var ans = item.getAttribute('data-ans');
+      if (norm(input.value) === norm(ans)){
+        correct++;
+        fb.textContent = '✓ correcte';
+        fb.className = 'fb ok';
+      } else {
+        fb.textContent = '✗ solució: ' + ans;
+        fb.className = 'fb no';
+      }
+    });
+    sectionScores[sectionId] = {correct:correct, total:total};
+    document.getElementById(sectionId+'-result').textContent = correct + ' / ' + total + ' respostes correctes.';
+    updateTotal();
+  };
+
+  window.checkRadio = function(sectionId){
+    var section = document.getElementById(sectionId);
+    var items = section.querySelectorAll('.item');
+    var correct=0, total=items.length;
+    items.forEach(function(item){
+      var ans = item.getAttribute('data-ans');
+      var checked = item.querySelector('input[type=radio]:checked');
+      var fb = item.querySelector('.fb');
+      if (checked && norm(checked.value) === norm(ans)){
+        correct++;
+        fb.textContent = '✓ correcte';
+        fb.className = 'fb ok';
+      } else {
+        fb.textContent = '✗ solució: ' + ans;
+        fb.className = 'fb no';
+      }
+    });
+    sectionScores[sectionId] = {correct:correct, total:total};
+    document.getElementById(sectionId+'-result').textContent = correct + ' / ' + total + ' respostes correctes.';
+    updateTotal();
+  };
+
+  window.checkTable = function(sectionId){
+    var table = document.getElementById(sectionId+'-table');
+    var inputs = table.querySelectorAll('input[type=text]');
+    var correct=0, total=inputs.length;
+    inputs.forEach(function(inp){
+      var ans = inp.getAttribute('data-ans');
+      if (norm(inp.value) === norm(ans)){
+        correct++;
+        inp.style.borderColor = 'var(--good)';
+        inp.style.background = 'var(--good-bg)';
+      } else {
+        inp.style.borderColor = 'var(--bad)';
+        inp.style.background = 'var(--bad-bg)';
+      }
+    });
+    sectionScores[sectionId] = {correct:correct, total:total};
+    document.getElementById(sectionId+'-result').textContent = correct + ' / ' + total + ' caselles correctes.';
+    updateTotal();
+  };
+
+  window.checkVocab = function(sectionId){
+    var section = document.getElementById(sectionId);
+    var rows = section.querySelectorAll('.vocab-row');
+    var correct=0, total=rows.length;
+    rows.forEach(function(row){
+      var ans = row.getAttribute('data-ans');
+      var sel = row.querySelector('select');
+      var fb = row.querySelector('.fb');
+      if (norm(sel.value) === norm(ans)){
+        correct++;
+        fb.textContent = '✓ correcte';
+        fb.className = 'fb ok';
+      } else {
+        fb.textContent = '✗ solució: ' + ans;
+        fb.className = 'fb no';
+      }
+    });
+    sectionScores[sectionId] = {correct:correct, total:total};
+    document.getElementById(sectionId+'-result').textContent = correct + ' / ' + total + ' respostes correctes.';
+    updateTotal();
+  };
+})();
+</script>
+
+</body></html>

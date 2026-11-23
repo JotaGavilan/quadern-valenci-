@@ -1,0 +1,742 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ixent, corrent, prenent</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  /* Layout: a single vertical column of "motion cards" — each gerund treated as a word caught mid-stride.
+     A thin kinetic rule (a gradient streak) marks the top of every major block, echoing an action in progress. */
+  :root{
+    --bg:#f5f0e4;
+    --surface:#ffffff;
+    --surface-2:#ece2c9;
+    --ink:#241d30;
+    --ink-soft:#6f6552;
+    --accent:#5a35e0;
+    --accent-ink:#ffffff;
+    --accent-soft:#e7e0fb;
+    --accent-soft-ink:#3a2399;
+    --line:#ddd0ab;
+    --good:#2f8f5b;
+    --good-bg:#deefe2;
+    --bad:#c0392b;
+    --bad-bg:#f6dedb;
+    --shadow:0 1px 2px rgba(36,29,48,.07), 0 10px 26px -14px rgba(36,29,48,.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#15111f;
+      --surface:#1e1930;
+      --surface-2:#271f3c;
+      --ink:#ece6f5;
+      --ink-soft:#ab9fc7;
+      --accent:#b49bfb;
+      --accent-ink:#1a1033;
+      --accent-soft:#2c2250;
+      --accent-soft-ink:#d9cbff;
+      --line:#3a3350;
+      --good:#79dba3;
+      --good-bg:#1d3327;
+      --bad:#f3998a;
+      --bad-bg:#3a2320;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15111f;
+    --surface:#1e1930;
+    --surface-2:#271f3c;
+    --ink:#ece6f5;
+    --ink-soft:#ab9fc7;
+    --accent:#b49bfb;
+    --accent-ink:#1a1033;
+    --accent-soft:#2c2250;
+    --accent-soft-ink:#d9cbff;
+    --line:#3a3350;
+    --good:#79dba3;
+    --good-bg:#1d3327;
+    --bad:#f3998a;
+    --bad-bg:#3a2320;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:26px;
+    padding-bottom:60px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page{ max-width:780px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    text-decoration:none;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .back-link:hover{ text-decoration:underline; }
+
+  header.top{
+    background:linear-gradient(100deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #ff8a4c 30%) 100%);
+    color:var(--accent-ink);
+    border-radius:20px;
+    padding:26px 26px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(115deg, rgba(255,255,255,.08) 0 3px, transparent 3px 26px);
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.88;
+    margin-bottom:10px;
+  }
+  header.top h1{ font-size:clamp(1.9rem, 6vw, 2.5rem); font-weight:700; font-style:italic; }
+  header.top p{ margin:12px 0 0; max-width:54ch; opacity:.95; font-size:.95rem; }
+  .pill-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .pill{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.22);
+    white-space:nowrap;
+  }
+
+  .score-bar{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:5;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    box-shadow:var(--shadow);
+    flex-wrap:wrap;
+  }
+  .score-bar .label{ font-size:.86rem; color:var(--ink-soft); }
+  .score-bar .score{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600;
+    font-size:1.05rem;
+    color:var(--accent);
+  }
+  .score-bar button{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:.88rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+  }
+  .score-bar button:hover{ opacity:.9; }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  section.card::before{
+    content:"";
+    position:absolute; top:0; left:22px; right:22px; height:3px;
+    background:linear-gradient(90deg, var(--accent), transparent);
+    border-radius:0 0 4px 4px;
+  }
+  section.card h2{ font-size:1.25rem; margin-bottom:4px; }
+  section.card .kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--accent);
+    margin-bottom:6px;
+    display:block;
+  }
+  section.card p.intro{ color:var(--ink-soft); font-size:.92rem; margin:8px 0 16px; max-width:60ch; }
+
+  .theory-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.9rem;
+    margin:14px 0;
+    overflow-x:auto;
+    display:block;
+  }
+  .theory-table table{ width:100%; border-collapse:collapse; min-width:420px; }
+  .theory-table thead th{
+    background:var(--surface-2);
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+  }
+  .theory-table tbody td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--line);
+  }
+  .theory-table .inf{ font-weight:600; }
+  .theory-table .ger{ color:var(--accent); font-weight:600; }
+
+  .qblock{
+    padding:14px 0;
+    border-top:1px solid var(--line);
+  }
+  .qblock:first-of-type{ border-top:none; padding-top:4px; }
+  .qnum{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.76rem;
+    color:var(--ink-soft);
+    margin-right:4px;
+  }
+  .qtext{ font-size:.96rem; }
+  .qtext .tag-verb{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem;
+    color:var(--accent-soft-ink);
+    background:var(--accent-soft);
+    padding:1px 6px;
+    border-radius:6px;
+  }
+  input[type="text"].blank{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.92rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    width:150px;
+    background:var(--surface);
+    color:var(--ink);
+    margin:0 4px;
+  }
+  input[type="text"].blank:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  select.blank{
+    font-family:'Work Sans', sans-serif;
+    font-size:.88rem;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    background:var(--surface);
+    color:var(--ink);
+    margin:0 4px;
+  }
+
+  .mc-options{ display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+  .mc-options label{
+    display:flex; align-items:center; gap:8px;
+    font-size:.92rem;
+    padding:7px 10px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+  }
+  .mc-options label:hover{ background:var(--surface-2); }
+  .mc-options input{ accent-color:var(--accent); }
+
+  .feedback{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:.84rem;
+    font-weight:600;
+    margin-left:8px;
+    padding:2px 9px;
+    border-radius:999px;
+  }
+  .feedback.ok{ background:var(--good-bg); color:var(--good); }
+  .feedback.bad{ background:var(--bad-bg); color:var(--bad); }
+  .feedback[hidden]{ display:none !important; }
+
+  .conj-table{ width:100%; border-collapse:collapse; margin-top:10px; overflow-x:auto; display:block; }
+  .conj-table table{ width:100%; border-collapse:collapse; min-width:420px; }
+  .conj-table th{
+    background:var(--surface-2); text-align:left; font-size:.76rem;
+    font-family:'JetBrains Mono', monospace; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); padding:8px 12px; border-bottom:1px solid var(--line);
+  }
+  .conj-table td{ padding:8px 12px; border-bottom:1px solid var(--line); vertical-align:middle; }
+
+  .dialog-bubble{
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:12px 14px;
+    margin-bottom:10px;
+    font-size:.92rem;
+    max-width:56ch;
+  }
+  .dialog-bubble .who{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--accent);
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    margin-top:26px;
+    box-shadow:var(--shadow);
+  }
+  .solutions h2{ font-size:1.2rem; margin-bottom:6px; }
+  .solutions .sol-item{
+    padding:10px 0;
+    border-top:1px solid var(--line);
+    font-size:.9rem;
+  }
+  .solutions .sol-item:first-of-type{ border-top:none; }
+  .solutions .sol-item .ans{ color:var(--accent); font-weight:600; font-family:'JetBrains Mono', monospace; }
+  .solutions details{ margin-top:16px; }
+  .solutions summary{
+    cursor:pointer;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.8rem;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:.8rem;
+    margin-top:26px;
+  }
+
+  @media (max-width:480px){
+    header.top{ padding:22px 18px 20px; }
+    section.card{ padding:18px 16px 20px; }
+    input[type="text"].blank{ width:120px; }
+  }
+</style>
+
+<div class="page">
+
+<a class="back-link" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 6 de novembre de 2026</div>
+    <h1>Ixent, corrent, prenent</h1>
+    <p>Tema gramatical d'avui: <strong>Gerundis irregulars</strong>. El gerundi és el temps de l'acció en marxa — just el que necessites quan expliques en veu alta què estàs fent a classe mentre ho fas.</p>
+    <div class="pill-row">
+      <span class="pill">Gerundis irregulars</span>
+      <span class="pill">Vocabulari: PIAR I · Scratch, Microbit i IA</span>
+    </div>
+  </div>
+</header>
+
+<div class="score-bar">
+  <span class="label">Puntuació acumulada</span>
+  <span class="score"><span id="scoreVal">0</span> / <span id="scoreMax">26</span></span>
+  <button id="checkBtn">Comprova les respostes</button>
+</div>
+
+<section class="card">
+  <span class="kicker">Teoria</span>
+  <h2>El gerundi: l'acció mentre passa</h2>
+  <p class="intro">El gerundi regular es forma segons la conjugació: <strong>-ar → -ant</strong>, <strong>-er/-re → -ent</strong>, <strong>-ir → -int</strong>. Però un grapat de verbs molt freqüents trenquen eixe patró i cal memoritzar-los, perquè apareixen contínuament quan parles en valencià a classe: "estic explicant", "estàs corrent el programa", "estàveu dient"...</p>
+  <div class="theory-table">
+    <table>
+      <thead><tr><th>Infinitiu</th><th>Gerundi</th><th>Exemple a classe</th></tr></thead>
+      <tbody>
+        <tr><td class="inf">fer</td><td class="ger">fent</td><td>Estic <em>fent</em> una còpia de seguretat del servidor.</td></tr>
+        <tr><td class="inf">dir</td><td class="ger">dient</td><td>El professor segueix <em>dient</em> les instruccions de MakeCode.</td></tr>
+        <tr><td class="inf">veure</td><td class="ger">veient</td><td>Estem <em>veient</em> l'error a la consola.</td></tr>
+        <tr><td class="inf">ser / ésser</td><td class="ger">sent / essent</td><td><em>Sent</em> tan tard, acabarem demà la pràctica.</td></tr>
+        <tr><td class="inf">eixir</td><td class="ger">ixent</td><td>Els alumnes van <em>ixent</em> cap al laboratori.</td></tr>
+        <tr><td class="inf">córrer</td><td class="ger">corrent</td><td>Estic <em>corrent</em> el programa en Python per a comprovar l'error.</td></tr>
+        <tr><td class="inf">prendre</td><td class="ger">prenent</td><td>Estàs <em>prenent</em> notes mentre expliques Scratch.</td></tr>
+        <tr><td class="inf">dur</td><td class="ger">duent</td><td>Vinc <em>duent</em> el portàtil per al claustre.</td></tr>
+        <tr><td class="inf">seure</td><td class="ger">seient</td><td>Estaven <em>seient</em> al voltant de la placa Microbit.</td></tr>
+        <tr><td class="inf">traure</td><td class="ger">traient</td><td>Estic <em>traient</em> els arxius de la carpeta compartida.</td></tr>
+        <tr><td class="inf">beure</td><td class="ger">bevent</td><td>Seguia parlant mentre anava <em>bevent</em> aigua.</td></tr>
+        <tr><td class="inf">creure</td><td class="ger">creient</td><td>Estàvem <em>creient</em> que la base de dades estava bé.</td></tr>
+        <tr><td class="inf">tenir</td><td class="ger">tenint</td><td><em>Tenint</em> en compte l'horari, farem la pràctica dijous.</td></tr>
+        <tr><td class="inf">venir</td><td class="ger">venint</td><td>Estan <em>venint</em> cap a l'aula d'informàtica.</td></tr>
+        <tr><td class="inf">viure</td><td class="ger">vivint</td><td>Estem <em>vivint</em> un canvi important amb la intel·ligència artificial.</td></tr>
+        <tr><td class="inf">escriure</td><td class="ger">escrivint</td><td>Estic <em>escrivint</em> una consulta SQL amb XAMPP.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="intro" style="margin-bottom:0">Fixa't que la majoria d'estes irregularitats apareixen quan el verb s'usa amb <strong>estar + gerundi</strong>, la construcció que fas servir constantment en l'oralitat de classe per a descriure allò que esteu fent en eixe moment.</p>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 1 · Omple els buits</span>
+  <h2>Què esteu fent ara mateix?</h2>
+  <p class="intro">Escriu el gerundi del verb indicat entre parèntesis.</p>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">Ara mateix estic <span class="tag-verb">eixir</span> <input type="text" class="blank" id="a1q1" data-answer="ixent" autocomplete="off"> de classe cap al laboratori d'informàtica.</span>
+    <span class="feedback" id="fb-a1q1" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">L'alumnat està <span class="tag-verb">prendre</span> <input type="text" class="blank" id="a1q2" data-answer="prenent" autocomplete="off"> notes mentre expliques Scratch.</span>
+    <span class="feedback" id="fb-a1q2" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">Estem <span class="tag-verb">córrer</span> <input type="text" class="blank" id="a1q3" data-answer="corrent" autocomplete="off"> el programa en Python per a comprovar l'error.</span>
+    <span class="feedback" id="fb-a1q3" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext">El professor seguia <span class="tag-verb">dir</span> <input type="text" class="blank" id="a1q4" data-answer="dient" autocomplete="off"> les instruccions per a connectar la placa Microbit amb MakeCode.</span>
+    <span class="feedback" id="fb-a1q4" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">5.</span>
+    <span class="qtext">Estàvem <span class="tag-verb">fer</span> <input type="text" class="blank" id="a1q5" data-answer="fent" autocomplete="off"> una còpia de seguretat quan es va penjar el servidor.</span>
+    <span class="feedback" id="fb-a1q5" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 2 · Tipus test</span>
+  <h2>Tria el gerundi correcte</h2>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext">Quin és el gerundi correcte de <strong>veure</strong>?</span>
+    <div class="mc-options" data-qid="a2q1" data-answer="veient">
+      <label><input type="radio" name="a2q1" value="veent"> veent</label>
+      <label><input type="radio" name="a2q1" value="veient"> veient</label>
+      <label><input type="radio" name="a2q1" value="vist"> vist</label>
+      <label><input type="radio" name="a2q1" value="veu"> veu</label>
+    </div>
+    <span class="feedback" id="fb-a2q1" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext">Quin és el gerundi correcte de <strong>traure</strong>?</span>
+    <div class="mc-options" data-qid="a2q2" data-answer="traient">
+      <label><input type="radio" name="a2q2" value="traent"> traent</label>
+      <label><input type="radio" name="a2q2" value="tragut"> tragut</label>
+      <label><input type="radio" name="a2q2" value="traient"> traient</label>
+      <label><input type="radio" name="a2q2" value="traurent"> traurent</label>
+    </div>
+    <span class="feedback" id="fb-a2q2" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext">Quin és el gerundi correcte de <strong>beure</strong>?</span>
+    <div class="mc-options" data-qid="a2q3" data-answer="bevent">
+      <label><input type="radio" name="a2q3" value="beuent"> beuent</label>
+      <label><input type="radio" name="a2q3" value="begut"> begut</label>
+      <label><input type="radio" name="a2q3" value="bevent"> bevent</label>
+      <label><input type="radio" name="a2q3" value="beient"> beient</label>
+    </div>
+    <span class="feedback" id="fb-a2q3" hidden></span>
+  </div>
+
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext">Quin és el gerundi correcte de <strong>viure</strong>?</span>
+    <div class="mc-options" data-qid="a2q4" data-answer="vivint">
+      <label><input type="radio" name="a2q4" value="viuent"> viuent</label>
+      <label><input type="radio" name="a2q4" value="vivint"> vivint</label>
+      <label><input type="radio" name="a2q4" value="vivent"> vivent</label>
+      <label><input type="radio" name="a2q4" value="viscut"> viscut</label>
+    </div>
+    <span class="feedback" id="fb-a2q4" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 3 · Taula de conjugació</span>
+  <h2>Completa el gerundi de cada verb</h2>
+  <p class="intro">Omple la columna buida amb la forma correcta.</p>
+  <div class="conj-table">
+    <table>
+      <thead><tr><th>Infinitiu</th><th>Gerundi</th></tr></thead>
+      <tbody>
+        <tr><td>ser / ésser</td><td><input type="text" class="blank" id="a3q1" data-answer="sent|essent" autocomplete="off"> <span class="feedback" id="fb-a3q1" hidden></span></td></tr>
+        <tr><td>tenir</td><td><input type="text" class="blank" id="a3q2" data-answer="tenint" autocomplete="off"> <span class="feedback" id="fb-a3q2" hidden></span></td></tr>
+        <tr><td>venir</td><td><input type="text" class="blank" id="a3q3" data-answer="venint" autocomplete="off"> <span class="feedback" id="fb-a3q3" hidden></span></td></tr>
+        <tr><td>escriure</td><td><input type="text" class="blank" id="a3q4" data-answer="escrivint" autocomplete="off"> <span class="feedback" id="fb-a3q4" hidden></span></td></tr>
+        <tr><td>riure</td><td><input type="text" class="blank" id="a3q5" data-answer="rient" autocomplete="off"> <span class="feedback" id="fb-a3q5" hidden></span></td></tr>
+        <tr><td>creure</td><td><input type="text" class="blank" id="a3q6" data-answer="creient" autocomplete="off"> <span class="feedback" id="fb-a3q6" hidden></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 4 · Mini-diàlegs al departament</span>
+  <h2>Al departament d'informàtica</h2>
+  <p class="intro">Completa cada intervenció amb el gerundi del verb indicat.</p>
+
+  <div class="dialog-bubble">
+    <span class="who">Cap de departament</span>
+    Mentre estàs <span class="tag-verb">dur</span> <input type="text" class="blank" id="a4q1" data-answer="duent" autocomplete="off"> l'ordinador portàtil al laboratori, aprofita per a connectar-lo al projector. <span class="feedback" id="fb-a4q1" hidden></span>
+  </div>
+  <div class="dialog-bubble">
+    <span class="who">Professor</span>
+    Els alumnes estaven <span class="tag-verb">seure</span> <input type="text" class="blank" id="a4q2" data-answer="seient" autocomplete="off"> al voltant de l'ordinador mirant el codi en Python. <span class="feedback" id="fb-a4q2" hidden></span>
+  </div>
+  <div class="dialog-bubble">
+    <span class="who">Professor</span>
+    Estic <span class="tag-verb">moure</span> <input type="text" class="blank" id="a4q3" data-answer="movent" autocomplete="off"> els arxius a la carpeta compartida de Microsoft 365. <span class="feedback" id="fb-a4q3" hidden></span>
+  </div>
+  <div class="dialog-bubble">
+    <span class="who">Cap de departament</span>
+    Estàvem <span class="tag-verb">voler</span> <input type="text" class="blank" id="a4q4" data-answer="volent" autocomplete="off"> actualitzar el lloc de WordPress quan s'ha penjat el servidor. <span class="feedback" id="fb-a4q4" hidden></span>
+  </div>
+</section>
+
+<section class="card">
+  <span class="kicker">Activitat 5 · Vocabulari</span>
+  <h2>PIAR I · Scratch, Microbit i IA</h2>
+  <p class="intro">Relaciona cada terme valencià amb la seua traducció al castellà.</p>
+
+  <div class="qblock">
+    <span class="qnum">1.</span>
+    <span class="qtext"><strong>bloc</strong> (a Scratch) →
+      <select class="blank" id="a5q1" data-answer="bloque">
+        <option value="">— tria —</option>
+        <option value="bloque">bloque</option>
+        <option value="bloqueo">bloqueo</option>
+        <option value="cuadro">cuadro</option>
+        <option value="bloc">bloc</option>
+      </select>
+    </span>
+    <span class="feedback" id="fb-a5q1" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">2.</span>
+    <span class="qtext"><strong>personatge / titella</strong> →
+      <select class="blank" id="a5q2" data-answer="personaje/sprite">
+        <option value="">— tria —</option>
+        <option value="personaje/sprite">personaje / sprite</option>
+        <option value="personal">personal</option>
+        <option value="personalidad">personalidad</option>
+        <option value="personaje histórico">personaje histórico</option>
+      </select>
+    </span>
+    <span class="feedback" id="fb-a5q2" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">3.</span>
+    <span class="qtext"><strong>esdeveniment</strong> →
+      <select class="blank" id="a5q3" data-answer="evento">
+        <option value="">— tria —</option>
+        <option value="evento">evento</option>
+        <option value="suceso trágico">suceso trágico</option>
+        <option value="eventualidad">eventualidad</option>
+        <option value="evaluación">evaluación</option>
+      </select>
+    </span>
+    <span class="feedback" id="fb-a5q3" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">4.</span>
+    <span class="qtext"><strong>placa controladora</strong> →
+      <select class="blank" id="a5q4" data-answer="placa controladora">
+        <option value="">— tria —</option>
+        <option value="placa controladora">placa controladora</option>
+        <option value="placa madre">placa madre</option>
+        <option value="tarjeta gráfica">tarjeta gráfica</option>
+        <option value="placa base">placa base</option>
+      </select>
+    </span>
+    <span class="feedback" id="fb-a5q4" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">5.</span>
+    <span class="qtext"><strong>sensor de distància</strong> →
+      <select class="blank" id="a5q5" data-answer="sensor de distancia">
+        <option value="">— tria —</option>
+        <option value="sensor de distancia">sensor de distancia</option>
+        <option value="sensor de temperatura">sensor de temperatura</option>
+        <option value="detector de movimiento">detector de movimiento</option>
+        <option value="sensor de luz">sensor de luz</option>
+      </select>
+    </span>
+    <span class="feedback" id="fb-a5q5" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">6.</span>
+    <span class="qtext"><strong>arbre de decisió</strong> →
+      <select class="blank" id="a5q6" data-answer="árbol de decisión">
+        <option value="">— tria —</option>
+        <option value="árbol de decisión">árbol de decisión</option>
+        <option value="árbol genealógico">árbol genealógico</option>
+        <option value="diagrama de flujo">diagrama de flujo</option>
+        <option value="árbol binario">árbol binario</option>
+      </select>
+    </span>
+    <span class="feedback" id="fb-a5q6" hidden></span>
+  </div>
+  <div class="qblock">
+    <span class="qnum">7.</span>
+    <span class="qtext"><strong>aprenentatge automàtic</strong> →
+      <select class="blank" id="a5q7" data-answer="aprendizaje automático">
+        <option value="">— tria —</option>
+        <option value="aprendizaje automático">aprendizaje automático</option>
+        <option value="aprendizaje autónomo">aprendizaje autónomo</option>
+        <option value="enseñanza automatizada">enseñanza automatizada</option>
+        <option value="autoaprendizaje">autoaprendizaje</option>
+      </select>
+    </span>
+    <span class="feedback" id="fb-a5q7" hidden></span>
+  </div>
+</section>
+
+<div class="solutions">
+  <h2>Solucions i explicacions</h2>
+  <details>
+    <summary>Mostra totes les solucions</summary>
+
+    <div class="sol-item"><strong>Activitat 1.1</strong> — <span class="ans">ixent</span>. El verb <em>eixir</em> fa un gerundi irregular en -ent, no en -int com la resta de verbs en -ir.</div>
+    <div class="sol-item"><strong>Activitat 1.2</strong> — <span class="ans">prenent</span>. De <em>prendre</em>: la arrel perd la -d- i manté l'accent a la e.</div>
+    <div class="sol-item"><strong>Activitat 1.3</strong> — <span class="ans">corrent</span>. De <em>córrer</em>, gerundi regular en -ent però útil per a l'expressió "córrer un programa" (executar-lo).</div>
+    <div class="sol-item"><strong>Activitat 1.4</strong> — <span class="ans">dient</span>. De <em>dir</em>: un dels gerundis irregulars més freqüents en valencià oral.</div>
+    <div class="sol-item"><strong>Activitat 1.5</strong> — <span class="ans">fent</span>. De <em>fer</em>: irregular, mai "ferent".</div>
+
+    <div class="sol-item"><strong>Activitat 2.1</strong> — <span class="ans">veient</span>. "Veent" no existeix; la i es manté per a evitar el buit vocàlic.</div>
+    <div class="sol-item"><strong>Activitat 2.2</strong> — <span class="ans">traient</span>. Igual que <em>veure</em>, <em>traure</em> intercala la i.</div>
+    <div class="sol-item"><strong>Activitat 2.3</strong> — <span class="ans">bevent</span>. De <em>beure</em>: la arrel canvia de beu- a bev-.</div>
+    <div class="sol-item"><strong>Activitat 2.4</strong> — <span class="ans">vivint</span>. De <em>viure</em>: la arrel viu- passa a viv- davant la terminació -int.</div>
+
+    <div class="sol-item"><strong>Activitat 3</strong> — <span class="ans">sent/essent</span> (ser), <span class="ans">tenint</span> (tenir), <span class="ans">venint</span> (venir), <span class="ans">escrivint</span> (escriure), <span class="ans">rient</span> (riure), <span class="ans">creient</span> (creure). En tots els casos la consonant final de l'arrel canvia davant la terminació del gerundi (escriu-→escriv-, cre-→crei-).</div>
+
+    <div class="sol-item"><strong>Activitat 4.1</strong> — <span class="ans">duent</span>. De <em>dur</em>.</div>
+    <div class="sol-item"><strong>Activitat 4.2</strong> — <span class="ans">seient</span>. De <em>seure</em>.</div>
+    <div class="sol-item"><strong>Activitat 4.3</strong> — <span class="ans">movent</span>. De <em>moure</em>: gerundi regular en -ent.</div>
+    <div class="sol-item"><strong>Activitat 4.4</strong> — <span class="ans">volent</span>. De <em>voler</em>: gerundi regular en -ent, encara que l'infinitiu puga fer pensar en una forma irregular.</div>
+
+    <div class="sol-item"><strong>Activitat 5 (vocabulari PIAR I)</strong> — bloc→<span class="ans">bloque</span> (una peça de codi a Scratch); personatge/titella→<span class="ans">personaje/sprite</span> (l'element que es mou a l'escenari); esdeveniment→<span class="ans">evento</span> (allò que activa un bloc, com "quan es clique la bandera"); placa controladora→<span class="ans">placa controladora</span> (com la Microbit); sensor de distància→<span class="ans">sensor de distancia</span>; arbre de decisió→<span class="ans">árbol de decisión</span> (estructura per a classificar dades en IA); aprenentatge automàtic→<span class="ans">aprendizaje automático</span> (el que practiquem amb Teachable Machine).</div>
+  </details>
+</div>
+
+<footer class="note">IES Jorge Juan, Alacant · Quadern de valencià oral per al professorat d'informàtica</footer>
+
+</div>
+
+<script>
+(function(){
+  var ANSWERS_SEP = '|';
+
+  function norm(s){
+    return (s||'').toString().trim().toLowerCase();
+  }
+
+  function checkTextInput(id){
+    var el = document.getElementById(id);
+    var fb = document.getElementById('fb-' + id);
+    if(!el || !fb) return false;
+    var raw = el.getAttribute('data-answer') || '';
+    var accepted = raw.split(ANSWERS_SEP).map(norm);
+    var val = norm(el.value);
+    var ok = val.length > 0 && accepted.indexOf(val) !== -1;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  function checkSelect(id){
+    var el = document.getElementById(id);
+    var fb = document.getElementById('fb-' + id);
+    if(!el || !fb) return false;
+    var answer = norm(el.getAttribute('data-answer'));
+    var val = norm(el.value);
+    var ok = val.length > 0 && val === answer;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  function checkMC(qid){
+    var group = document.querySelector('.mc-options[data-qid="' + qid + '"]');
+    var fb = document.getElementById('fb-' + qid);
+    if(!group || !fb) return false;
+    var answer = group.getAttribute('data-answer');
+    var checked = group.querySelector('input[type="radio"]:checked');
+    var ok = !!checked && checked.value === answer;
+    fb.hidden = false;
+    fb.textContent = ok ? '✓ correcte' : '✗ incorrecte';
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    return ok;
+  }
+
+  var textIds = ['a1q1','a1q2','a1q3','a1q4','a1q5','a3q1','a3q2','a3q3','a3q4','a3q5','a3q6','a4q1','a4q2','a4q3','a4q4'];
+  var mcIds = ['a2q1','a2q2','a2q3','a2q4'];
+  var selectIds = ['a5q1','a5q2','a5q3','a5q4','a5q5','a5q6','a5q7'];
+
+  var total = textIds.length + mcIds.length + selectIds.length;
+  document.getElementById('scoreMax').textContent = total;
+
+  function runCheck(){
+    var score = 0;
+    textIds.forEach(function(id){ if(checkTextInput(id)) score++; });
+    mcIds.forEach(function(id){ if(checkMC(id)) score++; });
+    selectIds.forEach(function(id){ if(checkSelect(id)) score++; });
+    document.getElementById('scoreVal').textContent = score;
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', runCheck);
+})();
+</script>
+
+</body></html>

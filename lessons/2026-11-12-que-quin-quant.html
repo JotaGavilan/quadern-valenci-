@@ -1,0 +1,579 @@
+<!doctype html><html lang="ca"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#2d5f6b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valencià">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('../sw.js').catch(function(){});});}</script>
+</head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Què, quin, quant?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  /* Layout: paper worksheet, same notebook system as the rest of the quadern; today's
+     accent is an inquisitive amber (the color of a raised hand / a question asked aloud),
+     with a teal thread marking "quin/quant", the pair that changes shape to agree with its noun */
+  :root{
+    --bg:#f4ede0;
+    --surface:#ffffff;
+    --surface-2:#ece0c8;
+    --ink:#241d12;
+    --ink-soft:#6b5c40;
+    --accent:#9a5a1e;
+    --accent-ink:#fff8ee;
+    --accent-soft:#f1e0c8;
+    --accent-soft-ink:#5c3710;
+    --line:#ddcda0;
+    --good:#2f7d56;
+    --good-bg:#e1efe4;
+    --bad:#a23b3b;
+    --bad-bg:#f6e3e1;
+    --quin:#2f6b6b;
+    --quin-bg:#dcecec;
+    --shadow:0 1px 2px rgba(35,31,24,.07), 0 10px 26px -14px rgba(35,31,24,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171209; --surface:#201a10; --surface-2:#2b2214;
+      --ink:#f0e6d2; --ink-soft:#bfa980;
+      --accent:#e3a564; --accent-ink:#2b1800; --accent-soft:#3a2a14; --accent-soft-ink:#f0cf9e;
+      --line:#3c3018;
+      --good:#82d6a6; --good-bg:#1c3328;
+      --bad:#e49a93; --bad-bg:#3a2320;
+      --quin:#7fd4d4; --quin-bg:#1d3636;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171209; --surface:#201a10; --surface-2:#2b2214;
+    --ink:#f0e6d2; --ink-soft:#bfa980;
+    --accent:#e3a564; --accent-ink:#2b1800; --accent-soft:#3a2a14; --accent-soft-ink:#f0cf9e;
+    --line:#3c3018;
+    --good:#82d6a6; --good-bg:#1c3328;
+    --bad:#e49a93; --bad-bg:#3a2320;
+    --quin:#7fd4d4; --quin-bg:#1d3636;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.55);
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    line-height:1.6;
+    padding-top:22px;
+    padding-bottom:70px;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+  }
+  .wrap{ max-width:760px; margin:0 auto; }
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+
+  a.backlink{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid var(--accent-soft);
+    margin-bottom:14px;
+  }
+  a.backlink:hover{ border-bottom-color:var(--accent); }
+
+  header.top{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border-radius:18px;
+    padding:22px 22px 20px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.09) 1px, transparent 1px) 0 0/28px 100%,
+      linear-gradient(0deg, rgba(255,255,255,.07) 1px, transparent 1px) 0 0/100% 28px;
+    pointer-events:none;
+  }
+  header.top .inner{ position:relative; z-index:1; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:8px;
+  }
+  header.top h1{ font-size:clamp(1.55rem,5vw,2.1rem); font-weight:600; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  .tag-row .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.74rem;
+    padding:5px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    white-space:nowrap;
+  }
+
+  .scorebar{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 16px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+  }
+  .scorebar b{ font-family:'Fraunces', serif; font-size:1.15rem; font-weight:600; color:var(--accent); }
+
+  section.card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px 22px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+  }
+  section.card h2{
+    font-size:1.2rem;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:4px;
+  }
+  section.card h2 .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    color:var(--accent);
+    border:1px solid var(--accent-soft);
+    background:var(--accent-soft);
+    border-radius:999px;
+    padding:3px 9px;
+    flex:none;
+  }
+  section.card > p.lead{ color:var(--ink-soft); margin:8px 0 16px; font-size:.92rem; }
+
+  .theory-table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:14px 0; }
+  table.theory{ border-collapse:collapse; width:100%; min-width:520px; font-size:.88rem; }
+  table.theory th{
+    background:var(--surface-2); text-align:left; padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase;
+    letter-spacing:.03em; color:var(--ink-soft); border-bottom:1px solid var(--line);
+  }
+  table.theory td{ padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.theory tr:last-child td{ border-bottom:none; }
+  table.theory .ex{ font-family:'IBM Plex Mono', monospace; font-size:.85rem; }
+  .qu{ color:var(--quin); font-weight:600; }
+
+  .rule-box{
+    background:var(--quin-bg);
+    border:1px solid var(--quin);
+    border-radius:12px;
+    padding:14px 16px;
+    margin:14px 0 4px;
+    font-size:.9rem;
+  }
+  .rule-box b{ color:var(--quin); }
+
+  .item{ border-top:1px solid var(--line); padding:14px 0; }
+  .item:first-child{ border-top:none; padding-top:0; }
+  .item p.sentence{ margin:0 0 10px; font-size:.97rem; }
+  .item .hint{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; color:var(--ink-soft); }
+  input.blank{
+    font:inherit; font-family:'IBM Plex Mono', monospace;
+    width:11em; max-width:60vw;
+    padding:6px 9px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--surface);
+    color:var(--ink);
+  }
+  input.blank:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  .feedback{ display:inline-flex; align-items:center; gap:6px; margin-left:8px; font-size:.84rem; font-family:'IBM Plex Mono', monospace; }
+  .feedback.ok{ color:var(--good); }
+  .feedback.ko{ color:var(--bad); }
+
+  .mc-opts{ display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+  .mc-opt{ display:flex; align-items:baseline; gap:9px; padding:8px 11px; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; font-size:.93rem; }
+  .mc-opt:hover{ background:var(--surface-2); }
+  .mc-opt input{ margin:0; flex:none; }
+  .mc-opt.right-ans{ border-color:var(--good); background:var(--good-bg); }
+  .mc-opt.wrong-ans{ border-color:var(--bad); background:var(--bad-bg); }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin-top:6px; }
+  table.fillgrid{ border-collapse:collapse; width:100%; min-width:460px; font-size:.9rem; }
+  table.fillgrid th{ background:var(--surface-2); text-align:left; padding:9px 12px; font-family:'IBM Plex Mono', monospace; font-size:.72rem; text-transform:uppercase; color:var(--ink-soft); border-bottom:1px solid var(--line); }
+  table.fillgrid td{ padding:9px 12px; border-bottom:1px solid var(--line); }
+  table.fillgrid tr:last-child td{ border-bottom:none; }
+  table.fillgrid .given{ font-family:'IBM Plex Mono', monospace; }
+
+  .dialogue .turn{ display:flex; gap:10px; margin-bottom:12px; align-items:baseline; flex-wrap:wrap; }
+  .dialogue .who{ font-family:'IBM Plex Mono', monospace; font-size:.76rem; font-weight:600; color:var(--accent); flex:none; width:6.4em; }
+  .dialogue .say{ flex:1 1 220px; min-width:0; font-size:.95rem; }
+
+  button.check{
+    font:inherit; font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:.84rem;
+    background:var(--accent); color:var(--accent-ink);
+    border:none; border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+  button.check:hover{ opacity:.9; }
+  button.check:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+  .section-score{ font-family:'IBM Plex Mono', monospace; font-size:.84rem; margin-top:10px; color:var(--ink-soft); }
+  .section-score.show b{ color:var(--accent); }
+
+  details.solutions{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 22px 20px;
+    margin-top:26px;
+    box-shadow:var(--shadow);
+  }
+  details.solutions summary{ font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem; cursor:pointer; }
+  .sol-block{ margin-top:16px; }
+  .sol-block h3{ font-size:.95rem; font-family:'IBM Plex Mono', monospace; color:var(--accent); text-transform:uppercase; letter-spacing:.03em; margin-bottom:8px; }
+  .sol-item{ font-size:.9rem; padding:8px 0; border-top:1px solid var(--line); }
+  .sol-item:first-child{ border-top:none; }
+  .sol-item .ans{ color:var(--good); font-family:'IBM Plex Mono', monospace; font-weight:600; }
+  .sol-item .expl{ color:var(--ink-soft); display:block; margin-top:2px; }
+
+  footer.note{ text-align:center; color:var(--ink-soft); font-size:.8rem; margin-top:26px; }
+
+  @media (max-width:480px){
+    header.top{ padding:18px 16px; }
+    .dialogue .who{ width:100%; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none!important; } }
+</style>
+
+<div class="wrap">
+  <a class="backlink" href="../index.html">← Quadern de valencià (totes les lliçons)</a>
+
+  <header class="top">
+    <div class="inner">
+      <div class="eyebrow">IES Jorge Juan · Departament d'Informàtica · 12 novembre 2026</div>
+      <h1>Què, quin, quant?</h1>
+      <div class="tag-row">
+        <span class="pill">Tema del dia: Pronoms interrogatius: què, qui, quin/quina, quant/quanta</span>
+        <span class="pill">Repàs verbal: Ser / estar / haver / anar en diversos temps</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="scorebar" id="scorebar">
+    <span>Puntuació global</span>
+    <span><b id="globalScore">0</b> / <span id="globalTotal">0</span></span>
+  </div>
+
+  <section class="card">
+    <h2><span class="num">Teoria</span> Quatre preguntes, quatre comportaments</h2>
+    <p class="lead">"Què" i "qui" no canvien mai de forma. "Quin" i "quant", en canvi, acompanyen sempre un nom i concorden amb ell en gènere i nombre — igual que un adjectiu.</p>
+
+    <div class="theory-table-wrap">
+      <table class="theory">
+        <thead><tr><th>Context</th><th>Pronom</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td>Cosa indefinida, <b>sense</b> nom al costat (subjecte, CD o darrere de preposició)</td><td><b>què</b></td><td class="ex">Què és un servidor web?</td></tr>
+          <tr><td>Persona (invariable: val per a singular i plural)</td><td><b>qui</b></td><td class="ex">Qui ha instal·lat el programari nou?</td></tr>
+          <tr><td>Tria entre diverses opcions, <b>sempre</b> + nom</td><td class="qu">quin / quina / quins / quines</td><td class="ex">Quin ordinador agafem per a la pràctica?</td></tr>
+          <tr><td>Quantitat, <b>sempre</b> + nom</td><td class="qu">quant / quanta / quants / quantes</td><td class="ex">Quantes contrasenyes has hagut de canviar?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <b>"Què" no és "quin".</b> En castellà "qué" i "cuál" sovint es confonen, però en valencià la diferència és clara: <span class="qu">què</span> pregunta per la identitat o la definició d'una cosa i mai va davant d'un nom (<i>Què és un algoritme?</i>), mentre <span class="qu">quin</span> + nom pregunta per triar entre opcions ja conegudes (<i>Quin llenguatge de programació fem servir, Python o Scratch?</i>). "Quin" i "quant" concorden sempre: <span class="ex mono">quin dispositiu</span>, <span class="ex mono">quina xarxa</span>, <span class="ex mono">quins alumnes</span>, <span class="ex mono">quantes proves</span>.
+    </div>
+  </section>
+
+  <section class="card" id="act1">
+    <h2><span class="num">Activitat 1</span> Omple els buits</h2>
+    <p class="lead">Escriu el pronom interrogatiu adequat: què, qui, o la forma de quin/quant que concorda amb el nom.</p>
+
+    <div class="item" data-ans="què">
+      <p class="sentence">1. <input type="text" class="blank" id="a1-1" aria-label="resposta 1"> és un algoritme, exactament?<span class="feedback" id="fb-a1-1"></span></p>
+    </div>
+    <div class="item" data-ans="qui">
+      <p class="sentence">2. <input type="text" class="blank" id="a1-2" aria-label="resposta 2"> ha instal·lat el programari nou al laboratori?<span class="feedback" id="fb-a1-2"></span></p>
+    </div>
+    <div class="item" data-ans="quants">
+      <p class="sentence">3. <input type="text" class="blank" id="a1-3" aria-label="resposta 3"> ordinadors portàtils tenim disponibles hui?<span class="feedback" id="fb-a1-3"></span></p>
+    </div>
+    <div class="item" data-ans="quina">
+      <p class="sentence">4. <input type="text" class="blank" id="a1-4" aria-label="resposta 4"> llicència de programari hem comprat per al departament?<span class="feedback" id="fb-a1-4"></span></p>
+    </div>
+    <div class="item" data-ans="qui">
+      <p class="sentence">5. Amb <input type="text" class="blank" id="a1-5" aria-label="resposta 5"> treballaràs hui en la pràctica de Python?<span class="feedback" id="fb-a1-5"></span></p>
+    </div>
+    <div class="item" data-ans="quantes">
+      <p class="sentence">6. <input type="text" class="blank" id="a1-6" aria-label="resposta 6"> hores dura la formació sobre intel·ligència artificial?<span class="feedback" id="fb-a1-6"></span></p>
+    </div>
+
+    <button class="check" onclick="checkActivity('act1')">Comprova les respostes</button>
+    <div class="section-score" id="score-act1"></div>
+  </section>
+
+  <section class="card" id="act2">
+    <h2><span class="num">Activitat 2</span> Selecciona l'opció correcta</h2>
+    <p class="lead">Marca el pronom ben triat per a cada pregunta.</p>
+
+    <div class="item" data-ans="a">
+      <p class="sentence">1. <span class="hint">[Què / Quin]</span> és la diferència entre maquinari i programari?</p>
+      <div class="mc-opts" data-q="1">
+        <label class="mc-opt"><input type="radio" name="a2-1" value="a"> Què</label>
+        <label class="mc-opt"><input type="radio" name="a2-1" value="b"> Quin</label>
+      </div>
+    </div>
+    <div class="item" data-ans="b">
+      <p class="sentence">2. <span class="hint">[Qui / Quins]</span> alumnes han acabat ja l'exercici de Scratch?</p>
+      <div class="mc-opts" data-q="2">
+        <label class="mc-opt"><input type="radio" name="a2-2" value="a"> Qui</label>
+        <label class="mc-opt"><input type="radio" name="a2-2" value="b"> Quins</label>
+      </div>
+    </div>
+    <div class="item" data-ans="b">
+      <p class="sentence">3. <span class="hint">[Quant / Quanta]</span> memòria RAM té eixe ordinador?</p>
+      <div class="mc-opts" data-q="3">
+        <label class="mc-opt"><input type="radio" name="a2-3" value="a"> Quant</label>
+        <label class="mc-opt"><input type="radio" name="a2-3" value="b"> Quanta</label>
+      </div>
+    </div>
+    <div class="item" data-ans="b">
+      <p class="sentence">4. <span class="hint">[Què / Quina]</span> eina farem servir hui, XAMPP o VirtualBox?</p>
+      <div class="mc-opts" data-q="4">
+        <label class="mc-opt"><input type="radio" name="a2-4" value="a"> Què</label>
+        <label class="mc-opt"><input type="radio" name="a2-4" value="b"> Quina</label>
+      </div>
+    </div>
+    <div class="item" data-ans="a">
+      <p class="sentence">5. <span class="hint">[Qui / Què]</span> és el responsable de la xarxa del centre?</p>
+      <div class="mc-opts" data-q="5">
+        <label class="mc-opt"><input type="radio" name="a2-5" value="a"> Qui</label>
+        <label class="mc-opt"><input type="radio" name="a2-5" value="b"> Què</label>
+      </div>
+    </div>
+
+    <button class="check" onclick="checkActivity('act2')">Comprova les respostes</button>
+    <div class="section-score" id="score-act2"></div>
+  </section>
+
+  <section class="card" id="act3">
+    <h2><span class="num">Activitat 3</span> Nom + pronom base → la forma correcta</h2>
+    <p class="lead">Completa amb la forma de "quin" o "quant" que concorda en gènere i nombre amb el nom de l'esquerra.</p>
+
+    <div class="table-wrap">
+      <table class="fillgrid">
+        <thead><tr><th>Nom + pronom base</th><th>Forma correcta</th></tr></thead>
+        <tbody>
+          <tr><td class="given">ordinador (quin)</td><td><input type="text" class="blank" id="a3-1" aria-label="resposta taula 1" data-ans="quin"> <span class="feedback" id="fb-a3-1"></span></td></tr>
+          <tr><td class="given">xarxa (quin)</td><td><input type="text" class="blank" id="a3-2" aria-label="resposta taula 2" data-ans="quina"> <span class="feedback" id="fb-a3-2"></span></td></tr>
+          <tr><td class="given">alumnes (quin)</td><td><input type="text" class="blank" id="a3-3" aria-label="resposta taula 3" data-ans="quins"> <span class="feedback" id="fb-a3-3"></span></td></tr>
+          <tr><td class="given">hores (quant)</td><td><input type="text" class="blank" id="a3-4" aria-label="resposta taula 4" data-ans="quantes"> <span class="feedback" id="fb-a3-4"></span></td></tr>
+          <tr><td class="given">temps disponible (quant)</td><td><input type="text" class="blank" id="a3-5" aria-label="resposta taula 5" data-ans="quant"> <span class="feedback" id="fb-a3-5"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button class="check" onclick="checkActivity('act3')">Comprova les respostes</button>
+    <div class="section-score" id="score-act3"></div>
+  </section>
+
+  <section class="card" id="act4">
+    <h2><span class="num">Activitat 4</span> Al departament d'informàtica</h2>
+    <p class="lead">Mini-diàleg al claustre preparant la classe. Completa els buits amb el pronom interrogatiu adequat.</p>
+
+    <div class="dialogue">
+      <div class="turn"><span class="who">Professor:</span><span class="say">Bon dia a tots. <input type="text" class="blank" id="a4-1" aria-label="resposta dialeg 1" data-ans="quin"> ordinador hem reservat per a fer la demostració de Teachable Machine?<span class="feedback" id="fb-a4-1"></span></span></div>
+      <div class="turn"><span class="who">Alumne:</span><span class="say">El del racó, professor. I <input type="text" class="blank" id="a4-2" aria-label="resposta dialeg 2" data-ans="qui"> ha preparat ja la màquina virtual amb VirtualBox?<span class="feedback" id="fb-a4-2"></span></span></div>
+      <div class="turn"><span class="who">Cap de dept.:</span><span class="say">Jo mateixa l'he configurada ahir. <input type="text" class="blank" id="a4-3" aria-label="resposta dialeg 3" data-ans="quantes"> consultes SQL necessitem per a la pràctica de XAMPP?<span class="feedback" id="fb-a4-3"></span></span></div>
+      <div class="turn"><span class="who">Alumna:</span><span class="say">Unes deu, crec. Per cert, <input type="text" class="blank" id="a4-4" aria-label="resposta dialeg 4" data-ans="què"> farem amb MakeCode i la placa Microbit hui?<span class="feedback" id="fb-a4-4"></span></span></div>
+      <div class="turn"><span class="who">Professor:</span><span class="say">Programarem un sensor de distància. I abans, <input type="text" class="blank" id="a4-5" aria-label="resposta dialeg 5" data-ans="quina"> llicència de Microsoft 365 teniu instal·lada al vostre portàtil?<span class="feedback" id="fb-a4-5"></span></span></div>
+    </div>
+
+    <button class="check" onclick="checkActivity('act4')">Comprova les respostes</button>
+    <div class="section-score" id="score-act4"></div>
+  </section>
+
+  <section class="card" id="act5">
+    <h2><span class="num">Repàs verbal</span> Ser / estar / haver / anar en diversos temps</h2>
+    <p class="lead">Un parell de frases per no perdre la mà amb estos quatre verbs, que canvien molt de forma segons el temps.</p>
+
+    <div class="item" data-ans="està">
+      <p class="sentence">1. Enguany, el laboratori d'informàtica <input type="text" class="blank" id="a5-1" aria-label="resposta verb 1"> (estar, present) a la primera planta.<span class="feedback" id="fb-a5-1"></span></p>
+    </div>
+    <div class="item" data-ans="sóc">
+      <p class="sentence">2. Fa deu anys que <input type="text" class="blank" id="a5-2" aria-label="resposta verb 2"> (ser, present, jo) professor d'informàtica.<span class="feedback" id="fb-a5-2"></span></p>
+    </div>
+    <div class="item" data-ans="estava">
+      <p class="sentence">3. Abans de la reforma, el servidor <input type="text" class="blank" id="a5-3" aria-label="resposta verb 3"> (estar, imperfet) a la sala de professors.<span class="feedback" id="fb-a5-3"></span></p>
+    </div>
+    <div class="item" data-ans="hauran">
+      <p class="sentence">4. Quan arribe demà al matí, els tècnics ja <input type="text" class="blank" id="a5-4" aria-label="resposta verb 4"> (haver, futur, ells) acabat la instal·lació.<span class="feedback" id="fb-a5-4"></span></p>
+    </div>
+
+    <button class="check" onclick="checkActivity('act5')">Comprova les respostes</button>
+    <div class="section-score" id="score-act5"></div>
+  </section>
+
+  <details class="solutions">
+    <summary>Veure totes les solucions i explicacions</summary>
+
+    <div class="sol-block">
+      <h3>Activitat 1 — Omple els buits</h3>
+      <div class="sol-item"><span class="ans">1. què</span><span class="expl">Pregunta per la definició d'una cosa, sense nom al costat.</span></div>
+      <div class="sol-item"><span class="ans">2. qui</span><span class="expl">Persona, invariable.</span></div>
+      <div class="sol-item"><span class="ans">3. quants</span><span class="expl">Concorda amb "ordinadors" (masculí plural).</span></div>
+      <div class="sol-item"><span class="ans">4. quina</span><span class="expl">Concorda amb "llicència" (femení singular).</span></div>
+      <div class="sol-item"><span class="ans">5. qui</span><span class="expl">Persona, darrere de preposició ("amb").</span></div>
+      <div class="sol-item"><span class="ans">6. quantes</span><span class="expl">Concorda amb "hores" (femení plural).</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 2 — Selecció</h3>
+      <div class="sol-item"><span class="ans">1. Què</span><span class="expl">Pregunta per la identitat, sense nom al costat.</span></div>
+      <div class="sol-item"><span class="ans">2. Quins</span><span class="expl">Acompanya el nom "alumnes" i concorda amb ell.</span></div>
+      <div class="sol-item"><span class="ans">3. Quanta</span><span class="expl">Concorda amb "memòria" (femení singular).</span></div>
+      <div class="sol-item"><span class="ans">4. Quina</span><span class="expl">Tria entre opcions, + nom "eina" (femení singular).</span></div>
+      <div class="sol-item"><span class="ans">5. Qui</span><span class="expl">Persona, pregunta per la identitat.</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 3 — Nom + pronom base</h3>
+      <div class="sol-item"><span class="ans">1. quin</span><span class="expl">"ordinador" és masculí singular.</span></div>
+      <div class="sol-item"><span class="ans">2. quina</span><span class="expl">"xarxa" és femení singular.</span></div>
+      <div class="sol-item"><span class="ans">3. quins</span><span class="expl">"alumnes" és masculí plural.</span></div>
+      <div class="sol-item"><span class="ans">4. quantes</span><span class="expl">"hores" és femení plural.</span></div>
+      <div class="sol-item"><span class="ans">5. quant</span><span class="expl">"temps" és masculí singular.</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Activitat 4 — Diàleg</h3>
+      <div class="sol-item"><span class="ans">1. quin</span><span class="expl">Concorda amb "ordinador" (masculí singular).</span></div>
+      <div class="sol-item"><span class="ans">2. qui</span><span class="expl">Persona.</span></div>
+      <div class="sol-item"><span class="ans">3. quantes</span><span class="expl">Concorda amb "consultes" (femení plural).</span></div>
+      <div class="sol-item"><span class="ans">4. què</span><span class="expl">Pregunta per l'acció, sense nom al costat.</span></div>
+      <div class="sol-item"><span class="ans">5. quina</span><span class="expl">Concorda amb "llicència" (femení singular).</span></div>
+    </div>
+
+    <div class="sol-block">
+      <h3>Repàs verbal — Ser / estar / haver / anar</h3>
+      <div class="sol-item"><span class="ans">1. està</span><span class="expl">"Estar" present, 3a persona singular.</span></div>
+      <div class="sol-item"><span class="ans">2. sóc</span><span class="expl">"Ser" present, 1a persona singular (irregular: sóc, ets, és...).</span></div>
+      <div class="sol-item"><span class="ans">3. estava</span><span class="expl">"Estar" imperfet, 3a persona singular.</span></div>
+      <div class="sol-item"><span class="ans">4. hauran</span><span class="expl">"Haver" futur, 3a persona plural (futur perfet perifràstic: hauran acabat).</span></div>
+    </div>
+  </details>
+
+  <footer class="note">IES Jorge Juan, Alacant · Exercici diari de valencià oral per a l'àmbit educatiu-informàtic</footer>
+</div>
+
+<script>
+(function(){
+  function norm(s){
+    return (s||'')
+      .toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/['’]/g,"'")
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  var sectionScores = {};
+
+  function setFeedback(el, ok){
+    if(!el) return;
+    el.textContent = ok ? '✓ correcte' : '✗ revisa-ho';
+    el.className = 'feedback ' + (ok ? 'ok' : 'ko');
+  }
+
+  function checkTextItems(container){
+    var correct = 0, total = 0;
+    container.querySelectorAll('.item[data-ans]').forEach(function(item){
+      var input = item.querySelector('input.blank');
+      if(!input) return;
+      total++;
+      var ok = norm(input.value) === norm(item.getAttribute('data-ans'));
+      if(ok) correct++;
+      var fb = item.querySelector('.feedback');
+      setFeedback(fb, ok);
+    });
+    container.querySelectorAll('input.blank[data-ans]').forEach(function(input){
+      total++;
+      var ok = norm(input.value) === norm(input.getAttribute('data-ans'));
+      if(ok) correct++;
+      var fb = document.getElementById('fb-' + input.id);
+      setFeedback(fb, ok);
+    });
+    return {correct: correct, total: total};
+  }
+
+  function checkMcItems(container){
+    var correct = 0, total = 0;
+    container.querySelectorAll('.item[data-ans]').forEach(function(item){
+      var opts = item.querySelectorAll('.mc-opt');
+      if(!opts.length) return;
+      var expected = item.getAttribute('data-ans');
+      var checkedInput = item.querySelector('input[type=radio]:checked');
+      total++;
+      var ok = checkedInput && checkedInput.value === expected;
+      if(ok) correct++;
+      opts.forEach(function(opt){
+        opt.classList.remove('right-ans','wrong-ans');
+        var inp = opt.querySelector('input');
+        if(inp.value === expected){ opt.classList.add('right-ans'); }
+        else if(checkedInput && inp.value === checkedInput.value){ opt.classList.add('wrong-ans'); }
+      });
+    });
+    return {correct: correct, total: total};
+  }
+
+  window.checkActivity = function(sectionId){
+    var section = document.getElementById(sectionId);
+    if(!section) return;
+    var result;
+    if(section.querySelector('.mc-opts')){
+      result = checkMcItems(section);
+    } else {
+      result = checkTextItems(section);
+    }
+    sectionScores[sectionId] = result;
+    var scoreEl = document.getElementById('score-' + sectionId);
+    if(scoreEl){
+      scoreEl.classList.add('show');
+      scoreEl.innerHTML = 'Resultat: <b>' + result.correct + ' / ' + result.total + '</b>';
+    }
+    updateGlobal();
+  };
+
+  function updateGlobal(){
+    var correct = 0, total = 0;
+    Object.keys(sectionScores).forEach(function(k){
+      correct += sectionScores[k].correct;
+      total += sectionScores[k].total;
+    });
+    document.getElementById('globalScore').textContent = correct;
+    document.getElementById('globalTotal').textContent = total;
+  }
+})();
+</script>
+
+</body></html>
